@@ -1,4 +1,5 @@
 # rest
+<<<<<<< HEAD
 
 메일 서버의 서비스를 RESTful API로 제공하는 것을 목표로 합니다.
 
@@ -114,3 +115,6 @@
   그룹 정의 조직
 
 
+=======
+Apache James REST API
+>>>>>>> origin/master
