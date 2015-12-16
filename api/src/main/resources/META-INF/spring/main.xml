@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  JMX 사용을 위한 설정
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <tx:annotation-driven proxy-target-class="true" transaction-manager="mail_tm"/>
+
+    <!--
+    ===========================================================================
+       Database DataSource
+    ===========================================================================
+    -->
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <property name="location" value="classpath:james-database.properties"/>
+    </bean>
+
+    <bean id="emlds" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${database.driverClassName}"/>
+        <property name="url" value="${database.url}"/>
+        <!--
+                <property name="username" value="${database.username}"/>
+                <property name="password" value="${database.password}"/>
+        -->
+        <!--The value for maxActive should always be larger than the number of spooler threads. The-->
+        <!--reason is that a spooler thread normally requires 1 connection to process a mail, however-->
+        <!--sometimes OpenJPA requires 1 connection to finish the processing on top of that. If-->
+        <!--    maxActive <= num spooler threads,-->
+        <!--it can happen that the spooler threads grab all maxActive connections but then cannot-->
+        <!--finish processing because each of them blocks waiting for OpenJPA which itself is waiting-->
+        <!--for a connection. See https://issues.apache.org/jira/browse/JAMES-1317.-->
+        <property name="maxActive" value="21"/>
+        <!-- This lets a mail fail to be processed rather than the server freezing. -->
+        <property name="maxWait" value="30000"/>
+        <!-- This keeps the number of connections in the pool low on average -->
+        <property name="timeBetweenEvictionRunsMillis" value="300000"/>
+        <property name="minEvictableIdleTimeMillis" value="300000"/>
+        <property name="removeAbandoned" value="true"/>
+        <property name="logAbandoned" value="true"/>
+        <property name="removeAbandonedTimeout" value="300"/>
+    </bean>
+
+    <!--
+      James Data
+    -->
+    <bean id="james-data-emf" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceUnitManager" ref="emlpum"/>
+        <property name="jpaVendorAdapter" ref="vendorAdapter"/>
+        <property name="persistenceUnitName" value="email"/>
+    </bean>
+
+    <!--
+      James Mailbox
+    -->
+    <bean id="james-mailbox-emf" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceUnitManager" ref="emlpum"/>
+        <property name="jpaVendorAdapter" ref="vendorAdapter"/>
+        <property name="persistenceUnitName" value="mailbox"/>
+    </bean>
+
+    <!--
+      Groupware
+    -->
+    <bean id="groupware-emf" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceUnitManager" ref="emlpum"/>
+        <property name="jpaVendorAdapter" ref="vendorAdapter"/>
+        <property name="persistenceUnitName" value="groupware"/>
+    </bean>
+
+    <!--
+      James Webmail
+    -->
+    <bean id="james-rest-emf" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceUnitManager" ref="emlpum"/>
+        <property name="jpaVendorAdapter" ref="vendorAdapter"/>
+        <property name="persistenceUnitName" value="rest"/>
+    </bean>
+
+    <bean id="vendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+        <property name="database" value="${vendorAdapter.database}"/>
+        <property name="showSql" value="true" />
+        <!-- property name="databasePlatform" value="org.hibernate.dialect.MySQLDialect" / -->
+    </bean>
+    <!--
+        <bean id="vendorAdapter" class="org.springframework.orm.jpa.vendor.OpenJpaVendorAdapter">
+            <property name="database" value="${vendorAdapter.database}"/>
+            &lt;!&ndash; set this to true for debugging purposes &ndash;&gt;
+            <property name="showSql" value="false"/>
+        </bean>
+    -->
+    <bean id="emlpum" class="org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager">
+        <property name="persistenceXmlLocations">
+            <list>
+                <value>classpath*:META-INF/persistence.xml</value>
+            </list>
+        </property>
+        <property name="defaultPersistenceUnitName" value="email"/>
+        <property name="defaultDataSource" ref="emlds"/>
+    </bean>
+
+    <bean id="mail_tm" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="james-data-emf" />
+    </bean>
+
+    <bean id="gw_tm" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="groupware-emf" />
+    </bean>
+
+    <bean id="rest_tm" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="james-rest-emf" />
+    </bean>
+
+</beans>

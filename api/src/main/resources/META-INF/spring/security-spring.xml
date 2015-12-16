@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  시스템 보안
+
+  스프링 시큐러티를 활용해서 시스템 보안을 구현합니다.
+-->
+
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:context="http://www.springframework.org/schema/context"
+             xmlns:util="http://www.springframework.org/schema/util"
+             xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.2.xsd
+           http://www.springframework.org/schema/util
+           http://www.springframework.org/schema/util/spring-util-3.2.xsd
+           http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <http>
+
+<!--
+        <custom-filter after="EXCEPTION_TRANSLATION_FILTER" ref="ajaxSessionTimeoutFilter"/>
+-->
+
+        <!-- login form 설정 -->
+        <form-login
+                login-page="/sub/common/login/cmmLogin.do"
+                authentication-failure-url="/sub/common/login/cmmLogin.do"
+                username-parameter="username"
+                password-parameter="password"
+                />
+        <!-- logout 설정 -->
+        <logout logout-success-url="/sub/common/login/cmmLogin.do"
+                logout-url="/data/common/login/selectLogoutFlag.do"
+                invalidate-session="true"
+                delete-cookies="JSESSIONID" />
+        <!-- 중복 로그인 차단 설정 -->
+        <!-- remember-me 같은 비 UI 를 사용한 로그인의 경우 401 에러가 보내지지만, 에러페이지를 사용하고 싶다면, session-authentication-error-url 을 사용 -->
+        <session-management session-fixation-protection="newSession" session-authentication-error-url="http://www.naver.com">
+            <!-- 첫번째 로그인을 해제하는 설정 -->
+<!--
+            <concurrency-control max-sessions="1" />
+-->
+            <!-- 두번째 로그인을 막는 설정. authentication-failure-url 로 보내진다. -->
+            <concurrency-control max-sessions="1" error-if-maximum-exceeded="true" expired-url="/service/common/exception/expiredSession.do" />
+        </session-management>
+    </http>
+
+    <authentication-manager alias="authenticationManager">
+<!--
+        <authentication-provider ref="myap"/>
+-->
+        <authentication-provider>
+            <user-service>
+                <user name="jhonson" password="hello" authorities="ROLE_USER, ROLE_ADMIN" />
+                <user name="bob" password="bobspassword" authorities="ROLE_USER" />
+            </user-service>
+        </authentication-provider>
+<!--
+        <authentication-provider user-service-ref="myUserDetailsService">
+            <password-encoder ref="bcryptEncoder"/>
+        </authentication-provider>
+-->
+    </authentication-manager>
+
+<!--
+    <beans:bean id="myap" class="com.oreumio.james.webmail.common.login.controller.MyAuthenticationProvider"/>
+-->
+
+    <!-- 사용자 인증 처리 -->
+<!--
+    <beans:bean id="myUserDetailsService"
+    class="com.oreumio.james.webmail.common.login.security.MyUserDetailsService"/>
+-->
+
+    <beans:bean name="bcryptEncoder"
+    class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+
+
+    <!-- spring security를 사용한 session timeout check 설정 -->
+<!--
+    <beans:bean id="ajaxSessionTimeoutFilter" class="com.oreumio.james.webmail.framework.filter.AjaxSessionTimeoutFilter" />
+-->
+
+</beans:beans>

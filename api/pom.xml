@@ -1,30 +1,128 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.oreumio</groupId>
-    <artifactId>rest-api</artifactId>
+
+    <parent>
+        <groupId>com.oreumio.james.server</groupId>
+        <artifactId>oreumio-james-server-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>oreumio-james-rest</artifactId>
     <packaging>war</packaging>
-    <version>1.0-SNAPSHOT</version>
-    <name>OreumIO rest-api</name>
-    <url>http://maven.apache.org</url>
+
+    <name>OreumIO James Server :: REST</name>
+    <description></description>
+
     <dependencies>
+        <dependency>
+            <groupId>com.oreumio.james.server</groupId>
+            <artifactId>oreumio-james-server-container-spring</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <!--
+         domainlist 때문에 사용해야 함.
+        -->
+        <dependency>
+            <groupId>com.oreumio.james.server</groupId>
+            <artifactId>oreumio-james-server-dnsservice-dnsjava</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.oreumio.james.server</groupId>
+            <artifactId>oreumio-james-server-data-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.oreumio.james.server</groupId>
+            <artifactId>oreumio-james-server-data-jpa</artifactId>
+            <!--
+                        <scope>runtime</scope>
+            -->
+        </dependency>
+        <dependency>
+            <groupId>com.oreumio.james.server</groupId>
+            <artifactId>oreumio-james-server-queue-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.oreumio.james.server</groupId>
+            <artifactId>oreumio-james-server-queue-activemq</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.oreumio.james.server</groupId>
+            <artifactId>oreumio-james-server-mailbox-adapter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.oreumio.james.server</groupId>
+            <artifactId>oreumio-james-server-logger-logback</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>3.2.13.RELEASE</version>
         </dependency>
         <!--
-              <dependency>
-                  <groupId>org.springframework</groupId>
-                  <artifactId>spring-web</artifactId>
-                  <version>3.2.13.RELEASE</version>
-              </dependency>
+                <dependency>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-web</artifactId>
+                </dependency>
         -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <!--
+         Spring XML 처리
+        -->
+        <dependency>
+            <groupId>org.apache.xbean</groupId>
+            <artifactId>xbean-spring</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <!--
+         보안 구현
+        -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+        </dependency>
+        <!--
+         JPA 구현
+        -->
+        <dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.1-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- 데이타베이스 -->
+        <dependency>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <version>1.2.0</version>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- JSON -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.6.0</version>
         </dependency>
+        <!-- HTTP -->
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-servlet-api</artifactId>
@@ -34,9 +132,32 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
-            <version>1.2</version>
             <scope>runtime</scope>
         </dependency>
+        <!-- -->
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <!--
+         로깅 설정
+        -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jul-to-slf4j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

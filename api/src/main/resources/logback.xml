@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <property name="LOG_HOME" value="../log" />
+<!--
+    <property file="src/main/java/chapters/configuration/variables1.properties" />
+    <property resource="resource1.properties" />
+-->
+
+    <!-- http://logback.qos.ch/documentation.html 참조 -->
+    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+        <resetJUL>true</resetJUL>
+    </contextListener>
+
+    <!-- To enable JMX Management -->
+    <jmxConfigurator/>
+
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%.-1level %d{HH:mm:ss.SSS} | %-40.40logger{0} | %msg%n</pattern>
+            <!--<pattern>%-5level %logger - %msg%n</pattern>-->
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/james-restserver.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${LOG_HOME}/james-restserver.%d{yyyy-MM-dd}.log</fileNamePattern>
+
+            <!-- keep 30 days' worth of history -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%-5level %d{HH:mm:ss.SSS} | %logger | %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="SPRING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/spring.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${LOG_HOME}/spring.%d{yyyy-MM-dd}.log</fileNamePattern>
+
+            <!-- keep 30 days' worth of history -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%-5level %d{HH:mm:ss.SSS} | %logger | %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="info">
+    </root>
+
+    <logger name="com.oreumio.james.rest" level="debug">
+        <appender-ref ref="console"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+
+    <logger name="james" level="debug">
+        <appender-ref ref="console"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+
+    <logger name="org.springframework" level="debug">
+        <appender-ref ref="SPRING"/>
+    </logger>
+</configuration>

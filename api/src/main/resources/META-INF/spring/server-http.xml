@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  HTTP 서비스
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:amq="http://activemq.apache.org/schema/core"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.2.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+        http://www.springframework.org/schema/tx
+     	http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://activemq.apache.org/schema/core
+        http://activemq.apache.org/schema/core/activemq-core.xsd
+      	http://www.springframework.org/schema/util
+      	http://www.springframework.org/schema/util/spring-util-3.2.xsd
+      	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd
+      	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+    <!-- http://docs.spring.io/spring/docs/3.2.x/spring-framework-reference/html/mvc.html -->
+
+    <!-- property 파일 로딩 : http://nkjava.blogspot.in/2013/07/springmvc-read-property-in-jsp.html -->
+    <util:properties id="applicationProperties"
+                     location="classpath:http.properties"/>
+    <context:property-placeholder properties-ref="applicationProperties" ignore-unresolvable="true" />
+
+    <context:component-scan base-package="com.oreumio.james.rest" />
+
+    <!-- Service, DAO 인터페이스 구현 없이 객체 주입이 가능하게 설정
+         http://blog.outsider.ne.kr/845 사이트 참조 -->
+<!--
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+-->
+
+    <!--
+        인터페이스를 구현하지 않은 오브젝트는 CGLIB 프락싱, 인터페이스를 하나라도 구현하고 있는 오브젝트는 JDK 프락싱이 된다.
+        대상 오브젝트가 인터페이스를 구현하고 있더라도, proxy-target-class 를 true 로 설정하면, CGLIB 프락싱을 강요할 수 있다.
+     -->
+    <aop:aspectj-autoproxy/>
+
+    <!-- MVC 관련 bean 자동 등록
+        http://springsource.tistory.com/90 사이트 참조-->
+    <!-- <mvc:annotation-driven /> -->
+	<mvc:annotation-driven>
+	  <mvc:message-converters register-defaults="true">
+	    <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+	      <property name="supportedMediaTypes" value = "text/plain;charset=UTF-8" />
+	    </bean>
+	  </mvc:message-converters>
+	</mvc:annotation-driven>
+    <!-- interceptor 설정 -->
+    <mvc:interceptors>
+<!--
+    	<mvc:interceptor>
+    		<mvc:mapping path="/**"/>    		
+		    <bean class="com.oreumio.james.webmail.framework.interceptor.CORSInterceptor"/>
+	    </mvc:interceptor>
+-->
+	    <mvc:interceptor>
+    		<mvc:mapping path="/**"/>    		
+		    <ref bean="localeChangeInterceptor" />		    
+	    </mvc:interceptor>
+<!--
+         <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/login/**"/>
+            <bean class="com.newriseup.framework.interceptor.LoginInterceptor">
+				<property name="autoLogin" value="true"/>
+				&lt;!&ndash; 자동으로 로그인되어 설정되는 사용자 값 &ndash;&gt;
+                <property name="clientId" value="C699383620"/>
+                <property name="empId" value="E67517716"/>
+                <property name="deptId" value="D1051167718"/>
+                <property name="userId" value="dtest2"/>
+                <property name="psnId" value="S2092877181"/>
+                <property name="lang" value="ko"/>
+                <property name="email" value="dtest2@hipluscard.eternityworks.com"/>
+                <property name="userId" value="5071972120689385186"/>
+                <property name="orgSortMode" value="0"/>
+                <property name="orgTitleDispMode" value="0"/>
+                <property name="parentDeptDispYn" value="Y"/>
+                <property name="schema" value="nrugw"/>
+                <property name="adminLogin" value="true"/>
+                <property name="roles">
+                    <list>
+                        <value>groupware</value>
+                        <value>portlet</value>
+                        <value>board</value>
+                        <value>deptCaptain</value>
+                        <value>deptAdmin</value>
+                        <value>docCharge</value>
+                        <value>recordAdmin</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:interceptor>
+-->
+    </mvc:interceptors>
+
+	<!-- security 설정 -->    
+    <!-- <security:http auto-config="true">
+		<security:intercept-url pattern="/**" access="ROLE_USER" />
+		<security:custom-filter after="EXCEPTION_TRANSLATION_FILTER" ref="ajaxSessionTimeoutFilter"/>
+	</security:http>
+	 
+	<security:authentication-manager>
+		<security:authentication-provider>
+			<security:user-service>
+				<security:user name="1" password="1" authorities="ROLE_USER" />
+			</security:user-service>
+		</security:authentication-provider>
+	</security:authentication-manager> -->
+	
+	<!-- spring security를 사용한 session timeout check 설정 -->
+	<!-- <bean id="ajaxSessionTimeoutFilter" class="com.newriseup.framework.filter.AjaxSessionTimeoutFilter">		
+	</bean> -->
+	
+	<!-- CORS Filter 설정 -->
+	<bean id="corsFilter" class="com.oreumio.james.rest.filter.CORSFilter">
+	</bean>
+	
+    <!-- JSTL 화면 설정 -->
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="prefix" value="/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+	
+	<!-- 다국어 설정 -->
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+	    <property name="defaultEncoding" value="UTF-8" />
+	    <property name="basenames">
+			<list>
+                <value>classpath:/i18n/common/cmmMessage</value>
+                <value>classpath:/i18n/email/emlMessage</value>
+            </list>
+        </property>
+	</bean>
+
+	<bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+	    <property name="paramName" value="lang" />
+	</bean>
+
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+	    <property name="defaultLocale" value="ko" />
+	</bean>
+
+    <!-- 파일업로드 설정 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- one of the properties available; the maximum file size in bytes -->
+        <property name="maxUploadSize" value="2000000000"/>
+        <property name="defaultEncoding" value="UTF-8" />
+    </bean>
+
+    <!--
+    emlReadConfirmMailService 를 위해서 아래의 설정을 함
+    -->
+
+    <!--
+      메일 평가
+     -->
+    <bean id="evaluator" class="com.oreumio.james.index.jpa.EvaluatorImpl">
+    </bean>
+
+    <!--
+      메일 저장기
+     -->
+    <bean id="poster" class="com.oreumio.james.mailbox.store.PosterImpl">
+        <property name="folder" value="INBOX"/>
+    </bean>
+
+	<!--
+      마임 싱글톤 구현을 위한 리파지토리
+     -->
+	<bean id="singletonrepository" class="com.oreumio.james.singletonrepository.JPASingletonRepository">
+		<property name="maxOfSingletonsPerFolder" value="5000"/>
+	</bean>
+
+	<bean id="reindexer" class="com.oreumio.james.mailbox.index.ReindexerImpl"/>
+
+</beans>

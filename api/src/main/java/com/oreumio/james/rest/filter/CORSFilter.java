@@ -1,4 +1,4 @@
-package com.oreumio.rest.filter;
+package com.oreumio.james.rest.filter;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -41,7 +41,7 @@ public class CORSFilter extends OncePerRequestFilter {
         Set<String> allowedOrigins = new HashSet<String>(Arrays.asList(corsAllowedOrigins.split(",")));
 
         String originHeader = request.getHeader("Origin");
-        System.out.println("Origin=" + (originHeader == null ? "<null>" : originHeader));
+//        System.out.println("Origin=" + (originHeader == null ? "<null>" : originHeader));
 
         if (request.getHeader("Access-Control-Request-Method") != null && "OPTIONS".equals(request.getMethod())) {
 

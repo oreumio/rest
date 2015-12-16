@@ -24,7 +24,7 @@
     }
 </script>
 <body>
-<h2>Hello World!</h2>
+<h2>Hello OreumIO James REST Server!</h2>
 
 <a href="/rest/mail/first">first</a>
 <a id="index_name">name</a>

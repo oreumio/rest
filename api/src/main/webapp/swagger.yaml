@@ -1,0 +1,148 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: 'OreumIO REST API'
+paths:
+  /client:
+    get:
+      description: |
+        고객이 자신을 등록한다.
+      responses:
+        '200':
+          description: Successful response
+  /client:
+    get:
+      description: |
+        고객이 자신을 해지한다.
+      responses:
+        '200':
+          description: Successful response
+  /client:
+    get:
+      description: |
+        고객이 자신을 해지한다.
+      responses:
+        '200':
+          description: Successful response
+  /client/domain:
+    get:
+      description: |
+        고객이 사용할 도메인을 등록한다.
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            title: ArrayOfPersons
+            type: array
+            items:
+              title: Person
+              type: object
+              properties:
+                name:
+                  type: string
+                single:
+                  type: boolean
+definitions:
+  Client:
+    type: object
+    properties:
+      clientId:
+        type: string
+        description: 고객 아이디
+      description:
+        type: string
+        description: 고객 설명
+      displayName:
+        type: string
+        description: 고객 표시명
+      state:
+        type: string
+        description: 고객 상태. 정상, 정지, 삭제.
+  Group:
+    type: object
+    properties:
+      groupId:
+        type: string
+        description: 그룹 아이디
+      clientId:
+        type: string
+        description: 고객 아이디
+      description:
+        type: string
+        description: 그룹 설명
+      displayName:
+        type: string
+        description: 그룹 표시명
+      quota:
+        type: integer
+        format: int32
+        description: 용량
+      config:
+        type: string
+        description: 그룹 설정
+      state:
+        type: string
+        description: 그룹 상태. 정상, 정지, 삭제.
+      domainName:
+        type: string
+        description: 주 도메인명
+      secondaryDomainNames:
+        type: array
+        items:
+          type: String
+          description: 도메인명.
+  User:
+    type: object
+    properties:
+      userId:
+        type: string
+        description: 사용자 아이디
+      groupId:
+        type: string
+        description: 그룹 아이디
+      userName:
+        type: string
+        description: 사용자명
+      domainName:
+        type: string
+        description: 도메인명
+      description:
+        type: string
+        description: 사용자 설명
+      displayName:
+        type: string
+        description: 사용자 표시명
+      quota:
+        type: integer
+        format: int32
+        description: 용량
+      config:
+        type: string
+        description: 사용자 설정
+      state:
+        type: string
+        description: 사용자 상태. 정상, 정지, 삭제.
+  Organization:
+    type: object
+    properties:
+      organizationId:
+        type: string
+        description: 조직 아이디. 0: 회사, 1: 부서, 2: 직위, 3: 직무, 4: 직책, 5: 기타
+      groupId:
+        type: string
+        description: 그룹 아이디
+      displayName:
+        type: string
+        description: 조직 표시명
+  OrganizationHi
+    type: object
+    properties:
+      organizationNodeId:
+        type: string
+        description: 조직 단위 아이디
+      organizationId:
+        type: string
+        description: 조직 아이디
+      parentOrganizationNodeId:
+        type: string
+        description: 부모 조직 단위 아이디

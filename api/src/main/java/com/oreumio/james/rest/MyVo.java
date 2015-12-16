@@ -1,4 +1,4 @@
-package com.oreumio.rest;
+package com.oreumio.james.rest;
 
 /**
  * Created by jchoi on 12/14/15.

@@ -1,45 +1,162 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="http://java.sun.com/xml/ns/javaee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
                       http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-         version="3.0">
+  version="3.0">
 
-  <display-name>OreumIO RESTful Web Application</display-name>
+	<display-name>OreumIO James REST Server</display-name>
 
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
-    <context-param>
-        <param-name>contextConfigLocation</param-name>
-        <param-value>/WEB-INF/spring-rest.xml</param-value>
-    </context-param>
+	<!-- 중복 로그인 차단 -->
+<!--
+	<listener>
+  		<listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
+	</listener>
+-->
 
-    <!-- cors(Cross-Origin Resource Sharing) 설정  -->
+	<!-- ApplicationContext 설정 -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+        <!-- 주의: 메일 서비스를 별도 프로세스로 나눠서 분리기동할 경우, activemq 는 보통 standalone 으로 설정해야 합니다. -->
+        <!-- 주의: 메일 서비스를 별도 프로세스로 나눠서 분리기동할 경우, mailbox-event 는 보통 jms 로 설정해야 합니다. -->
+		<param-value>
+			classpath:META-INF/spring/main.xml
+			classpath:META-INF/spring/server-http.xml
+			classpath:META-INF/spring/security-spring.xml
+			classpath:META-INF/spring/data.xml
+			classpath:META-INF/spring/dns.xml
+			classpath:META-INF/spring/activemq-standalone.xml
+			classpath:META-INF/spring/mailbox-jpa.xml
+			classpath:META-INF/spring/mailbox-event-simple.xml
+			classpath:META-INF/spring/mailrepository.xml
+			classpath:META-INF/spring/container.xml
+        </param-value>
+	</context-param>
+	<context-param>
+		<param-name>contextClass</param-name>
+		<param-value>com.oreumio.james.container.spring.context.web.JamesServerWebApplicationContext</param-value>
+	</context-param>
+
+	<!-- 인코딩 설정 -->
+	<filter>
+		<filter-name>encoding-filter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encoding-filter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+   <!-- security filter 설정 -->
+   <filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>*.do</url-pattern>
+	</filter-mapping>
+
+	<!-- shiro 설정
+	<filter>
+		<filter-name>shiroFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		<init-param>
+			<param-name>targetFilterLifecycle</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>shiroFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+ -->
+    <!-- Ajax Session Timeout을 체크하기 위한 설정 -->
+<!--
+    <filter>
+    	<filter-name>AjaxSessionTimeoutFilter</filter-name>
+    	<filter-class>com.oreumio.james.webmail.framework.filter.AjaxSessionTimeoutFilter</filter-class>
+    </filter>
+    <filter-mapping>
+    	<filter-name>AjaxSessionTimeoutFilter</filter-name>
+    	<url-pattern>/*</url-pattern>
+    </filter-mapping>
+-->
+
+	<!-- cors(Cross-Origin Resource Sharing) 설정  -->
     <filter>
         <filter-name>corsFilter</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>corsFilter</filter-name>
-        <servlet-name>rest</servlet-name>
+        <servlet-name>dispatcher</servlet-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+    
+    <!-- IE 호환성 보기 서버에서 해제를 위한 설정-->
+<!--
+    <filter>
+        <filter-name>IEFilter</filter-name>
+        <filter-class>com.oreumio.james.webmail.framework.filter.IEFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>IEFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>	
+-->
 
+<!--
+    <filter>
+    	<filter-name>emlSessionFilter</filter-name>
+    	<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+  	</filter>
+    	<filter-mapping>
+    	<filter-name>emlSessionFilter</filter-name>
+    	<url-pattern>/*</url-pattern>
+  	</filter-mapping>
+-->
+
+<!--
     <servlet>
-        <servlet-name>rest</servlet-name>
-        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-        <init-param>
-            <param-name>contextConfigLocation</param-name>
-            <param-value></param-value>
-        </init-param>
+        <servlet-name>WebAppLoad</servlet-name>
+        <servlet-class>com.oreumio.james.webmail.email.common.WebAppLoad</servlet-class>
         <load-on-startup>1</load-on-startup>
-    </servlet>
+	</servlet>
+-->
 
-    <servlet-mapping>
-        <servlet-name>rest</servlet-name>
-        <url-pattern>/rest/*</url-pattern>
+	<!-- WebApplicationContext 설정 -->
+	<servlet>
+		<servlet-name>dispatcher</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value></param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>	
+	<servlet-mapping>
+        <servlet-name>dispatcher</servlet-name>        
+        <url-pattern>*.do</url-pattern>
     </servlet-mapping>
 
+    <!-- session timeout -->
+    <session-config>
+        <session-timeout>360</session-timeout>
+    </session-config>
+
+	<!-- error 페이지 -->
+<!--
+	 <error-page>
+	    <location>/error.jsp</location>
+	</error-page>
+-->
 </web-app>
