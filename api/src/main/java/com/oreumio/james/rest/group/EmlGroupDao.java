@@ -1,5 +1,6 @@
 package com.oreumio.james.rest.group;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oreumio.james.util.IdProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +9,8 @@ import org.springframework.stereotype.Repository;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.List;
 
 /**
@@ -27,6 +30,8 @@ public class EmlGroupDao {
 
     @Resource(name = "idProvider")
     private IdProvider<String> idProvider;
+
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     /**
 	 * @param em EntityManager
@@ -55,17 +60,8 @@ public class EmlGroupDao {
         return groupList;
     }
 
-    public EmlGroup insert(String groupName, String clientId, String groupState, long groupQuota) {
-        EmlGroup emlGroup = new EmlGroup();
-        emlGroup.setId("G" + 1);
-        emlGroup.setName(groupName);
-        emlGroup.setClientId(clientId);
-        emlGroup.setState(groupState);
-        emlGroup.setQuota(groupQuota);
-        emlGroup.setConfig("{}");
-        emlGroup.setHost("oreumio.com");
+    public void insert(EmlGroup emlGroup) {
         em.persist(emlGroup);
-        return emlGroup;
     }
 
     public void delete(String groupId) {
@@ -73,9 +69,9 @@ public class EmlGroupDao {
         em.remove(emlGroup);
     }
 
-    public void updateName(String groupId, String groupName) {
+    public void updateDisplayName(String groupId, String displayName) {
         EmlGroup emlGroup = em.find(EmlGroup.class, groupId);
-        emlGroup.setName(groupName);
+        emlGroup.setDisplayName(displayName);
     }
 
     public void updateQuota(String groupId, long groupQuota) {

@@ -4,6 +4,7 @@ import com.oreumio.james.rest.user.EmlUserService;
 import com.oreumio.james.rest.user.EmlUserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -40,8 +41,8 @@ public class UserController {
 
     @RequestMapping("add")
     @ResponseBody
-    public EmlUserVo add(String name, String groupId, long quota) {
-        return userService.add(name, groupId, quota);
+    public EmlUserVo add(EmlUserVo emlUserVo) {
+        return userService.add(emlUserVo);
     }
 
     @RequestMapping("remove")

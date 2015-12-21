@@ -6,9 +6,10 @@ package com.oreumio.james.rest.group;
 public class EmlGroupVo {
     private String id;
     private String clientId;
-    private String name;
     private String state;
     private long quota;
+    private String displayName;
+    private EmlGroupConfigVo serverConfig;
 
     public EmlGroupVo() {
     }
@@ -16,9 +17,9 @@ public class EmlGroupVo {
     public EmlGroupVo(EmlGroup emlGroup) {
         id = emlGroup.getId();
         clientId = emlGroup.getClientId();
-        name = emlGroup.getName();
         state = emlGroup.getState();
         quota = emlGroup.getQuota();
+        displayName = emlGroup.getDisplayName();
     }
 
     public String getId() {
@@ -37,14 +38,6 @@ public class EmlGroupVo {
         this.clientId = clientId;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getState() {
         return state;
     }
@@ -59,5 +52,33 @@ public class EmlGroupVo {
 
     public void setQuota(long quota) {
         this.quota = quota;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public EmlGroupConfigVo getServerConfig() {
+        return serverConfig;
+    }
+
+    public void setServerConfig(EmlGroupConfigVo serverConfig) {
+        this.serverConfig = serverConfig;
+    }
+
+    @Override
+    public String toString() {
+        return "EmlGroupVo{" +
+                "id='" + id + '\'' +
+                ", clientId='" + clientId + '\'' +
+                ", state='" + state + '\'' +
+                ", quota=" + quota +
+                ", displayName='" + displayName + '\'' +
+                ", serverConfig=" + serverConfig +
+                '}';
     }
 }

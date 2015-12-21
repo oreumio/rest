@@ -49,6 +49,10 @@ public class EmlUserDao {
         return emlUser;
     }
 
+    public long selectMailUsage(String userId) {
+        return 0;
+    }
+
     public void deleteUser(String userName, String domainName) {
 
         EmlUser emlUser = em.createQuery("SELECT a FROM EmlUser a, EmlGroupDomain b WHERE a.groupId = b.groupId AND a.state = :state AND a.userName = :userName AND b.groupDomain = :domainName", EmlUser.class)
@@ -67,14 +71,9 @@ public class EmlUserDao {
         return userList;
     }
 
-    public EmlUser insert(String userName, String groupId, String userState, long userQuota) {
-        EmlUser emlUser = new EmlUser();
+    public EmlUser insert(EmlUserVo emlUserVo) {
+        EmlUser emlUser = new EmlUser(emlUserVo);
         emlUser.setId("U" + idProvider.next());
-        emlUser.setUserName(userName);
-        emlUser.setGroupId(groupId);
-        emlUser.setState(userState);
-        emlUser.setQuota(userQuota);
-        emlUser.setConfig("{}");
         em.persist(emlUser);
         return emlUser;
     }

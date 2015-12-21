@@ -25,7 +25,7 @@ public class EmlGroup implements Serializable {
     private String clientId;
 
 	@Column(name = "GROUP_DISPLAY_NAME", nullable = false)
-	private String name;
+	private String displayName;
 
     /**
      * 상태(N:정상,R:중지,D:삭제)
@@ -40,15 +40,30 @@ public class EmlGroup implements Serializable {
      * 설정값
      */
     @Lob
-    @Column(name = "GROUP_CONFIG", nullable = false)
-    private String config;
+    @Column(name = "GROUP_SERVER_CONFIG", nullable = false)
+    private String serverConfig;
+
+    @Lob
+    @Column(name = "GROUP_CLIENT_CONFIG", nullable = false)
+    private String clientConfig;
 
 	@Column(name = "GROUP_HOST", nullable = false)
 	private String host;
 
 	public EmlGroup() {
-
+        state = "R";
+        host = "oreumio.com";
+        serverConfig = "{}";
+        clientConfig = "{}";
 	}
+
+    public EmlGroup(EmlGroupVo emlGroupVo) {
+        this();
+        id = emlGroupVo.getId();
+        clientId = emlGroupVo.getClientId();
+        displayName = emlGroupVo.getDisplayName();
+        quota = emlGroupVo.getQuota();
+    }
 
     public String getId() {
         return id;
@@ -66,12 +81,12 @@ public class EmlGroup implements Serializable {
         this.clientId = clientId;
     }
 
-    public String getName() {
-        return name;
+    public String getDisplayName() {
+        return displayName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public String getState() {
@@ -90,12 +105,20 @@ public class EmlGroup implements Serializable {
         this.quota = quota;
     }
 
-    public String getConfig() {
-        return config;
+    public String getServerConfig() {
+        return serverConfig;
     }
 
-    public void setConfig(String config) {
-        this.config = config;
+    public void setServerConfig(String serverConfig) {
+        this.serverConfig = serverConfig;
+    }
+
+    public String getClientConfig() {
+        return clientConfig;
+    }
+
+    public void setClientConfig(String clientConfig) {
+        this.clientConfig = clientConfig;
     }
 
     public String getHost() {
@@ -111,10 +134,11 @@ public class EmlGroup implements Serializable {
         return "EmlGroup{" +
                 "id='" + id + '\'' +
                 ", clientId='" + clientId + '\'' +
-                ", name='" + name + '\'' +
+                ", displayName='" + displayName + '\'' +
                 ", state='" + state + '\'' +
                 ", quota=" + quota +
-                ", config='" + config + '\'' +
+                ", serverConfig='" + serverConfig + '\'' +
+                ", clientConfig='" + clientConfig + '\'' +
                 ", host='" + host + '\'' +
                 '}';
     }

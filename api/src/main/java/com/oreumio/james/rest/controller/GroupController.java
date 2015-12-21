@@ -2,6 +2,8 @@ package com.oreumio.james.rest.controller;
 
 import com.oreumio.james.rest.group.EmlGroupService;
 import com.oreumio.james.rest.group.EmlGroupVo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +18,8 @@ import java.util.List;
 @Controller
 @RequestMapping("group")
 public class GroupController {
+
+    private static Logger logger = LoggerFactory.getLogger(GroupController.class);
 
     @Autowired
     private EmlGroupService groupService;
@@ -34,8 +38,15 @@ public class GroupController {
 
     @RequestMapping("add")
     @ResponseBody
-    public EmlGroupVo add(String name, String clientId, long quota) {
-        return groupService.add(name, clientId, quota);
+    public EmlGroupVo add(EmlGroupVo emlGroupVo) {
+        logger.debug("" + emlGroupVo);
+        try {
+            groupService.add(emlGroupVo);
+            return emlGroupVo;
+        } catch (Exception e) {
+            logger.warn("에러가 발생했습니다.", e);
+            return null;
+        }
     }
 
     @RequestMapping("remove")
@@ -69,8 +80,8 @@ public class GroupController {
 
     @RequestMapping("addDomain")
     @ResponseBody
-    public void addDomain(String id, String domain) {
-        groupService.addDomain(id, domain);
+    public void addDomain(String groupId, String domainName) {
+        groupService.addDomain(groupId, domainName);
     }
 
     @RequestMapping("removeDomain")

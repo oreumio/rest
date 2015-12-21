@@ -7,6 +7,11 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class SessionUtil {
     public static SessionVo getSession(HttpServletRequest request) {
-        return null;
+        SessionVo sessionVo = (SessionVo) request.getSession().getAttribute("session");
+        if (sessionVo == null) {
+            sessionVo = new SessionVo("U1", "G1");
+            request.getSession().setAttribute("session", sessionVo);
+        }
+        return sessionVo;
     }
 }

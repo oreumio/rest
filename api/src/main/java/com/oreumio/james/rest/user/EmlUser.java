@@ -27,14 +27,17 @@ public class EmlUser implements Serializable {
 	/**
 	 * 고객 아이디
 	 */
-	@Column(name = "GROUP_ID", nullable = false, insertable = false, updatable = false, length = 30)
+	@Column(name = "GROUP_ID", nullable = false, length = 30)
 	private String groupId;
 
 	/**
 	 * 유저 아이디
 	 */
-	@Column(name = "USER_NAME", nullable = false, length = 30)
+	@Column(name = "USER_NAME", nullable = false)
 	private String userName;
+
+    @Column(name = "DOMAIN_NAME", nullable = false)
+    private String domainName;
 
     /** Hashed password */
     @Column(name = "PWD", nullable = false, length = 100)
@@ -45,6 +48,9 @@ public class EmlUser implements Serializable {
      */
     @Column(name = "PWD_HASH_ALGRTH", nullable = false, length = 30)
     private String alg;
+
+    @Column(name = "DISPLAY_NAME", nullable = false)
+    private String displayName;
 
 	/**
 	 * POP3 &amp;&amp; IMAP 사용여부
@@ -93,8 +99,12 @@ public class EmlUser implements Serializable {
 	 * 설정값
 	 */
 	@Lob
-	@Column(name = "USER_CONFIG")
-	private String config;
+	@Column(name = "USER_SERVER_CONFIG")
+	private String serverConfig;
+
+    @Lob
+    @Column(name = "USER_CLIENT_CONFIG")
+    private String clientConfig;
 
 	/**
 	 * 조직도 동기화 시간
@@ -112,8 +122,21 @@ public class EmlUser implements Serializable {
         socketEnabled = "Y";
         apprMailExceptYn = "N";
         mailAutodelExceptYn = "N";
-        config = "{}";
+        serverConfig = "{}";
+        clientConfig = "{}";
+        state = "R";
 	}
+
+    public EmlUser(EmlUserVo emlUserVo) {
+        this();
+        groupId = emlUserVo.getGroupId();
+        userName = emlUserVo.getUserName();
+        domainName = emlUserVo.getDomainName();
+        password = emlUserVo.getPassword();
+        displayName = emlUserVo.getDisplayName();
+        quota = emlUserVo.getQuota();
+        serverConfig = emlUserVo.getServerConfig();
+    }
 
 	/**
 	 * @return the id
@@ -221,21 +244,23 @@ public class EmlUser implements Serializable {
 		this.updDt = updDt;
 	}
 
-	/**
-	 * @return the config
-	 */
-	public String getConfig() {
-		return config;
-	}
+    public String getServerConfig() {
+        return serverConfig;
+    }
 
-	/**
-	 * @param config the config to set
-	 */
-	public void setConfig(String config) {
-		this.config = config;
-	}
+    public void setServerConfig(String serverConfig) {
+        this.serverConfig = serverConfig;
+    }
 
-	/**
+    public String getClientConfig() {
+        return clientConfig;
+    }
+
+    public void setClientConfig(String clientConfig) {
+        this.clientConfig = clientConfig;
+    }
+
+    /**
 	 * @return the orgRegDt
 	 */
 	public Date getOrgRegDt() {
@@ -265,6 +290,14 @@ public class EmlUser implements Serializable {
 		this.userName = userName;
 	}
 
+    public String getDomainName() {
+        return domainName;
+    }
+
+    public void setDomainName(String domainName) {
+        this.domainName = domainName;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -279,6 +312,14 @@ public class EmlUser implements Serializable {
 
     public void setAlg(String alg) {
         this.alg = alg;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     /**
@@ -302,7 +343,8 @@ public class EmlUser implements Serializable {
                 ", quota=" + quota +
                 ", attachmentMaxSize=" + attachmentMaxSize +
                 ", updDt=" + updDt +
-                ", config='" + config + '\'' +
+                ", serverConfig='" + serverConfig + '\'' +
+                ", clientConfig='" + clientConfig + '\'' +
                 ", orgRegDt=" + orgRegDt +
                 '}';
     }

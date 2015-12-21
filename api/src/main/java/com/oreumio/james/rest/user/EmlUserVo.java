@@ -10,6 +10,9 @@ public class EmlUserVo {
     private String id;
     private String groupId;
     private String userName;
+    private String domainName;
+    private String password;
+    private String displayName;
     private String socketEnabled;
     private String apprMailExceptYn;
     private String mailAutodelExceptYn;
@@ -17,7 +20,8 @@ public class EmlUserVo {
     private long quota;
     private long attachmentMaxSize;
     private Date updDt;
-    private String config;
+    private String serverConfig;
+    private String clientConfig;
     private Date orgRegDt;
 
     public EmlUserVo() {
@@ -27,6 +31,9 @@ public class EmlUserVo {
         id = emlUser.getId();
         groupId = emlUser.getGroupId();
         userName = emlUser.getUserName();
+        domainName = emlUser.getDomainName();
+        password = emlUser.getPassword();
+        displayName = emlUser.getDisplayName();
         socketEnabled = emlUser.getSocketEnabled();
         apprMailExceptYn = emlUser.getApprMailExceptYn();
         mailAutodelExceptYn = emlUser.getMailAutodelExceptYn();
@@ -34,7 +41,8 @@ public class EmlUserVo {
         quota = emlUser.getQuota();
         attachmentMaxSize = emlUser.getAttachmentMaxSize();
         updDt = emlUser.getUpdDt();
-        config = emlUser.getConfig();
+        serverConfig = emlUser.getServerConfig();
+        clientConfig = emlUser.getClientConfig();
         orgRegDt = emlUser.getOrgRegDt();
     }
 
@@ -60,6 +68,30 @@ public class EmlUserVo {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getDomainName() {
+        return domainName;
+    }
+
+    public void setDomainName(String domainName) {
+        this.domainName = domainName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public String getSocketEnabled() {
@@ -118,12 +150,20 @@ public class EmlUserVo {
         this.updDt = updDt;
     }
 
-    public String getConfig() {
-        return config;
+    public String getServerConfig() {
+        return serverConfig;
     }
 
-    public void setConfig(String config) {
-        this.config = config;
+    public void setServerConfig(String serverConfig) {
+        this.serverConfig = serverConfig;
+    }
+
+    public String getClientConfig() {
+        return clientConfig;
+    }
+
+    public void setClientConfig(String clientConfig) {
+        this.clientConfig = clientConfig;
     }
 
     public Date getOrgRegDt() {
@@ -140,6 +180,8 @@ public class EmlUserVo {
                 "id='" + id + '\'' +
                 ", groupId='" + groupId + '\'' +
                 ", userName='" + userName + '\'' +
+                ", domainName='" + domainName + '\'' +
+                ", displayName='" + displayName + '\'' +
                 ", socketEnabled='" + socketEnabled + '\'' +
                 ", apprMailExceptYn='" + apprMailExceptYn + '\'' +
                 ", mailAutodelExceptYn='" + mailAutodelExceptYn + '\'' +
@@ -147,7 +189,8 @@ public class EmlUserVo {
                 ", quota=" + quota +
                 ", attachmentMaxSize=" + attachmentMaxSize +
                 ", updDt=" + updDt +
-                ", config='" + config + '\'' +
+                ", serverConfig='" + serverConfig + '\'' +
+                ", clientConfig='" + clientConfig + '\'' +
                 ", orgRegDt=" + orgRegDt +
                 '}';
     }

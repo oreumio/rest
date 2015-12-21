@@ -115,6 +115,15 @@ public class EmlUserConfigVo {
         }
     }
 
+    public EmlUserConfigVo() {
+        useAbsence = "no";
+        useBlocker = "no";
+        useClassifier = "no";
+        useFooter = "no";
+        useForwarder = "no";
+        useLabeler = "no";
+    }
+
     public String getListDisplayType() {
         return listDisplayType;
     }

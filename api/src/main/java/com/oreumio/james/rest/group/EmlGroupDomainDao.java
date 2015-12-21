@@ -53,7 +53,7 @@ public class EmlGroupDomainDao {
 
     public EmlGroupDomain insert(String groupId, String groupDomain) {
         EmlGroupDomain emlGroupDomain = new EmlGroupDomain();
-        emlGroupDomain.setId("GD" + 1);
+        emlGroupDomain.setId("GD" + idProvider.next());
         emlGroupDomain.setGroupId(groupId);
         emlGroupDomain.setGroupDomain(groupDomain);
         em.persist(emlGroupDomain);

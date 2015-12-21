@@ -1,9 +1,14 @@
 package com.oreumio.james.rest.user;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.oreumio.james.util.IdProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,10 +20,15 @@ import java.util.List;
  * @author Jhonson choi (jhonsonchoi@gmail.com)
  */
 @Service
-public class EmlUserService {
+public class EmlUserService implements EmlUserSupportService {
 
     @Autowired
     private EmlUserDao userDao;
+
+    @Resource(name = "idProvider")
+    private IdProvider<String> idProvider;
+
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     public EmlUserVo get(String userId) {
         EmlUser emlUser = userDao.selectUser(userId);
@@ -40,8 +50,15 @@ public class EmlUserService {
     }
 
     @Transactional(value = "rest_tm")
-    public EmlUserVo add(String userName, String groupId, long userQuota) {
-        EmlUser emlUser = userDao.insert(userName, groupId, "R", userQuota);
+    public EmlUserVo add(EmlUserVo emlUserVo) {
+        StringWriter writer = new StringWriter();
+        try {
+            objectMapper.writeValue(writer, new EmlUserConfigVo());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        emlUserVo.setServerConfig(writer.toString());
+        EmlUser emlUser = userDao.insert(emlUserVo);
         return new EmlUserVo(emlUser);
     }
 
@@ -66,5 +83,12 @@ public class EmlUserService {
     public void changePassword(String userId, String password) {
         EmlUser emlUser = userDao.selectUser(userId);
         emlUser.setPassword(password);
+    }
+
+    @Override
+    public String getPersonal(String address, String lang) {
+        String userName = null, domainName = null;
+        EmlUserVo emlUserVo = get(userName, domainName);
+        return emlUserVo.getDisplayName();
     }
 }
