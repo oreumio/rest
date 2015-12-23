@@ -1,7 +1,7 @@
 package com.oreumio.james.rest.util;
 
 import com.oreumio.james.rest.AppException;
-import com.oreumio.james.rest.send.EmlAddressVo;
+import com.oreumio.james.rest.form.EmlAddressVo;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.lang.StringUtils;
@@ -213,7 +213,7 @@ public final class EmlMailUtil {
     	return matcher.replaceAll("");
     }
 
-    public static InternetAddress[] getInternetAddress(List<EmlAddressVo> emlAddressVos) throws UnsupportedEncodingException {
+    public static InternetAddress[] getInternetAddress(List<? extends EmlAddressVo> emlAddressVos) throws UnsupportedEncodingException {
         InternetAddress[] internetAddresses = new InternetAddress[emlAddressVos.size()];
 
         for (int i = 0; i < emlAddressVos.size(); i++) {

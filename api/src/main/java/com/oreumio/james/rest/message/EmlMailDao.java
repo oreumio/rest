@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
 /**
  * @author Jhonson choi (jhonsonchoi@gmail.com)
@@ -28,5 +29,11 @@ public class EmlMailDao {
 
     public void setIdProvider(IdProvider<String> idProvider) {
         this.idProvider = idProvider;
+    }
+
+    public List<EmlMail> list(long mailboxId) {
+        return em.createQuery("SELECT mail FROM EmlMail mail WHERE mail.mailboxId = :mailboxId")
+                .setParameter("mailboxId", mailboxId)
+                .getResultList();
     }
 }

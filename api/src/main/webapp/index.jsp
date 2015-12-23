@@ -24,6 +24,24 @@
             return false;
         });
 
+        $('#testJson').click(function () {
+            console.log('test json');
+            var data = [{
+                k1 : 'v1',
+                k2 : 'v2',
+                k3 : 'v3-1'
+            }];
+            $.ajax({
+                method: 'post',
+                url: "/my/to.do",
+                data: JSON.stringify(data),
+                success: function (r) {
+                    console.log(r);
+                },
+                dataType: 'json',
+                contentType: 'application/json'
+            });
+        });
     });
 
     function reqFromAnother() {
@@ -111,7 +129,10 @@
 <a href="/rest/mail/first">first</a>
 <a id="index_name">name</a>
 <p>
-<a id="addUser">테스트 사용자 추가</a>
+<input type="button" id="addUser" value="테스트 사용자 추가" />
+</p>
+<p>
+    <input type="button" id="testJson" value="JSON 테스트" />
 </p>
 </body>
 </html>

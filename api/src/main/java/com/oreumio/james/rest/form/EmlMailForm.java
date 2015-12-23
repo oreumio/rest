@@ -1,6 +1,11 @@
-package com.oreumio.james.rest.send;
+package com.oreumio.james.rest.form;
 
+import org.apache.commons.lang.StringUtils;
+
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -10,129 +15,191 @@ import java.util.List;
  *
  * @author Jhonson choi (jhonsonchoi@gmail.com)
  */
-public class EmlMailFormVo implements Serializable {
+@Entity
+@Table(name = "EML_MAIL_FORM")
+public class EmlMailForm implements Serializable {
 
 	private static final long serialVersionUID = 4397779894496831642L;
 
-	/**
+    @Id
+    @Column(name = "MAIL_FORM_ID", nullable = false, length = 30)
+    private String id;
+
+    /**
 	 * 발송자 이메일 아이디
 	 */
+    @Column(name = "USER_ID", nullable = false, length = 30)
 	private String userId;
 
 	/**
 	 * 제목
 	 */
+    @Column(name = "SUBJECT")
 	private String subject;
 
 	/**
 	 * 중요도
 	 */
+    @Column(name = "PRIORITY", length = 1)
 	private String priority;
 
 	/**
 	 *  개별발송 여부. 
 	 */
+    @Column(name = "SEPARATE", length = 1)
 	private String separateSendYn;
 
 	/** 대용량 메일 여부. */
+    @Column(name = "BIG_ATTACHMENT", length = 1)
 	private String massiveMailYn;
 
 	/** 비밀번호. */
+    @Column(name = "PASSWORD", length = 10)
 	private String password;
 
 	/** 보안메일 사용여부. */
+    @Column(name = "SECURED", length = 1)
 	private String passwordYn;
 
 	/** 메일 본문 내용. */
+    @Column(name = "CONTENT", length = 3000)
 	private String content;
 
+    @OneToMany(mappedBy = "mailForm", cascade = CascadeType.ALL)
 	/** 보내는 사람(이메일 주소). */
-	private EmlAddressVo mailFrom;
-	/**
-	 * 직위 및 부서 정보
-	 */
-	private String organizationInfo;
+	private List<EmlMailFormFrom> mailFrom;
 
 	/** 메일 to. */
-	private List<EmlAddressVo> mailTos;
+    @OneToMany(mappedBy = "mailForm", cascade = CascadeType.ALL)
+	private List<EmlMailFormTo> mailTo;
 
 	/** 메일 cc. */
-	private List<EmlAddressVo> mailCcs;
+    @OneToMany(mappedBy = "mailForm", cascade = CascadeType.ALL)
+	private List<EmlMailFormCc> mailCc;
 
 	/** 메일 bcc. */
-	private List<EmlAddressVo> mailBccs;
+    @OneToMany(mappedBy = "mailForm", cascade = CascadeType.ALL)
+	private List<EmlMailFormBcc> mailBcc;
 
 	/** 첨부파일 목록. */
-	private List<String> fileList;
+/*
+	private List<EmlFile> fileList;
+*/
 
 	/** 대용량 메일 첨부파일 다운로드 기한. */
-	private String fileDownEndDe;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "FILE_DOWNLOAD_EXP")
+	private Date fileDownEndDe;
 
 	/**
 	 * 메일 쓰기 모드
 	 * 쓰기:write,답변:reply,모두답변:allReply,전달:forward
 	 * 재발송:resend,임시저장:temp,예약메일:reserv
 	 */
+    @Column(name = "MODE")
 	private String mode;
 
 	/** 메일 전송후 이동할 페이지 코드값. */
+    @Column(name = "AFTER_PAGE")
 	private String afterPage;
 
 	/** 예약날짜(2013-12-04). */
-	private String reservDt;
-
-	/** 예약 시간(17:33). */
-	private String reservTime;
+    @Temporal(TemporalType.DATE)
+    @Column(name = "SEND_DATE")
+	private Date reservDt;
 
     /** 예약메일 기준시간 정보(GMT+09:00). */
+    @Column(name = "TIMEZONE")
     private String timeZoneId;
 
     /**
      * 예약메일, 임시보관함 메일의 수정전 메일이나 전달시 기존 메일 정보
      */
-    private List<EmlMailKeyVo> mailIdList;
-
-    /**
-     * 그룹 아이디
-     */
-    private String groupId;
+    @Column(name = "MAIL_LIST")
+    private String mailIdList;
 
     /** 
      * 보안 메일 조회 만료 기한.
      */
-	private String storeExpireDe;
+    @Temporal(TemporalType.DATE)
+    @Column(name = "SECURITY_EXP")
+	private Date storeExpireDe;
 
 	/**
 	 * 수신확인 응답 메일 받기 여부
 	 */
+    @Column(name = "MDN_REQUEST", length = 1)
 	private String mailReadRecpinYn;
-
-	/**
-	 * 발송자 이메일
-	 */
-	private String email;
 
 	/**
 	 * 다국어 코드
 	 */
+    @Column(name = "LANG_CODE", length = 10)
 	private String langCd;
-
-	/**
-	 * 그룹웨어 URL
-	 */
-	private String gwUrl;
 
 	/**
 	 * 발송자 아이피
 	 */
+    @Column(name = "REMOTE_ADDRESS", length = 30)
 	private String remoteAddr;
 
-	/**
-	 * 친구 맺기 수신 여부
-	 */
-	private String buddyJoinRecpinYn;
+    public EmlMailForm() {
+    }
 
-	/**
+    public EmlMailForm(EmlMailFormVo emlMailFormVo) {
+        userId = emlMailFormVo.getUserId();
+        subject = emlMailFormVo.getSubject();
+        priority = emlMailFormVo.getPriority();
+        separateSendYn = emlMailFormVo.getSeparateSendYn();
+        massiveMailYn = emlMailFormVo.getMassiveMailYn();
+        password = emlMailFormVo.getPassword();
+        passwordYn = emlMailFormVo.getPasswordYn();
+        content = emlMailFormVo.getContent();
+        mailFrom = new ArrayList<EmlMailFormFrom>();
+        for (EmlMailFormFromVo emlAddressVo : emlMailFormVo.getMailFrom()) {
+            EmlMailFormFrom emlMailFormFrom = new EmlMailFormFrom(emlAddressVo);
+            emlMailFormFrom.setMailForm(this);
+            mailFrom.add(emlMailFormFrom);
+
+        }
+        mailTo = new ArrayList<EmlMailFormTo>();
+        for (EmlMailFormToVo emlAddressVo : emlMailFormVo.getMailTo()) {
+            EmlMailFormTo emlMailFormTo = new EmlMailFormTo(emlAddressVo);
+            emlMailFormTo.setMailForm(this);
+            mailTo.add(emlMailFormTo);
+        }
+        mailCc = new ArrayList<EmlMailFormCc>();
+        for (EmlMailFormCcVo emlAddressVo : emlMailFormVo.getMailCc()) {
+            EmlMailFormCc emlMailFormCc = new EmlMailFormCc(emlAddressVo);
+            emlMailFormCc.setMailForm(this);
+            mailCc.add(emlMailFormCc);
+        }
+        mailBcc = new ArrayList<EmlMailFormBcc>();
+        for (EmlMailFormBccVo emlAddressVo : emlMailFormVo.getMailBcc()) {
+            EmlMailFormBcc emlMailFormBcc = new EmlMailFormBcc(emlAddressVo);
+            emlMailFormBcc.setMailForm(this);
+            mailBcc.add(emlMailFormBcc);
+        }
+//        fileList = null;
+        fileDownEndDe = emlMailFormVo.getFileDownEndDe();
+        mode = emlMailFormVo.getMode();
+        afterPage = emlMailFormVo.getAfterPage();
+        reservDt = emlMailFormVo.getReservDt();
+        timeZoneId = emlMailFormVo.getTimeZoneId();
+        mailIdList = null;
+        storeExpireDe = emlMailFormVo.getStoreExpireDe();
+        mailReadRecpinYn = emlMailFormVo.getMailReadRecpinYn();
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    /**
 	 * @return the userId
 	 */
 	public String getUserId() {
@@ -250,56 +317,46 @@ public class EmlMailFormVo implements Serializable {
 	/**
 	 * @return the mailFrom
 	 */
-	public EmlAddressVo getMailFrom() {
+	public List<EmlMailFormFrom> getMailFrom() {
 		return mailFrom;
 	}
 
 	/**
 	 * @param mailFrom the mailFrom to set
 	 */
-	public void setMailFrom(EmlAddressVo mailFrom) {
+	public void setMailFrom(List<EmlMailFormFrom> mailFrom) {
 		this.mailFrom = mailFrom;
-	}
-
-	/**
-	 * @return the organizationInfo
-	 */
-	public String getOrganizationInfo() {
-		return organizationInfo;
-	}
-
-	/**
-	 * @param organizationInfo the organizationInfo to set
-	 */
-	public void setOrganizationInfo(String organizationInfo) {
-		this.organizationInfo = organizationInfo;
 	}
 
 	/**
 	 * @return the fileList
 	 */
-	public List<String> getFileList() {
+/*
+	public List<EmlFile> getFileList() {
 		return fileList;
 	}
+*/
 
 	/**
 	 * @param fileList the fileList to set
 	 */
-	public void setFileList(List<String> fileList) {
+/*
+	public void setFileList(List<EmlFile> fileList) {
 		this.fileList = fileList;
 	}
+*/
 
 	/**
 	 * @return the fileDownEndDe
 	 */
-	public String getFileDownEndDe() {
+	public Date getFileDownEndDe() {
 		return fileDownEndDe;
 	}
 
 	/**
 	 * @param fileDownEndDe the fileDownEndDe to set
 	 */
-	public void setFileDownEndDe(String fileDownEndDe) {
+	public void setFileDownEndDe(Date fileDownEndDe) {
 		this.fileDownEndDe = fileDownEndDe;
 	}
 
@@ -334,29 +391,15 @@ public class EmlMailFormVo implements Serializable {
 	/**
 	 * @return the reservDt
 	 */
-	public String getReservDt() {
+	public Date getReservDt() {
 		return reservDt;
 	}
 
 	/**
 	 * @param reservDt the reservDt to set
 	 */
-	public void setReservDt(String reservDt) {
+	public void setReservDt(Date reservDt) {
 		this.reservDt = reservDt;
-	}
-
-	/**
-	 * @return the reservTime
-	 */
-	public String getReservTime() {
-		return reservTime;
-	}
-
-	/**
-	 * @param reservTime the reservTime to set
-	 */
-	public void setReservTime(String reservTime) {
-		this.reservTime = reservTime;
 	}
 
 	/**
@@ -376,85 +419,71 @@ public class EmlMailFormVo implements Serializable {
 	/**
 	 * @return the mailIdList
 	 */
-	public List<EmlMailKeyVo> getMailIdList() {
-		return mailIdList;
+	public String getMailIdList() {
+		return StringUtils.defaultString(mailIdList);
 	}
 
 	/**
 	 * @param mailIdList the mailIdList to set
 	 */
-	public void setMailIdList(List<EmlMailKeyVo> mailIdList) {
+	public void setMailIdList(String mailIdList) {
 		this.mailIdList = mailIdList;
-	}
-
-	/**
-	 * @return the groupId
-	 */
-	public String getCmpId() {
-		return groupId;
-	}
-
-	/**
-	 * @param groupId the groupId to set
-	 */
-	public void setGroupId(String groupId) {
-		this.groupId = groupId;
 	}
 
 	/**
 	 * @return the storeExpireDe
 	 */
-	public String getStoreExpireDe() {
+	public Date getStoreExpireDe() {
 		return storeExpireDe;
 	}
 
 	/**
 	 * @param storeExpireDe the storeExpireDe to set
 	 */
-	public void setStoreExpireDe(String storeExpireDe) {
+	public void setStoreExpireDe(Date storeExpireDe) {
 		this.storeExpireDe = storeExpireDe;
 	}
 
 	/**
-	 * @return the mailTos
+	 * @return the mailTo
 	 */
-	public List<EmlAddressVo> getMailTos() {
-		return mailTos;
+	public List<EmlMailFormTo> getMailTo() {
+		return mailTo;
 	}
 
 	/**
-	 * @param mailTos the mailTos to set
+	 * @param mailTo the mailTo to set
 	 */
-	public void setMailTos(List<EmlAddressVo> mailTos) {
-		this.mailTos = mailTos;
+	public void setMailTo(List<EmlMailFormTo> mailTo) {
+		this.mailTo = mailTo;
 	}
 
 	/**
-	 * @return the mailCcs
+	 * @return the mailCc
 	 */
-	public List<EmlAddressVo> getMailCcs() {
-		return mailCcs;
+	public List<EmlMailFormCc> getMailCc() {
+		return mailCc;
 	}
 
 	/**
-	 * @param mailCcs the mailCcs to set
+	 * @param mailCc the mailCc to set
 	 */
-	public void setMailCcs(List<EmlAddressVo> mailCcs) {
-		this.mailCcs = mailCcs;
+	public void setMailCc(List<EmlMailFormCc> mailCc) {
+		this.mailCc = mailCc;
 	}
 
 	/**
-	 * @return the mailBccs
+	 * @return the mailBcc
 	 */
-	public List<EmlAddressVo> getMailBccs() {
-		return mailBccs;
+	public List<EmlMailFormBcc> getMailBcc() {
+		return mailBcc;
 	}
 
 	/**
-	 * @param mailBccs the mailBccs to set
+	 * @param mailBcc the mailBcc to set
 	 */
-	public void setMailBccs(List<EmlAddressVo> mailBccs) {
-		this.mailBccs = mailBccs;
+	public void setMailBcc(List<EmlMailFormBcc> mailBcc) {
+		this.mailBcc = mailBcc;
 	}
 
 	/**
@@ -472,20 +501,6 @@ public class EmlMailFormVo implements Serializable {
 	}
 
 	/**
-	 * @return the email
-	 */
-	public String getEmail() {
-		return email;
-	}
-
-	/**
-	 * @param email the email to set
-	 */
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	/**
 	 * @return the langCd
 	 */
 	public String getLangCd() {
@@ -497,20 +512,6 @@ public class EmlMailFormVo implements Serializable {
 	 */
 	public void setLangCd(String langCd) {
 		this.langCd = langCd;
-	}
-
-	/**
-	 * @return the gwUrl
-	 */
-	public String getGwUrl() {
-		return gwUrl;
-	}
-
-	/**
-	 * @param gwUrl the gwUrl to set
-	 */
-	public void setGwUrl(String gwUrl) {
-		this.gwUrl = gwUrl;
 	}
 
 	/**
@@ -527,24 +528,11 @@ public class EmlMailFormVo implements Serializable {
 		this.remoteAddr = remoteAddr;
 	}
 
-	/**
-	 * @return the buddyJoinRecpinYn
-	 */
-	public String getBuddyJoinRecpinYn() {
-		return buddyJoinRecpinYn;
-	}
-
-	/**
-	 * @param buddyJoinRecpinYn the buddyJoinRecpinYn to set
-	 */
-	public void setBuddyJoinRecpinYn(String buddyJoinRecpinYn) {
-		this.buddyJoinRecpinYn = buddyJoinRecpinYn;
-	}
-
     @Override
     public String toString() {
-        return "EmlMailFormVo{" +
-                "userId='" + userId + '\'' +
+        return "EmlMailForm{" +
+                "id='" + id + '\'' +
+                ", userId='" + userId + '\'' +
                 ", subject='" + subject + '\'' +
                 ", priority='" + priority + '\'' +
                 ", separateSendYn='" + separateSendYn + '\'' +
@@ -552,27 +540,20 @@ public class EmlMailFormVo implements Serializable {
                 ", password='" + password + '\'' +
                 ", passwordYn='" + passwordYn + '\'' +
                 ", content='" + content + '\'' +
-                ", mailFrom='" + mailFrom + '\'' +
-                ", organizationInfo='" + organizationInfo + '\'' +
-                ", mailTos='" + mailTos + '\'' +
-                ", mailCcs='" + mailCcs + '\'' +
-                ", mailBccs='" + mailBccs + '\'' +
-                ", fileList=" + fileList +
+                ", mailFrom=" + mailFrom +
+                ", mailTo=" + mailTo +
+                ", mailCc=" + mailCc +
+                ", mailBcc=" + mailBcc +
                 ", fileDownEndDe='" + fileDownEndDe + '\'' +
                 ", mode='" + mode + '\'' +
                 ", afterPage='" + afterPage + '\'' +
                 ", reservDt='" + reservDt + '\'' +
-                ", reservTime='" + reservTime + '\'' +
                 ", timeZoneId='" + timeZoneId + '\'' +
                 ", mailIdList='" + mailIdList + '\'' +
-                ", groupId='" + groupId + '\'' +
                 ", storeExpireDe='" + storeExpireDe + '\'' +
                 ", mailReadRecpinYn='" + mailReadRecpinYn + '\'' +
-                ", email='" + email + '\'' +
                 ", langCd='" + langCd + '\'' +
-                ", gwUrl='" + gwUrl + '\'' +
                 ", remoteAddr='" + remoteAddr + '\'' +
-                ", buddyJoinRecpinYn='" + buddyJoinRecpinYn + '\'' +
                 '}';
     }
 }

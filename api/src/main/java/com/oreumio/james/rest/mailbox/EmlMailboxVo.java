@@ -35,6 +35,14 @@ public class EmlMailboxVo {
     public EmlMailboxVo() {
     }
 
+    public EmlMailboxVo(EmlMailbox emlMailbox) {
+        mailboxName = emlMailbox.getName();
+        size = emlMailbox.getUsed();
+        count = emlMailbox.getCount();
+        unseenCount = emlMailbox.getUnread();
+        mailboxOrder = emlMailbox.getOrder();
+    }
+
     public String getMailboxName() {
         return mailboxName;
     }

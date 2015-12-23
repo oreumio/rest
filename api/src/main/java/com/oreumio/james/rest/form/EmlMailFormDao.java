@@ -1,4 +1,4 @@
-package com.oreumio.james.rest.send;
+package com.oreumio.james.rest.form;
 
 import com.oreumio.james.util.IdProvider;
 import org.springframework.stereotype.Repository;
@@ -38,15 +38,16 @@ public class EmlMailFormDao {
         return emlMailFormList;
     }
 
-    public EmlMailForm insert(EmlMailFormVo emlMailFormVo) {
-        EmlMailForm emlMailForm = new EmlMailForm(emlMailFormVo);
-        em.persist(emlMailForm);
+    public EmlMailForm select(String userId, String mailFormId) {
+        EmlMailForm emlMailForm = em.createQuery("SELECT mailForm FROM EmlMailForm mailForm WHERE mailForm.userId = :userId and mailForm.id = :mailFormId", EmlMailForm.class)
+                .setParameter("userId", userId)
+                .setParameter("mailFormId", mailFormId)
+                .getSingleResult();
         return emlMailForm;
     }
 
-    public EmlMailForm select(String mailFormId) {
-        EmlMailForm emlMailForm = em.find(EmlMailForm.class, mailFormId);
-        return emlMailForm;
+    public void insert(EmlMailForm emlMailForm) {
+        em.persist(emlMailForm);
     }
 
     public void delete(EmlMailForm emlMailForm) {

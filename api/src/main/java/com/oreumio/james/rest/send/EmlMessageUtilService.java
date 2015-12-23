@@ -2,8 +2,7 @@ package com.oreumio.james.rest.send;
 
 import com.oreumio.james.rest.AppException;
 import com.oreumio.james.rest.file.EmlFile;
-import com.oreumio.james.rest.file.EmlFileVo;
-import com.oreumio.james.rest.util.DateUtil;
+import com.oreumio.james.rest.form.EmlMailFormVo;
 import com.oreumio.james.rest.util.EmlMailUtil;
 import com.oreumio.james.util.IdProvider;
 import org.apache.commons.lang.StringUtils;
@@ -203,8 +202,8 @@ public class EmlMessageUtilService {
         setReceivedDate(message, mailFormVo.getRemoteAddr());
 
 		// 보낸 사람 조직도 정보
-		if (StringUtils.isNotEmpty(mailFormVo.getMailFrom().getPersonal())) {
-			InternetAddress orgAddress = new InternetAddress(mailFormVo.getMailFrom().getAddress(), mailFormVo.getMailFrom().getPersonal(), "utf-8");
+		if (StringUtils.isNotEmpty(mailFormVo.getMailFrom().get(0).getPersonal())) {
+			InternetAddress orgAddress = new InternetAddress(mailFormVo.getMailFrom().get(0).getAddress(), mailFormVo.getMailFrom().get(0).getPersonal(), "utf-8");
 			message.setHeader("X-From", orgAddress.toString());
 		}
 
@@ -224,19 +223,19 @@ public class EmlMessageUtilService {
 
         // From
 		InternetAddress fromAddress = null;
-		if (StringUtils.isNotEmpty(mailFormVo.getMailFrom().getPersonal())) {
-			fromAddress = new InternetAddress(mailFormVo.getMailFrom().getAddress(), mailFormVo.getMailFrom().getPersonal(), "utf-8");
+		if (StringUtils.isNotEmpty(mailFormVo.getMailFrom().get(0).getPersonal())) {
+			fromAddress = new InternetAddress(mailFormVo.getMailFrom().get(0).getAddress(), mailFormVo.getMailFrom().get(0).getPersonal(), "utf-8");
 		} else {
-			fromAddress = new InternetAddress(mailFormVo.getMailFrom().getAddress());
+			fromAddress = new InternetAddress(mailFormVo.getMailFrom().get(0).getAddress());
 		}
 		message.setFrom(fromAddress);
 
 		// To
-		if (mailFormVo.getMailTos() != null && mailFormVo.getMailTos().size() > 0) {
+		if (mailFormVo.getMailTo() != null && mailFormVo.getMailTo().size() > 0) {
 			InternetAddress[] toAddress = null;
 
 			try {
-				toAddress = EmlMailUtil.getInternetAddress(mailFormVo.getMailTos());
+				toAddress = EmlMailUtil.getInternetAddress(mailFormVo.getMailTo());
 			} catch (UnsupportedEncodingException e) {
                 /*"이메일 주소 형식이 올바르지 않습니다."*/
 				throw new AppException(messageSource.getMessage("mail.desc.incorrectEmailAddressType", null, "",
@@ -246,11 +245,11 @@ public class EmlMessageUtilService {
 			message.setRecipients(Message.RecipientType.TO,	toAddress);
 		}
 
-		if (mailFormVo.getMailCcs() != null && mailFormVo.getMailCcs().size() > 0) {
+		if (mailFormVo.getMailCc() != null && mailFormVo.getMailCc().size() > 0) {
 			InternetAddress[] ccAddress = null;
 
 			try {
-				ccAddress = EmlMailUtil.getInternetAddress(mailFormVo.getMailCcs());
+				ccAddress = EmlMailUtil.getInternetAddress(mailFormVo.getMailCc());
 			} catch (UnsupportedEncodingException e) {
                 /*"이메일 주소 형식이 올바르지 않습니다."*/
 

@@ -90,10 +90,16 @@
         <class>com.oreumio.james.rest.org.EmlUserOrg</class>
         <class>com.oreumio.james.rest.org.EmlOrgSystem</class>
         <class>com.oreumio.james.rest.org.EmlOrgSystemUnit</class>
-        <class>com.oreumio.james.rest.send.EmlMailForm</class>
         <class>com.oreumio.james.rest.send.EmlRecentlyUsedRecipient</class>
         <class>com.oreumio.james.rest.send.EmlReadConfirm</class>
         <class>com.oreumio.james.rest.send.EmlReadConfirmMail</class>
+        <class>com.oreumio.james.rest.mailbox.EmlMailbox</class>
+        <class>com.oreumio.james.rest.message.EmlMail</class>
+        <class>com.oreumio.james.rest.form.EmlMailForm</class>
+        <class>com.oreumio.james.rest.form.EmlMailFormFrom</class>
+        <class>com.oreumio.james.rest.form.EmlMailFormTo</class>
+        <class>com.oreumio.james.rest.form.EmlMailFormCc</class>
+        <class>com.oreumio.james.rest.form.EmlMailFormBcc</class>
         <class>com.oreumio.james.webmail.email.model.EmlUser</class>
         <class>com.oreumio.james.webmail.email.model.EmlGroup</class>
         <class>com.oreumio.james.webmail.email.model.EmlMessage</class>
@@ -125,7 +131,9 @@
 
         <exclude-unlisted-classes/>
         <properties>
+<!--
             <property name="hibernate.hbm2ddl.auto" value="create"/>
+-->
         </properties>
 
     </persistence-unit>

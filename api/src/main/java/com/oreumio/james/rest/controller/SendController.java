@@ -1,6 +1,6 @@
 package com.oreumio.james.rest.controller;
 
-import com.oreumio.james.rest.send.EmlMailFormVo;
+import com.oreumio.james.rest.form.EmlMailFormVo;
 import com.oreumio.james.rest.send.SendService;
 import com.oreumio.james.rest.session.SessionUtil;
 import com.oreumio.james.rest.session.SessionVo;

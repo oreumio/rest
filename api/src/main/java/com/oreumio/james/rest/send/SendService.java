@@ -11,6 +11,7 @@ import com.oreumio.james.repository.SingletonRepository;
 import com.oreumio.james.rest.AppException;
 import com.oreumio.james.rest.file.EmlFile;
 import com.oreumio.james.rest.file.EmlFileDao;
+import com.oreumio.james.rest.form.*;
 import com.oreumio.james.rest.message.EmlMailDao;
 import com.oreumio.james.rest.user.EmlUser;
 import com.oreumio.james.rest.user.EmlUserDao;
@@ -47,12 +48,9 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.mail.Address;
 import javax.mail.Flags;
-import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.*;
 import java.io.*;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.util.*;
 
@@ -208,7 +206,7 @@ public class SendService {
             StringWriter errors = new StringWriter();
             e.printStackTrace(new PrintWriter(errors));
             try {
-                sendSystemMessage(emlMailFormVo.getUserId(), emlMailFormVo.getMailFrom().getAddress(),
+                sendSystemMessage(emlMailFormVo.getUserId(), emlMailFormVo.getMailFrom().get(0).getAddress(),
                         "[시스템 메일]메일 발송중 오류가 발생했습니다.", "-------------에러 메세지-------------<br><br>" + errors.toString(), null);
             } catch (MessagingException e1) {
                 e1.printStackTrace();
@@ -288,7 +286,7 @@ public class SendService {
 
         // 발신자 이름 검사
 
-        String mailFromName = StringUtils.defaultString(emlMailFormVo.getMailFrom().getPersonal()); //보내는 사람 이름
+        String mailFromName = StringUtils.defaultString(emlMailFormVo.getMailFrom().get(0).getPersonal()); //보내는 사람 이름
 
         if (StringUtils.contains(mailFromName, "\"")) {
             //throw new AppException("보내는 이름에 입력할 수 없는 특수문자가 포함되어 있습니다.");
@@ -296,7 +294,7 @@ public class SendService {
 
         // 수신자 검사
 
-        if (emlMailFormVo.getMailTos() == null && emlMailFormVo.getMailTos().size() > 0) {
+        if (emlMailFormVo.getMailTo() == null || emlMailFormVo.getMailTo().size() == 0) {
 			// "받는 사람이 정상적으로 지정되지 않았습니다."
             throw new AppException(messageSource.getMessage("mail.desc.notAssignReceiverPlz", null, "",
                     LocaleContextHolder.getLocale()));
@@ -313,7 +311,7 @@ public class SendService {
         // 최근 수신자로 저장할 주소 추출
         // 사용자가 입력한 주소 그대로 최근 수신자로 추출
 
-        List<String> mailToList = gatherRecentlyUsedRecipients(emlMailFormVo.getMailTos(), emlMailFormVo.getMailCcs(), emlMailFormVo.getMailBccs());
+        List<String> mailToList = gatherRecentlyUsedRecipients(emlMailFormVo.getMailTo(), emlMailFormVo.getMailCc(), emlMailFormVo.getMailBcc());
 
         //최근 수신자 저장
         updateRecentlyUsedRecipient(emlMailFormVo.getUserId(), mailToList);
@@ -375,8 +373,8 @@ public class SendService {
             for (EmlMailKey mailPathVo : emlMailDao.selectMailPathByIds(Arrays.asList(emlMailFormVo.getMailIdList().split(",")))) {
                 multiMap.put(mailPathVo.getMailboxName(), mailPathVo.getUid());
             }
-*/
             emlMailboxUtilService.setFlags(emlMailFormVo.getEmail(), multiMap, new Flags(Flags.Flag.ANSWERED), true);
+*/
         } else if ("forward".equals(mode)) { //전달일 경우 기존 메일의 DB 전달 상태 변경
 /*
             emlMailDao.updateMailForwardStatus(Arrays.asList(emlMailFormVo.getMailIdList().split(",")));
@@ -390,8 +388,8 @@ public class SendService {
                 for (EmlMailKey mailPathVo : emlMailDao.selectMailPathByIds(mailIdList)) {
                     multiMap.put(mailPathVo.getMailboxName(), mailPathVo.getUid());
                 }
-*/
                 emlMailboxUtilService.expungeWithoutBackup(emlMailFormVo.getEmail(), multiMap);
+*/
             }
         }
 
@@ -417,18 +415,18 @@ public class SendService {
         // 입력할 때 모두 결정해서 보내는 것이 맞기 때문에 언어 설정은 필요 없다.
     }
 
-    private List<String> gatherRecentlyUsedRecipients(List<EmlAddressVo> to, List<EmlAddressVo> cc, List<EmlAddressVo> bcc) {
+    private List<String> gatherRecentlyUsedRecipients(List<EmlMailFormToVo> to, List<EmlMailFormCcVo> cc, List<EmlMailFormBccVo> bcc) {
         List<String> addressList = new ArrayList<String>();
-        for (EmlAddressVo emlAddressVo : to) {
+        for (EmlMailFormToVo emlAddressVo : to) {
             addressList.add(emlAddressVo.getAddress());
         }
         if (cc != null) {
-            for (EmlAddressVo emlAddressVo : cc) {
+            for (EmlMailFormCcVo emlAddressVo : cc) {
                 addressList.add(emlAddressVo.getAddress());
             }
         }
         if (bcc != null) {
-            for (EmlAddressVo emlAddressVo : bcc) {
+            for (EmlMailFormBccVo emlAddressVo : bcc) {
                 addressList.add(emlAddressVo.getAddress());
             }
         }
@@ -440,7 +438,7 @@ public class SendService {
 
         // 예약 시각 검사
 
-        if (StringUtils.isEmpty(emlMailFormVo.getReservDt()) || StringUtils.isEmpty(emlMailFormVo.getReservTime())) {
+        if (emlMailFormVo.getReservDt() == null) {
             // "받는 사람이 정상적으로 지정되지 않았습니다."
             throw new AppException(messageSource.getMessage("mail.desc.notAssignReceiverPlz", null, "",
                     LocaleContextHolder.getLocale()));
@@ -456,7 +454,7 @@ public class SendService {
 
         // 발신자 이름 검사
 
-        String mailFromName = StringUtils.defaultString(emlMailFormVo.getMailFrom().getPersonal()); //보내는 사람 이름
+        String mailFromName = StringUtils.defaultString(emlMailFormVo.getMailFrom().get(0).getPersonal()); //보내는 사람 이름
 
         if (StringUtils.contains(mailFromName, "\"")) {
             //throw new AppException("보내는 이름에 입력할 수 없는 특수문자가 포함되어 있습니다.");
@@ -464,7 +462,7 @@ public class SendService {
 
         // 수신자 검사
 
-        if (emlMailFormVo.getMailTos() == null && emlMailFormVo.getMailTos().size() > 0) {
+        if (emlMailFormVo.getMailTo() == null || emlMailFormVo.getMailTo().size() == 0) {
             // "받는 사람이 정상적으로 지정되지 않았습니다."
             throw new AppException(messageSource.getMessage("mail.desc.notAssignReceiverPlz", null, "",
                     LocaleContextHolder.getLocale()));
@@ -485,7 +483,7 @@ public class SendService {
         // 최근 수신자로 저장할 주소 추출
         // 사용자가 입력한 주소 그대로 최근 수신자로 추출
 
-        List<String> mailToList = gatherRecentlyUsedRecipients(emlMailFormVo.getMailTos(), emlMailFormVo.getMailCcs(), emlMailFormVo.getMailBccs());
+        List<String> mailToList = gatherRecentlyUsedRecipients(emlMailFormVo.getMailTo(), emlMailFormVo.getMailCc(), emlMailFormVo.getMailBcc());
 
         //최근 수신자 저장
         updateRecentlyUsedRecipient(emlMailFormVo.getUserId(), mailToList);
@@ -504,7 +502,7 @@ public class SendService {
         }
 
         //예약 메일함에 저장
-        emlMailFormDao.insert(emlMailFormVo);
+        emlMailFormDao.insert(new EmlMailForm(emlMailFormVo));
 
         return null; //result;
     }
@@ -526,12 +524,12 @@ public class SendService {
         if (!"Y".equals(emlMailFormVo.getSeparateSendYn())) { //일반 발송
             mailList.addAll(internalGenerateMail(emlMailFormVo));
         } else { // 개별 발송
-            List<EmlAddressVo> to = emlMailFormVo.getMailTos();
+            List<EmlMailFormToVo> to = emlMailFormVo.getMailTo();
 
-            for (EmlAddressVo emlAddressVo : to) {
-                List<EmlAddressVo> newTo = new ArrayList<EmlAddressVo>();
+            for (EmlMailFormToVo emlAddressVo : to) {
+                List<EmlMailFormToVo> newTo = new ArrayList<EmlMailFormToVo>();
                 newTo.add(emlAddressVo);
-                emlMailFormVo.setMailTos(newTo);
+                emlMailFormVo.setMailTo(newTo);
                 mailList.addAll(internalGenerateMail(emlMailFormVo));
             }
         }
@@ -545,17 +543,23 @@ public class SendService {
         List<MailImpl> mailList = new ArrayList<MailImpl>();
 
         // 메일 송신자
-        MailAddress sender = new MailAddress(emlMailFormVo.getMailFrom().getAddress());
+        MailAddress sender = new MailAddress(emlMailFormVo.getMailFrom().get(0).getAddress());
 
         // 메일 수신자
         List<MailAddress> recipients;
 
-        List<EmlAddressVo> to = new ArrayList<EmlAddressVo>();
-        to.addAll(emlMailFormVo.getMailTos());
-        to.addAll(emlMailFormVo.getMailCcs());
-        to.addAll(emlMailFormVo.getMailBccs());
+        List<String> to = new ArrayList<String>();
+        for (EmlMailFormToVo emlMailFormToVo : emlMailFormVo.getMailTo()) {
+            to.add(emlMailFormToVo.getAddress());
+        }
+        for (EmlMailFormCcVo emlMailFormCcVo : emlMailFormVo.getMailCc()) {
+            to.add(emlMailFormCcVo.getAddress());
+        }
+        for (EmlMailFormBccVo emlMailFormBccVo : emlMailFormVo.getMailBcc()) {
+            to.add(emlMailFormBccVo.getAddress());
+        }
 
-        for (EmlAddressVo emlAddressVo : to) {
+        for (String address : to) {
 
             // 읽음 확인 아이디 생성
 
@@ -568,7 +572,7 @@ public class SendService {
             // Mail 객체 생성
 
             recipients = new ArrayList<MailAddress>();
-            recipients.add(new MailAddress(emlAddressVo.getAddress()));
+            recipients.add(new MailAddress(address));
 
             MailImpl mail = new MailImpl(MailImpl.getId(), sender, recipients, new MimeMessageCopyOnWriteProxy(message));
             mail.setAttribute("groupid", "G1");
@@ -998,7 +1002,11 @@ public class SendService {
 		/*"(시스템메일)메일 발송 결과 보고입니다."*/
         emlMailFormVo.setSubject(messageSource.getMessage("mail.desc.systemMailSendResultReportPlz", null, "", locale));
         emlMailFormVo.setPriority("3");
-        emlMailFormVo.setMailFrom(new EmlAddressVo("postmaster@" + mailAddr.getDomain()));
+/*
+        List<EmlMailFormFromVo> from = new ArrayList<EmlMailFormFromVo>();
+        from.add(new EmlMailFormFromVo("postmaster@" + mailAddr.getDomain()));
+        emlMailFormVo.setMailFrom(from);
+*/
 /*
 		emlMailFormVo.setMailTos(from);
 */
@@ -1066,7 +1074,9 @@ public class SendService {
         MailAddress recipient = new MailAddress(recipientAddress);
         emlMailFormVo.setSubject(subject);
         emlMailFormVo.setPriority("3");
-        emlMailFormVo.setMailFrom(new EmlAddressVo("postmaster@" + recipient.getDomain()));
+        List<EmlMailFormFromVo> from = new ArrayList<EmlMailFormFromVo>();
+        from.add(new EmlMailFormFromVo("postmaster@" + recipient.getDomain()));
+        emlMailFormVo.setMailFrom(from);
 /*
 		emlMailFormVo.setMailTos(from);
 		emlMailFormVo.setFileList(fileList);

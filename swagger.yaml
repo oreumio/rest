@@ -1,7 +1,9 @@
 swagger: '2.0'
 info:
   version: 1.0.0
-  title: 'OreumIO REST API'
+  title: 'OreumIO James REST API'
+  description: >
+   OreumIO James API 는 사용자가 자신의 데이타에 접근할 수 있게 해줍니다.
 paths:
   /client:
     get:
