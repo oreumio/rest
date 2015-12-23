@@ -15,12 +15,13 @@
         $('#addUser').click(function () {
             addGroup('그룹1');
             addGroupDomain(groupId, groupDomainName);
-            addUser(groupId, 'test1', '테스트1');
-            addUser(groupId, 'test2', '테스트2');
-            addUser(groupId, 'test3', '테스트3');
-            addUser(groupId, 'test4', '테스트4');
-            addUser(groupId, 'test5', '테스트5');
-            addUser(groupId, 'test6', '테스트6');
+            login('U1', groupId, 'C1');
+            addUser('test1', '테스트1');
+            addUser('test2', '테스트2');
+            addUser('test3', '테스트3');
+            addUser('test4', '테스트4');
+            addUser('test5', '테스트5');
+            addUser('test6', '테스트6');
             return false;
         });
 
@@ -60,14 +61,13 @@
         console.log('addGroup');
 
         var data = {
-            clientId: 'C1',
             quota: 1000000000,
             displayName: displayName
         };
 
         $.ajax({
             method: 'post',
-            url: "/group/add.do",
+            url: "/groups.do",
             dataType: 'json',
             data: data,
             async: false,
@@ -89,7 +89,7 @@
 
         $.ajax({
             method: 'post',
-            url: "/group/addDomain.do",
+            url: '/groups/' + groupId + '/domains.do',
             dataType: 'json',
             data: data,
             async: false,
@@ -100,11 +100,30 @@
         });
     }
 
-    function addUser(groupId, userName, displayName) {
+    function login(userId, groupId, clientId) {
+        console.log('login');
+
+        var data = {
+            userId: userId,
+            groupId: groupId,
+            clientId: clientId
+        };
+
+        $.ajax({
+            method: 'post',
+            url: "/login.do",
+            dataType: 'json',
+            data: data,
+            success: function (r) {
+                console.log(r);
+            }
+        });
+    }
+
+    function addUser(userName, displayName) {
         console.log('addUser');
 
         var data = {
-            groupId: groupId,
             userName: userName,
             domainName: groupDomainName,
             password: 'pass',
@@ -113,8 +132,8 @@
         };
 
         $.ajax({
-            method: 'get',
-            url: "/user/add.do",
+            method: 'post',
+            url: "/users.do",
             dataType: 'json',
             data: data,
             success: function (r) {

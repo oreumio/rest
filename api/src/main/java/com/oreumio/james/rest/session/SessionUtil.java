@@ -9,7 +9,7 @@ public class SessionUtil {
     public static SessionVo getSession(HttpServletRequest request) {
         SessionVo sessionVo = (SessionVo) request.getSession().getAttribute("session");
         if (sessionVo == null) {
-            sessionVo = new SessionVo("Uc203ee60015110000001", "G1");
+            sessionVo = new SessionVo("U1", "G1", "C1");
             request.getSession().setAttribute("session", sessionVo);
         }
         return sessionVo;

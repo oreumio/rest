@@ -44,30 +44,34 @@ public class EmlGroupSecDomainDao {
 	 * @param groupId 그룹 아이디
 	 * @return 그룹 정보
 	 */
-    public List<EmlGroupSecDomain> list(String groupId, String groupDomain) {
-        List<EmlGroupSecDomain> groupSecDomainList = em.createQuery("SELECT groupSecDomain FROM EmlGroupSecDomain groupSecDomain WHERE groupSecDomain.groupId = :groupId AND groupSecDomain.groupDomain = :groupDomain", EmlGroupSecDomain.class)
+    public List<EmlGroupSecDomain> list(String groupId, String groupDomainId) {
+        List<EmlGroupSecDomain> groupSecDomainList = em.createQuery("SELECT groupSecDomain FROM EmlGroupSecDomain groupSecDomain WHERE groupSecDomain.groupId = :groupId AND groupSecDomain.groupDomainId = :groupDomainId", EmlGroupSecDomain.class)
                 .setParameter("groupId", groupId)
-                .setParameter("groupDomain", groupDomain)
+                .setParameter("groupDomainId", groupDomainId)
                 .getResultList();
         return groupSecDomainList;
     }
 
-    public EmlGroupSecDomain insert(String groupId, String groupDomain, String groupSecDomain) {
+    public EmlGroupSecDomain insert(String groupId, String groupDomainId, String groupSecDomainName) {
         EmlGroupSecDomain emlGroupSecDomain = new EmlGroupSecDomain();
-        emlGroupSecDomain.setId("GSD" + 1);
+        emlGroupSecDomain.setId("GSD" + idProvider.next());
         emlGroupSecDomain.setGroupId(groupId);
-        emlGroupSecDomain.setGroupDomain(groupDomain);
-        emlGroupSecDomain.setGroupSecDomain(groupSecDomain);
+        emlGroupSecDomain.setGroupDomainId(groupDomainId);
+        emlGroupSecDomain.setGroupSecDomainName(groupSecDomainName);
         em.persist(emlGroupSecDomain);
         return emlGroupSecDomain;
     }
 
-    public void delete(String groupId, String groupDomain, String groupSecDomain) {
-        EmlGroupSecDomain emlGroupSecDomain = em.createQuery("SELECT groupSecDomain FROM EmlGroupSecDomain groupSecDomain WHERE groupSecDomain.groupId = :groupId AND groupSecDomain.groupDomain = :groupDomain AND groupSecDomain.groupSecDomain = :groupSecDomain", EmlGroupSecDomain.class)
+    public EmlGroupSecDomain select(String groupId, String groupDomainId, String groupSecDomainId) {
+        EmlGroupSecDomain groupSecDomain = em.createQuery("SELECT groupSecDomain FROM EmlGroupSecDomain groupSecDomain WHERE groupSecDomain.groupId = :groupId AND groupSecDomain.groupDomainId = :groupDomainId AND groupSecDomain.id = :groupSecDomainId", EmlGroupSecDomain.class)
                 .setParameter("groupId", groupId)
-                .setParameter("groupDomain", groupDomain)
-                .setParameter("groupSecDomain", groupSecDomain)
+                .setParameter("groupDomainId", groupDomainId)
+                .setParameter("groupSecDomainId", groupSecDomainId)
                 .getSingleResult();
-        em.remove(emlGroupSecDomain);
+        return groupSecDomain;
+    }
+
+    public void delete(EmlGroupSecDomain groupSecDomain) {
+        em.remove(groupSecDomain);
     }
 }

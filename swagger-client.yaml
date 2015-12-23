@@ -1,0 +1,369 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: 'OreumIO James REST API'
+  description: >
+   OreumIO James API 는 사용자가 자신의 데이타에 접근할 수 있게 해줍니다.
+host: localhost:8083
+produces:
+  - application/json
+  - text/html
+  - text/plain
+paths:
+  /groups.do:
+    get:
+      description: |
+        그룹 정보를 검색한다.
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Group'
+    post:
+      description: |
+        그룹을 등록한다.
+      responses:
+        '200':
+          description: Successful response
+  /groups/{groupId}.do:
+    get:
+      description: |
+        그룹의 정보를 얻는다.
+      parameters:
+        - name: groupId
+          in: path
+          description: 그룹 아이디
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/Group'
+    delete:
+      description: |
+        그룹을 삭제한다.
+      parameters:
+        - name: groupId
+          in: path
+          description: 그룹 아이디
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+  /groups/{groupId}/changeQuota.do:
+    post:
+      description: |
+        그룹 용량을 변경한다.
+      parameters:
+        - name: groupId
+          in: path
+          description: 그룹 아이디
+          required: true
+          type: string
+        - name: quota
+          in: query
+          description: 그룹 쿼타
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Successful response
+  /groups/{groupId}/suspend.do:
+    post:
+      description: |
+        그룹의 상태를 변경한다.
+      parameters:
+        - name: groupId
+          in: path
+          description: 그룹 아이디
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+  /groups/{groupId}/resume.do:
+    post:
+      description: |
+        그룹의 상태를 변경한다.
+      parameters:
+        - name: groupId
+          in: path
+          description: 그룹 아이디
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+  /groups/{groupId}/domains.do:
+    get:
+      description: |
+        그룹 도메인 목록을 구한다.
+      parameters:
+        - name: groupId
+          in: path
+          description: 그룹 아이디
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+    post:
+      description: |
+        그룹이 사용할 도메인을 등록한다.
+      parameters:
+        - name: groupId
+          in: path
+          description: 그룹 아이디
+          required: true
+          type: string
+        - name: domainName
+          in: query
+          description: 도메인명
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/GroupDomain'
+  /groups/{groupId}/domains/{domainId}.do:
+    delete:
+      description: |
+        그룹 도메인을 삭제한다.
+      parameters:
+        - name: groupId
+          in: path
+          description: 그룹 아이디
+          required: true
+          type: string
+        - name: domainId
+          in: path
+          description: 도메인 아이디
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+  /groups/{groupId}/domains/{domainId}/secDomains.do:
+    get:
+      description: |
+        그룹 부 도메인 목록을 구한다.
+      parameters:
+        - name: groupId
+          in: path
+          description: 그룹 아이디
+          required: true
+          type: string
+        - name: domainId
+          in: path
+          description: 도메인 아이디
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+    post:
+      description: |
+        그룹 부 도메인을 추가한다.
+      parameters:
+        - name: groupId
+          in: path
+          description: 그룹 아이디
+          required: true
+          type: string
+        - name: domainId
+          in: path
+          description: 도메인 아이디
+          required: true
+          type: string
+        - name: secDomainName
+          in: query
+          description: 도메인 아이디
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/GroupSecDomain'
+  /groups/{groupId}/domains/{domainId}/secDomains/{secDomainId}.do:
+    delete:
+      description: |
+        그룹 부 도메인을 삭제한다.
+      parameters:
+        - name: groupId
+          in: path
+          description: 그룹 아이디
+          required: true
+          type: string
+        - name: domainId
+          in: path
+          description: 도메인 아이디
+          required: true
+          type: string
+        - name: secDomainId
+          in: path
+          description: 부 도메인 아이디
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+
+definitions:
+  Group:
+    type: object
+    properties:
+      id:
+        type: string
+        description: 그룹 아이디
+      clientId:
+        type: string
+        description: 고객 아이디
+      description:
+        type: string
+        description: 그룹 설명
+      displayName:
+        type: string
+        description: 그룹 표시명
+      quota:
+        type: integer
+        format: int32
+        description: 용량
+      serverConfig:
+      serverConfig:
+        $ref: '#/definitions/ServerConfig'
+      clientConfig:
+        type: string
+        description: 그룹 설정
+      state:
+        type: string
+        description: 그룹 상태. 정상(N), 정지(R), 삭제(D).
+  ServerConfig:
+    type: object
+    properties:
+      filterSocket:
+        type: string
+        description: 소켓 접속 제한 여부
+      ignoreUserQuota:
+        type: string
+        description: 사용자 용량 제한 여부
+      defaultUserQuota:
+        type: integer
+        description: 사용자 기본 용량
+      defaultMaxAttachmentSize:
+        type: integer
+        description: 첨부파일 최대 크기
+      serverQuota:
+        type: integer
+        description: 계획 용량
+      attachmentThresholdSize:
+        type: integer
+        description: 대용량 첨부화 기준 크기
+      attachmentDownloadTime:
+        type: string
+        description: 대용량 첨부파일 다운로드 시간
+      maintSpam:
+        type: string
+        description: 스팸 관리 여부
+      maintSpamTime:
+        type: string
+        description: 스팸 보관 시간
+      maintDeletedMail:
+        type: string
+        description: 삭제 메일 관리 여부
+      maintDeletedMailTime:
+        type: string
+        description: 삭제 메일 보관 시간
+      maintXFERLog:
+        type: string
+        description: 수발신 로그 관리 여부
+      maintXFERLogTime:
+        type: string
+        description: 수발신 로그 보관 시간
+      maintAPPRLog:
+        type: string
+        description: 발신 제한 기록 관리 여부
+      maintAPPRLogTime:
+        type: string
+        description: 발신 제한 기록 보관 시간
+      maintSECLog:
+        type: string
+        description: 보안 메일 관리 여부
+      maintSECLogTime:
+        type: string
+        description: 보안 메일 보관 시간
+      notifyOverQuotaThreshold:
+        type: string
+        description: 용량 임계치 도달 시 통보 여부
+      withdrawalType:
+        type: string
+        description: 내부 메일 철회 방법
+      maintReceivedMail:
+        type: string
+        description: 받은 메일 관리 여부
+      maintReceivedMailTime:
+        type: string
+        description: 받은 메일 보관 시간
+      maintSentMail:
+        type: string
+        description: 보낸 메일 관리 여부
+      maintSentMailTime:
+        type: string
+        description: 보낸 메일 관리 시간
+      useSignature:
+        type: string
+        description: 그룹 서명 사용 여부
+      signature:
+        type: string
+        description: 그룹 서명
+      useSecurity:
+        type: string
+        description: 발신 필터링 여부
+      securityFilterList:
+        type: string
+        description: 발신 필터
+  GroupDomain:
+    type: object
+    properties:
+      id:
+        type: string
+        description: 그룹 도메인 아이디
+      groupId:
+        type: string
+        description: 그룹 아이디
+      groupDomainName:
+        type: string
+        description: 그룹 도메인명
+  GroupSecDomain:
+    type: object
+    properties:
+      id:
+        type: string
+        description: 그룹 도메인 아이디
+      groupId:
+        type: string
+        description: 그룹 아이디
+      groupDomainId:
+        type: string
+        description: 그룹 주 도메인 아이디
+      groupSecDomainName:
+        type: string
+        description: 그룹 도메인명

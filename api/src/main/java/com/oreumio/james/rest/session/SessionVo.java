@@ -5,15 +5,17 @@ package com.oreumio.james.rest.session;
  */
 public class SessionVo {
 
-    private String userId;
-    private String groupId;
+    private String userId = "U1";
+    private String groupId = "G1";
+    private String clientId = "C1";
 
     public SessionVo() {
     }
 
-    public SessionVo(String userId, String groupId) {
+    public SessionVo(String userId, String groupId, String clientId) {
         this.userId = userId;
         this.groupId = groupId;
+        this.clientId = clientId;
     }
 
     public String getUserId() {
@@ -30,5 +32,13 @@ public class SessionVo {
 
     public void setGroupId(String groupId) {
         this.groupId = groupId;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 }

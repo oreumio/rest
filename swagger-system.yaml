@@ -5,29 +5,36 @@ info:
   description: >
    OreumIO James API 는 사용자가 자신의 데이타에 접근할 수 있게 해줍니다.
 paths:
-  /client:
+  /clients:
     get:
       description: |
-        고객이 자신을 등록한다.
+        고객 정보를 검색한다.
       responses:
         '200':
           description: Successful response
-  /client:
-    get:
+  /clients:
+    post:
       description: |
-        고객이 자신을 해지한다.
+        고객을 등록한다.
       responses:
         '200':
           description: Successful response
-  /client:
+  /clients/{client-id}:
     get:
       description: |
-        고객이 자신을 해지한다.
+        고객의 정보를 얻는다.
       responses:
         '200':
           description: Successful response
-  /client/domain:
-    get:
+  /clients/{client-id}/unregister:
+    post:
+      description: |
+        고객을 해지한다.
+      responses:
+        '200':
+          description: Successful response
+  /clients/{client-id}/domains:
+    post:
       description: |
         고객이 사용할 도메인을 등록한다.
       responses:
@@ -44,6 +51,123 @@ paths:
                   type: string
                 single:
                   type: boolean
+  /clients/{client-id}/domains:
+    get:
+      description: |
+        고객 도메인 목록을 구한다.
+      responses:
+        '200':
+          description: Successful response
+  /groups:
+    get:
+      description: |
+        그룹 정보를 검색한다.
+      responses:
+        '200':
+          description: Successful response
+  /groups:
+    post:
+      description: |
+        그룹을 등록한다.
+      responses:
+        '200':
+          description: Successful response
+  /groups/{group-id}:
+    get:
+      description: |
+        그룹의 정보를 얻는다.
+      responses:
+        '200':
+          description: Successful response
+  /groups/{group-id}:
+    delete:
+      description: |
+        그룹을 삭제한다.
+      responses:
+        '200':
+          description: Successful response
+  /groups/{group-id}/changeQuota:
+    post:
+      description: |
+        그룹 용량을 변경한다.
+      responses:
+        '200':
+          description: Successful response
+  /groups/{group-id}/suspend:
+    post:
+      description: |
+        그룹의 상태를 변경한다.
+      responses:
+        '200':
+          description: Successful response
+  /groups/{group-id}/resume:
+    post:
+      description: |
+        그룹의 상태를 변경한다.
+      responses:
+        '200':
+          description: Successful response
+  /groups/{group-id}/domains:
+    post:
+      description: |
+        그룹이 사용할 도메인을 등록한다.
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            title: ArrayOfPersons
+            type: array
+            items:
+              title: Person
+              type: object
+              properties:
+                name:
+                  type: string
+                single:
+                  type: boolean
+  /groups/{group-id}/domains:
+    get:
+      description: |
+        그룹 도메인 목록을 구한다.
+      responses:
+        '200':
+          description: Successful response
+  /groups/{group-id}/domains/{domain-id}:
+    delete:
+      description: |
+        그룹 도메인을 삭제한다.
+      responses:
+        '200':
+          description: Successful response
+  /groups/{group-id}/domains/{domain-id}/secDomains:
+    post:
+      description: |
+        그룹 부 도메인 목록을 구한다.
+      responses:
+        '200':
+          description: Successful response
+  /groups/{group-id}/domains/{domain-id}/secDomains:
+    post:
+      description: |
+        그룹 부 도메인을 추가한다.
+      responses:
+        '200':
+          description: Successful response
+  /groups/{group-id}/domains/{domain-id}/secDomains/{secDomain-id}:
+    delete:
+      description: |
+        그룹 부 도메인을 삭제한다.
+      responses:
+        '200':
+          description: Successful response
+
+  /users
+    post:
+      description: |
+        사용자를 추가한다.
+      responses:
+        '200':
+          description: Successful response
 definitions:
   Client:
     type: object

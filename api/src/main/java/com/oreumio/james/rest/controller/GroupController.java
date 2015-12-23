@@ -1,12 +1,18 @@
 package com.oreumio.james.rest.controller;
 
+import com.oreumio.james.rest.group.EmlGroupDomainVo;
+import com.oreumio.james.rest.group.EmlGroupSecDomainVo;
 import com.oreumio.james.rest.group.EmlGroupService;
 import com.oreumio.james.rest.group.EmlGroupVo;
+import com.oreumio.james.rest.session.SessionUtil;
+import com.oreumio.james.rest.session.SessionVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +22,6 @@ import java.util.List;
  * @author Jhonson choi (jhonsonchoi@gmail.com)
  */
 @Controller
-@RequestMapping("group")
 public class GroupController {
 
     private static Logger logger = LoggerFactory.getLogger(GroupController.class);
@@ -24,24 +29,20 @@ public class GroupController {
     @Autowired
     private EmlGroupService groupService;
 
-    @RequestMapping("get")
+    @RequestMapping(value = "groups", method = RequestMethod.GET)
     @ResponseBody
-    public EmlGroupVo get(HttpServletRequest request, String id) {
-        return groupService.get(id);
+    public List<EmlGroupVo> list(HttpServletRequest request) {
+        SessionVo sessionVo = SessionUtil.getSession(request);
+        return groupService.list(sessionVo.getClientId());
     }
 
-    @RequestMapping("list")
+    @RequestMapping(value = "groups", method = RequestMethod.POST)
     @ResponseBody
-    public List<EmlGroupVo> list(HttpServletRequest request, String clientId) {
-        return groupService.list(clientId);
-    }
-
-    @RequestMapping("add")
-    @ResponseBody
-    public EmlGroupVo add(EmlGroupVo emlGroupVo) {
-        logger.debug("" + emlGroupVo);
+    public EmlGroupVo add(HttpServletRequest request, EmlGroupVo emlGroupVo) {
+        SessionVo sessionVo = SessionUtil.getSession(request);
+        logger.debug("그룹을 추가합니다: " + emlGroupVo);
         try {
-            groupService.add(emlGroupVo);
+            groupService.add(sessionVo.getClientId(), emlGroupVo);
             return emlGroupVo;
         } catch (Exception e) {
             logger.warn("에러가 발생했습니다.", e);
@@ -49,28 +50,46 @@ public class GroupController {
         }
     }
 
-    @RequestMapping("remove")
+    @RequestMapping(value = "groups/{groupId}", method = RequestMethod.GET)
     @ResponseBody
-    public void remove(String id) {
-        groupService.remove(id);
+    public EmlGroupVo get(HttpServletRequest request, @PathVariable String groupId) {
+        SessionVo sessionVo = SessionUtil.getSession(request);
+        return groupService.get(sessionVo.getClientId(), groupId);
     }
 
-    @RequestMapping("changeName")
+    @RequestMapping(value = "groups/{groupId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public void changeName(String id, String name) {
-        groupService.updateName(id, name);
+    public void remove(HttpServletRequest request, @PathVariable String groupId) {
+        SessionVo sessionVo = SessionUtil.getSession(request);
+        groupService.remove(sessionVo.getClientId(), groupId);
     }
 
-    @RequestMapping("changeQuota")
+    @RequestMapping("groups/{groupId}/changeName")
     @ResponseBody
-    public void changeQuota(String id, long quota) {
-        groupService.updateQuota(id, quota);
+    public void changeName(HttpServletRequest request, @PathVariable String groupId, String name) {
+        SessionVo sessionVo = SessionUtil.getSession(request);
+        groupService.updateName(sessionVo.getClientId(), groupId, name);
     }
 
-    @RequestMapping("changeState")
+    @RequestMapping("groups/{groupId}/changeQuota")
     @ResponseBody
-    public void changeState(String id, String state) {
-        groupService.updateState(id, state);
+    public void changeQuota(HttpServletRequest request, @PathVariable String groupId, long quota) {
+        SessionVo sessionVo = SessionUtil.getSession(request);
+        groupService.updateQuota(sessionVo.getClientId(), groupId, quota);
+    }
+
+    @RequestMapping("groups/{groupId}/suspend")
+    @ResponseBody
+    public void suspend(HttpServletRequest request, @PathVariable String groupId) {
+        SessionVo sessionVo = SessionUtil.getSession(request);
+        groupService.updateState(sessionVo.getClientId(), groupId, "R");
+    }
+
+    @RequestMapping("groups/{groupId}/resume")
+    @ResponseBody
+    public void resume(HttpServletRequest request, @PathVariable String groupId) {
+        SessionVo sessionVo = SessionUtil.getSession(request);
+        groupService.updateState(sessionVo.getClientId(), groupId, "N");
     }
 
 //    주 도메인 추가
@@ -78,28 +97,45 @@ public class GroupController {
 //    부 도메인 추가
 //    부 도메인 제거
 
-    @RequestMapping("addDomain")
+    @RequestMapping(value = "groups/{groupId}/domains", method = RequestMethod.GET)
     @ResponseBody
-    public void addDomain(String groupId, String domainName) {
-        groupService.addDomain(groupId, domainName);
+    public List<EmlGroupDomainVo> listDomains(HttpServletRequest request, @PathVariable String groupId) {
+        SessionVo sessionVo = SessionUtil.getSession(request);
+        return groupService.listDomains(sessionVo.getClientId(), groupId);
     }
 
-    @RequestMapping("removeDomain")
+    @RequestMapping(value = "groups/{groupId}/domains", method = RequestMethod.POST)
     @ResponseBody
-    public void removeDomain(String id, String domain) {
-        groupService.removeDomain(id, domain);
+    public EmlGroupDomainVo addDomain(HttpServletRequest request, @PathVariable String groupId, String domainName) {
+        SessionVo sessionVo = SessionUtil.getSession(request);
+        return groupService.addDomain(sessionVo.getClientId(), groupId, domainName);
     }
 
-
-    @RequestMapping("addSecDomain")
+    @RequestMapping(value = "groups/{groupId}/domains/{domainId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public void addSecDomain(String id, String domain, String secDomain) {
-        groupService.addSecDomain(id, domain, secDomain);
+    public void removeDomain(HttpServletRequest request, @PathVariable String groupId, @PathVariable String domainId) {
+        SessionVo sessionVo = SessionUtil.getSession(request);
+        groupService.removeDomain(sessionVo.getClientId(), groupId, domainId);
     }
 
-    @RequestMapping("removeSecDomain")
+    @RequestMapping(value = "groups/{groupId}/domains/{domainId}/secDomains", method = RequestMethod.GET)
     @ResponseBody
-    public void removeSecDomain(String id, String domain, String secDomain) {
-        groupService.removeSecDomain(id, domain, secDomain);
+    public List<EmlGroupSecDomainVo> listSecDomain(HttpServletRequest request, @PathVariable String groupId, @PathVariable String domainId) {
+        SessionVo sessionVo = SessionUtil.getSession(request);
+        return groupService.listSecDomains(sessionVo.getClientId(), groupId, domainId);
+    }
+
+    @RequestMapping(value = "groups/{groupId}/domains/{domainId}/secDomains", method = RequestMethod.POST)
+    @ResponseBody
+    public EmlGroupSecDomainVo addSecDomain(HttpServletRequest request, @PathVariable String groupId, @PathVariable String domainId, String secDomainName) {
+        SessionVo sessionVo = SessionUtil.getSession(request);
+        return groupService.addSecDomain(sessionVo.getClientId(), groupId, domainId, secDomainName);
+    }
+
+    @RequestMapping(value = "groups/{groupId}/domains/{domainId}/secDomains/{secDomainId}", method = RequestMethod.DELETE)
+    @ResponseBody
+    public void removeSecDomain(HttpServletRequest request, @PathVariable String groupId, @PathVariable String domainId, @PathVariable String secDomainId) {
+        SessionVo sessionVo = SessionUtil.getSession(request);
+        groupService.removeSecDomain(sessionVo.getClientId(), groupId, domainId, secDomainId);
     }
 }

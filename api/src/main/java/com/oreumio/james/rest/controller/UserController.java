@@ -1,12 +1,14 @@
 package com.oreumio.james.rest.controller;
 
+import com.oreumio.james.rest.session.SessionUtil;
+import com.oreumio.james.rest.session.SessionVo;
 import com.oreumio.james.rest.user.EmlUserService;
 import com.oreumio.james.rest.user.EmlUserVo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -15,57 +17,74 @@ import java.util.List;
  * @author Jhonson choi (jhonsonchoi@gmail.com)
  */
 @Controller
-@RequestMapping("user")
 public class UserController {
+
+    private static Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private EmlUserService userService;
 
-    @RequestMapping("get")
+    @RequestMapping(value = "users/{userId}", method = RequestMethod.GET)
     @ResponseBody
-    public EmlUserVo get(HttpServletRequest request, String userId) {
-        return userService.get(userId);
+    public EmlUserVo get(HttpServletRequest request, @PathVariable String userId) {
+        SessionVo sessionVo = SessionUtil.getSession(request);
+        logger.debug("get userId=" + userId);
+        return userService.get(sessionVo.getGroupId(), userId);
     }
 
-    @RequestMapping("getBy")
+    @RequestMapping(value = "users", method = RequestMethod.GET)
     @ResponseBody
-    public EmlUserVo get(HttpServletRequest request, String userName, String domainName) {
-        return userService.get(userName, domainName);
+    public List<EmlUserVo> list(HttpServletRequest request) {
+        SessionVo sessionVo = SessionUtil.getSession(request);
+        logger.debug("list");
+        return userService.list(sessionVo.getGroupId());
     }
 
-    @RequestMapping("list")
+    @RequestMapping(value = "users", method = RequestMethod.POST)
     @ResponseBody
-    public List<EmlUserVo> list(HttpServletRequest request, String groupId) {
-        return userService.list(groupId);
+    public EmlUserVo add(HttpServletRequest request, EmlUserVo emlUserVo) {
+        SessionVo sessionVo = SessionUtil.getSession(request);
+        logger.debug("add emlUserVo=" + emlUserVo);
+        return userService.add(sessionVo.getGroupId(), emlUserVo);
     }
 
-    @RequestMapping("add")
+    @RequestMapping(value = "users/{userId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public EmlUserVo add(EmlUserVo emlUserVo) {
-        return userService.add(emlUserVo);
+    public void remove(HttpServletRequest request, @PathVariable String userId) {
+        SessionVo sessionVo = SessionUtil.getSession(request);
+        logger.debug("remove userId=" + userId);
+        userService.remove(sessionVo.getGroupId(), userId);
     }
 
-    @RequestMapping("remove")
+    @RequestMapping(value = "users/{userId}/suspend", method = RequestMethod.POST)
     @ResponseBody
-    public void remove(String name, String groupId, long quota) {
-        userService.remove(name, groupId);
+    public void suspend(HttpServletRequest request, @PathVariable String userId) {
+        SessionVo sessionVo = SessionUtil.getSession(request);
+        logger.debug("suspend userId=" + userId);
+        userService.changeState(sessionVo.getGroupId(), userId, "N", "R");
     }
 
-    @RequestMapping("changeState")
+    @RequestMapping(value = "users/{userId}/resume", method = RequestMethod.POST)
     @ResponseBody
-    public void changeState(String id, String state) {
-        userService.changeState(id, state);
+    public void resume(HttpServletRequest request, @PathVariable String userId, String state) {
+        SessionVo sessionVo = SessionUtil.getSession(request);
+        logger.debug("resume userId=" + userId);
+        userService.changeState(sessionVo.getGroupId(), userId, "R", "N");
     }
 
-    @RequestMapping("changeQuota")
+    @RequestMapping(value = "users/{userId}/changeQuota", method = RequestMethod.POST)
     @ResponseBody
-    public void changeQuota(String id, long quota) {
-        userService.changeQuota(id, quota);
+    public void changeQuota(HttpServletRequest request, @PathVariable String userId, long quota) {
+        SessionVo sessionVo = SessionUtil.getSession(request);
+        logger.debug("changeQuota userId=" + userId);
+        userService.changeQuota(sessionVo.getGroupId(), userId, quota);
     }
 
-    @RequestMapping("changePassword")
+    @RequestMapping(value = "users/{userId}/changePassword", method = RequestMethod.POST)
     @ResponseBody
-    public void changePassword(String id, String password) {
-        userService.changePassword(id, password);
+    public void changePassword(HttpServletRequest request, @PathVariable String userId, String password) {
+        SessionVo sessionVo = SessionUtil.getSession(request);
+        logger.debug("changePassword userId=" + userId);
+        userService.changePassword(sessionVo.getGroupId(), userId, password);
     }
 }

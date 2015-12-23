@@ -1,9 +1,5 @@
 package com.oreumio.james.rest.group;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.io.Serializable;
 
 /**
@@ -13,27 +9,27 @@ import java.io.Serializable;
  *
  * @author Jhonson choi (jhonsonchoi@gmail.com)
  */
-@Entity
-@Table(name = "EML_GROUP_SEC_DOMAIN")
-public class EmlGroupSecDomain implements Serializable {
+public class EmlGroupSecDomainVo implements Serializable {
 
 	/**
 	 * 고객 아이디
 	 */
-	@Id
-    @Column(name = "GROUP_SEC_DOMAIN_ID", nullable = false, length = 30)
     private String id;
 
-	@Column(name = "GROUP_ID", nullable = false, length = 30)
 	private String groupId;
 
-    @Column(name = "GROUP_DOMAIN_ID", nullable = false, length = 30)
     private String groupDomainId;
 
-	@Column(name = "GROUP_SEC_DOMAIN_NAME", nullable = false)
 	private String groupSecDomainName;
 
-    public EmlGroupSecDomain() {
+    public EmlGroupSecDomainVo() {
+    }
+
+    public EmlGroupSecDomainVo(EmlGroupSecDomain groupSecDomain) {
+        id = groupSecDomain.getId();
+        groupId = groupSecDomain.getGroupId();
+        groupDomainId = groupSecDomain.getGroupDomainId();
+        groupSecDomainName = groupSecDomain.getGroupSecDomainName();
     }
 
     public String getId() {

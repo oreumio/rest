@@ -1,9 +1,5 @@
 package com.oreumio.james.rest.group;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.io.Serializable;
 
 /**
@@ -13,26 +9,26 @@ import java.io.Serializable;
  *
  * @author Jhonson choi (jhonsonchoi@gmail.com)
  */
-@Entity
-@Table(name = "EML_GROUP_DOMAIN")
 public class EmlGroupDomainVo implements Serializable {
 
 	/**
 	 * 그룹 도메인 아이디
 	 */
-	@Id
-	@Column(name = "GROUP_DOMAIN_ID", nullable = false, length = 30)
 	private String id;
 
-    @Column(name = "GROUP_ID", nullable = false, length = 30)
     private String groupId;
 
-	@Column(name = "GROUP_DOMAIN_NAME", nullable = false)
-	private String groupDomain;
+	private String groupDomainName;
 
 	public EmlGroupDomainVo() {
 
 	}
+
+    public EmlGroupDomainVo(EmlGroupDomain groupDomain) {
+        id = groupDomain.getId();
+        groupId = groupDomain.getGroupId();
+        groupDomainName = groupDomain.getGroupDomainName();
+    }
 
     public String getId() {
         return id;
@@ -50,20 +46,20 @@ public class EmlGroupDomainVo implements Serializable {
         this.groupId = groupId;
     }
 
-    public String getGroupDomain() {
-        return groupDomain;
+    public String getGroupDomainName() {
+        return groupDomainName;
     }
 
-    public void setGroupDomain(String groupDomain) {
-        this.groupDomain = groupDomain;
+    public void setGroupDomainName(String groupDomainName) {
+        this.groupDomainName = groupDomainName;
     }
 
     @Override
     public String toString() {
-        return "EmlGroupDomain{" +
+        return "EmlGroupDomainVo{" +
                 "id='" + id + '\'' +
                 ", groupId='" + groupId + '\'' +
-                ", groupDomain='" + groupDomain + '\'' +
+                ", groupDomainName='" + groupDomainName + '\'' +
                 '}';
     }
 }

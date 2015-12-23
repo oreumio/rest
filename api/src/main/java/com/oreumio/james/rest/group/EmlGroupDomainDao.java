@@ -51,20 +51,24 @@ public class EmlGroupDomainDao {
         return groupDomainList;
     }
 
-    public EmlGroupDomain insert(String groupId, String groupDomain) {
+    public EmlGroupDomain insert(String groupId, String groupDomainName) {
         EmlGroupDomain emlGroupDomain = new EmlGroupDomain();
         emlGroupDomain.setId("GD" + idProvider.next());
         emlGroupDomain.setGroupId(groupId);
-        emlGroupDomain.setGroupDomain(groupDomain);
+        emlGroupDomain.setGroupDomainName(groupDomainName);
         em.persist(emlGroupDomain);
         return emlGroupDomain;
     }
 
-    public void delete(String groupId, String groupDomain) {
-        EmlGroupDomain emlGroupDomain = em.createQuery("SELECT groupDomain FROM EmlGroupDomain groupDomain WHERE groupDomain.groupId = :groupId AND groupDomain.groupDomain = :groupDomain", EmlGroupDomain.class)
+    public EmlGroupDomain select(String groupId, String domainId) {
+        EmlGroupDomain emlGroupDomain = em.createQuery("SELECT groupDomain FROM EmlGroupDomain groupDomain WHERE groupDomain.groupId = :groupId AND groupDomain.id = :domainId", EmlGroupDomain.class)
                 .setParameter("groupId", groupId)
-                .setParameter("groupDomain", groupDomain)
+                .setParameter("domainId", domainId)
                 .getSingleResult();
+        return emlGroupDomain;
+    }
+
+    public void delete(EmlGroupDomain emlGroupDomain) {
         em.remove(emlGroupDomain);
     }
 }
