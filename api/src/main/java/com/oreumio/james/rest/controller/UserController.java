@@ -24,28 +24,28 @@ public class UserController {
     @Autowired
     private EmlUserService userService;
 
+    @RequestMapping(value = "users", method = RequestMethod.GET)
+    @ResponseBody
+    public List<EmlUserVo> list(HttpServletRequest request, int pageNo, int pageSize) {
+        SessionVo sessionVo = SessionUtil.getSession(request);
+        logger.debug("사용자 목록을 검색합니다.: apiKey=" + sessionVo.getGroupId() + ", pageNo=" + pageNo + ", pageSize=" + pageSize);
+        return userService.list(sessionVo.getGroupId());
+    }
+
+    @RequestMapping(value = "users", method = RequestMethod.POST)
+    @ResponseBody
+    public EmlUserVo add(HttpServletRequest request, @RequestBody EmlUserVo emlUserVo) {
+        SessionVo sessionVo = SessionUtil.getSession(request);
+        logger.debug("add emlUserVo=" + emlUserVo);
+        return userService.add(sessionVo.getGroupId(), emlUserVo);
+    }
+
     @RequestMapping(value = "users/{userId}", method = RequestMethod.GET)
     @ResponseBody
     public EmlUserVo get(HttpServletRequest request, @PathVariable String userId) {
         SessionVo sessionVo = SessionUtil.getSession(request);
         logger.debug("get userId=" + userId);
         return userService.get(sessionVo.getGroupId(), userId);
-    }
-
-    @RequestMapping(value = "users", method = RequestMethod.GET)
-    @ResponseBody
-    public List<EmlUserVo> list(HttpServletRequest request) {
-        SessionVo sessionVo = SessionUtil.getSession(request);
-        logger.debug("list");
-        return userService.list(sessionVo.getGroupId());
-    }
-
-    @RequestMapping(value = "users", method = RequestMethod.POST)
-    @ResponseBody
-    public EmlUserVo add(HttpServletRequest request, EmlUserVo emlUserVo) {
-        SessionVo sessionVo = SessionUtil.getSession(request);
-        logger.debug("add emlUserVo=" + emlUserVo);
-        return userService.add(sessionVo.getGroupId(), emlUserVo);
     }
 
     @RequestMapping(value = "users/{userId}", method = RequestMethod.DELETE)

@@ -88,8 +88,8 @@
         <class>com.oreumio.james.rest.group.EmlGroupSecDomain</class>
         <class>com.oreumio.james.rest.user.EmlUser</class>
         <class>com.oreumio.james.rest.org.EmlUserOrg</class>
-        <class>com.oreumio.james.rest.org.EmlOrgSystem</class>
-        <class>com.oreumio.james.rest.org.EmlOrgSystemUnit</class>
+        <class>com.oreumio.james.rest.org.EmlOrg</class>
+        <class>com.oreumio.james.rest.org.EmlOrgUnit</class>
         <class>com.oreumio.james.rest.send.EmlRecentlyUsedRecipient</class>
         <class>com.oreumio.james.rest.send.EmlReadConfirm</class>
         <class>com.oreumio.james.rest.send.EmlReadConfirmMail</class>

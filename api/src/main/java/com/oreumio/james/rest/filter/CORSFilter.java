@@ -51,7 +51,7 @@ public class CORSFilter extends OncePerRequestFilter {
 //            }
 
             response.addHeader("Access-Control-Allow-Methods", corsAllowedMethods);
-            response.addHeader("Access-Control-Allow-Headers", "Content-Type");
+            response.addHeader("Access-Control-Allow-Headers", "content-type, Authorization, Cache-Control");
             response.addHeader("Access-Control-Max-Age", corsMaxAge);
         } else {
             response.addHeader("Access-Control-Allow-Origin", "*");

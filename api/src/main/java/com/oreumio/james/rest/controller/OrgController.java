@@ -1,14 +1,16 @@
 package com.oreumio.james.rest.controller;
 
 import com.oreumio.james.rest.org.EmlOrgService;
-import com.oreumio.james.rest.org.EmlOrgSystemUnitVo;
-import com.oreumio.james.rest.org.EmlOrgSystemVo;
+import com.oreumio.james.rest.org.EmlOrgUnitVo;
+import com.oreumio.james.rest.org.EmlOrgVo;
 import com.oreumio.james.rest.org.EmlUserOrgVo;
-import com.oreumio.james.rest.user.EmlUserVo;
+import com.oreumio.james.rest.session.SessionUtil;
+import com.oreumio.james.rest.session.SessionVo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -17,69 +19,83 @@ import java.util.List;
  * @author Jhonson choi (jhonsonchoi@gmail.com)
  */
 @Controller
-@RequestMapping("org")
 public class OrgController {
+
+    private static Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     EmlOrgService emlOrgService;
 
-    @RequestMapping("listSystems")
+    @RequestMapping(value = "orgs", method = RequestMethod.GET)
     @ResponseBody
-    public List<EmlOrgSystemVo> listSystems(HttpServletRequest request, String groupId) {
-        return emlOrgService.listSystems(groupId);
+    public List<EmlOrgVo> listOrgs(HttpServletRequest request) {
+        logger.debug("조직을 검색합니다.");
+        SessionVo sessionVo = SessionUtil.getSession(request);
+        return emlOrgService.listSystems(sessionVo.getGroupId());
     }
 
-    @RequestMapping("addSystem")
+    @RequestMapping(value = "orgs", method = RequestMethod.POST)
     @ResponseBody
-    public EmlOrgSystemVo addSystem(HttpServletRequest request, String groupId, String systemName) {
-        return emlOrgService.addSystem(groupId, systemName);
+    public EmlOrgVo addOrg(HttpServletRequest request, @RequestBody EmlOrgVo orgVo) {
+        logger.debug("조직을 추가합니다.: orgName=" + orgVo.getDisplayName());
+        SessionVo sessionVo = SessionUtil.getSession(request);
+        return emlOrgService.addSystem(sessionVo.getGroupId(), orgVo.getDisplayName());
     }
 
-    @RequestMapping("removeSystem")
+    @RequestMapping(value = "orgs/{orgId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public void removeSystem(HttpServletRequest request, String groupId, String systemName) {
-        emlOrgService.removeSystem(groupId, systemName);
+    public void removeOrg(HttpServletRequest request, @PathVariable String orgId) {
+        logger.debug("조직을 삭제합니다.: orgId=" + orgId);
+        SessionVo sessionVo = SessionUtil.getSession(request);
+        emlOrgService.removeSystem(sessionVo.getGroupId(), orgId);
     }
 
-    @RequestMapping("listSystemUnits")
+    @RequestMapping(value = "orgs/{orgId}/orgUnits", method = RequestMethod.GET)
     @ResponseBody
-    public List<EmlOrgSystemUnitVo> listSystemUnits(HttpServletRequest request, String systemId) {
-        return emlOrgService.listSystemUnits(systemId);
+    public List<EmlOrgUnitVo> listOrgUnits(HttpServletRequest request, @PathVariable String orgId) {
+        logger.debug("조직의 단위를 검색합니다.: orgId=" + orgId);
+        SessionVo sessionVo = SessionUtil.getSession(request);
+        return emlOrgService.listSystemUnits(sessionVo.getGroupId(), orgId);
     }
 
-    @RequestMapping("listSubSystemUnits")
+    @RequestMapping(value = "orgs/{orgId}/orgUnits/listSubSystemUnits", method = RequestMethod.GET)
     @ResponseBody
-    public List<EmlOrgSystemUnitVo> listSubSystemUnits(HttpServletRequest request, String systemUnitId) {
-        return emlOrgService.listSubSystemUnits(systemUnitId);
+    public List<EmlOrgUnitVo> listSubSystemUnits(HttpServletRequest request, String orgUnitId) {
+        return emlOrgService.listSubSystemUnits(orgUnitId);
     }
 
-    @RequestMapping("addSystemUnit")
+    @RequestMapping(value = "orgs/{orgId}/orgUnits", method = RequestMethod.POST)
     @ResponseBody
-    public EmlOrgSystemUnitVo addSystemUnit(HttpServletRequest request, String systemId, String systemUnitName, String parentOrgSystemUnitId) {
-        return emlOrgService.addSystemUnit(systemId, systemUnitName, parentOrgSystemUnitId);
+    public EmlOrgUnitVo addOrgUnit(HttpServletRequest request, @PathVariable String orgId, @RequestBody EmlOrgUnitVo orgSystemUnitVo) {
+        logger.debug("조직의 단위를 추가합니다.: orgId=" + orgId + ", orgUnitName=" + orgSystemUnitVo.getDisplayName() + ", parentOrgUnitId=" + orgSystemUnitVo.getParentOrgUnitId());
+        return emlOrgService.addSystemUnit(orgId, orgSystemUnitVo.getDisplayName(), orgSystemUnitVo.getParentOrgUnitId());
     }
 
-    @RequestMapping("removeSystemUnit")
+    @RequestMapping(value = "orgs/{orgId}/orgUnits/{orgUnitId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public void removeSystemUnit(HttpServletRequest request, String systemId, String systemUnitName) {
-        emlOrgService.removeSystemUnit(systemId, systemUnitName);
+    public void removeOrgUnit(HttpServletRequest request, @PathVariable String orgId, @PathVariable String orgUnitId) {
+        logger.debug("조직의 단위를 삭제합니다.: orgId=" + orgId + ", orgUnitId=" + orgUnitId);
+        emlOrgService.removeSystemUnit(orgId, orgUnitId);
     }
 
-    @RequestMapping("addSystemUnitUser")
+    @RequestMapping(value = "orgs/{orgId}/orgUnits/{orgUnitId}/users", method = RequestMethod.GET)
     @ResponseBody
-    public EmlUserOrgVo addSystemUnitUser(HttpServletRequest request, String userId, String systemUnitId) {
-        return emlOrgService.addSystemUnitUser(userId, systemUnitId);
+    public List<EmlUserOrgVo> listOrgUnitUsers(HttpServletRequest request, @PathVariable String orgId, @PathVariable String orgUnitId) {
+        logger.debug("조직의 단위의 사용자를 검색합니다.: orgId=" + orgId + ", orgUnitId=" + orgUnitId);
+        return emlOrgService.listSystemUnitUsers(orgId, orgUnitId);
     }
 
-    @RequestMapping("removeSystemUnitUser")
+    @RequestMapping(value = "orgs/{orgId}/orgUnits/{orgUnitId}/users", method = RequestMethod.POST)
     @ResponseBody
-    public void removeSystemUnitUser(HttpServletRequest request, String userId, String systemUnitId) {
-        emlOrgService.removeSystemUnitUser(userId, systemUnitId);
+    public EmlUserOrgVo addOrgUnitUser(HttpServletRequest request, @PathVariable String orgId, @PathVariable String orgUnitId, @RequestBody EmlUserOrgVo userOrgVo) {
+        logger.debug("조직의 단위의 사용자를 추가합니다.: orgId=" + orgId + ", orgUnitId=" + orgUnitId + ", userId=" + userOrgVo.getUserId());
+        return emlOrgService.addSystemUnitUser(orgId, orgUnitId, userOrgVo.getUserId());
     }
 
-    @RequestMapping("listSystemUnitUsers")
+    @RequestMapping(value = "orgs/{orgId}/orgUnits/{orgUnitId}/users/{userId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public List<EmlUserOrgVo> listSystemUnitUsers(HttpServletRequest request, String systemUnitId) {
-        return emlOrgService.listSystemUnitUsers(systemUnitId);
+    public void removeOrgUnitUser(HttpServletRequest request, @PathVariable String orgId, @PathVariable String orgUnitId, @PathVariable String userId) {
+        logger.debug("조직의 단위의 사용자를 삭제합니다.: orgId=" + orgId + ", orgUnitId=" + orgUnitId + ", userId=" + userId);
+        emlOrgService.removeSystemUnitUser(orgId, orgUnitId, userId);
     }
 }

@@ -51,10 +51,10 @@ public class EmlUserOrgDao {
         return emlUserOrgs;
     }
 
-    public EmlUserOrg insert(String systemUnitId, String userId) {
+    public EmlUserOrg insert(String orgUnitId, String userId) {
         EmlUserOrg emlUserOrg = new EmlUserOrg();
         emlUserOrg.setId("GSD" + 1);
-        emlUserOrg.setOrgSystemUnitId(systemUnitId);
+        emlUserOrg.setOrgSystemUnitId(orgUnitId);
         emlUserOrg.setUserId(userId);
         em.persist(emlUserOrg);
         return emlUserOrg;

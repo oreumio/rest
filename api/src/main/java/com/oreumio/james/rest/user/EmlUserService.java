@@ -45,6 +45,8 @@ public class EmlUserService implements EmlUserSupportService {
     }
 
     public List<EmlUserVo> list(String groupId) {
+        logger.debug("사용자를 검색합니다. : groupId=" + groupId);
+
         List<EmlUser> emlUserList = userDao.list(groupId);
         List<EmlUserVo> emlUserVoList = new ArrayList<EmlUserVo>();
         for (EmlUser emlUser : emlUserList) {
@@ -67,6 +69,7 @@ public class EmlUserService implements EmlUserSupportService {
             e.printStackTrace();
         }
         emlUserVo.setServerConfig(writer.toString());
+        emlUserVo.setPassword("pass");
         EmlUser emlUser = userDao.insert(emlUserVo);
         return new EmlUserVo(emlUser);
     }

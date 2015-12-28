@@ -18,9 +18,9 @@ import java.util.List;
  * @author Jhonson choi (jhonsonchoi@gmail.com)
  */
 @Repository
-public class EmlOrgSystemDao {
+public class EmlOrgDao {
 
-	static final Logger LOGGER = LoggerFactory.getLogger(EmlOrgSystemDao.class);
+	static final Logger LOGGER = LoggerFactory.getLogger(EmlOrgDao.class);
 
 	@PersistenceContext(unitName = "rest")
 	private EntityManager em;
@@ -44,15 +44,15 @@ public class EmlOrgSystemDao {
 	 * @param groupId 그룹 아이디
 	 * @return 그룹 정보
 	 */
-    public List<EmlOrgSystem> list(String groupId) {
-        List<EmlOrgSystem> emlOrgSystemList = em.createQuery("SELECT orgSystem FROM EmlOrgSystem orgSystem WHERE orgSystem.groupId = :groupId", EmlOrgSystem.class)
+    public List<EmlOrg> list(String groupId) {
+        List<EmlOrg> emlOrgSystemList = em.createQuery("SELECT orgSystem FROM EmlOrg orgSystem WHERE orgSystem.groupId = :groupId", EmlOrg.class)
                 .setParameter("groupId", groupId)
                 .getResultList();
         return emlOrgSystemList;
     }
 
-    public EmlOrgSystem insert(String groupId, String name) {
-        EmlOrgSystem emlOrgSystem = new EmlOrgSystem();
+    public EmlOrg insert(String groupId, String name) {
+        EmlOrg emlOrgSystem = new EmlOrg();
         emlOrgSystem.setId("OS" + idProvider.next());
         emlOrgSystem.setGroupId(groupId);
         emlOrgSystem.setName(name);
@@ -60,15 +60,15 @@ public class EmlOrgSystemDao {
         return emlOrgSystem;
     }
 
-    public EmlOrgSystem select(String groupId, String name) {
-        EmlOrgSystem emlOrgSystem = em.createQuery("SELECT orgSystem FROM EmlOrgSystem orgSystem WHERE orgSystem.groupId = :groupId AND orgSystem.name = :name", EmlOrgSystem.class)
+    public EmlOrg select(String groupId, String orgId) {
+        EmlOrg emlOrgSystem = em.createQuery("SELECT orgSystem FROM EmlOrg orgSystem WHERE orgSystem.groupId = :groupId AND orgSystem.id = :orgId", EmlOrg.class)
                 .setParameter("groupId", groupId)
-                .setParameter("name", name)
+                .setParameter("orgId", orgId)
                 .getSingleResult();
         return emlOrgSystem;
     }
 
-    public void delete(EmlOrgSystem emlOrgSystem) {
+    public void delete(EmlOrg emlOrgSystem) {
         em.remove(emlOrgSystem);
     }
 }

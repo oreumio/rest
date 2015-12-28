@@ -18,9 +18,9 @@ import java.util.List;
  * @author Jhonson choi (jhonsonchoi@gmail.com)
  */
 @Repository
-public class EmlOrgSystemUnitDao {
+public class EmlOrgUnitDao {
 
-	static final Logger LOGGER = LoggerFactory.getLogger(EmlOrgSystemUnitDao.class);
+	static final Logger LOGGER = LoggerFactory.getLogger(EmlOrgUnitDao.class);
 
 	@PersistenceContext(unitName = "rest")
 	private EntityManager em;
@@ -44,8 +44,8 @@ public class EmlOrgSystemUnitDao {
 	 * @param orgSystemId 조직 체계 아이디
 	 * @return 그룹 정보
 	 */
-    public List<EmlOrgSystemUnit> list(String orgSystemId) {
-        List<EmlOrgSystemUnit> emlOrgSystemUnitList = em.createQuery("SELECT orgSystemUnit FROM EmlOrgSystemUnit orgSystemUnit WHERE orgSystemUnit.orgSystemId = :orgSystemId", EmlOrgSystemUnit.class)
+    public List<EmlOrgUnit> list(String orgSystemId) {
+        List<EmlOrgUnit> emlOrgSystemUnitList = em.createQuery("SELECT orgSystemUnit FROM EmlOrgUnit orgSystemUnit WHERE orgSystemUnit.orgSystemId = :orgSystemId", EmlOrgUnit.class)
                 .setParameter("orgSystemId", orgSystemId)
                 .getResultList();
         return emlOrgSystemUnitList;
@@ -56,32 +56,32 @@ public class EmlOrgSystemUnitDao {
      * @param orgSystemUnitId 조직 체계 단위 아이디
      * @return 그룹 정보
      */
-    public List<EmlOrgSystemUnit> listSubSystemUnits(String orgSystemUnitId) {
-        List<EmlOrgSystemUnit> emlOrgSystemUnitList = em.createQuery("SELECT orgSystemUnit FROM EmlOrgSystemUnit orgSystemUnit WHERE orgSystemUnit.parentOrgSystemUnitId = :orgSystemUnitId", EmlOrgSystemUnit.class)
+    public List<EmlOrgUnit> listSubSystemUnits(String orgSystemUnitId) {
+        List<EmlOrgUnit> emlOrgSystemUnitList = em.createQuery("SELECT orgSystemUnit FROM EmlOrgUnit orgSystemUnit WHERE orgSystemUnit.parentOrgSystemUnitId = :orgSystemUnitId", EmlOrgUnit.class)
                 .setParameter("orgSystemUnitId", orgSystemUnitId)
                 .getResultList();
         return emlOrgSystemUnitList;
     }
 
-    public EmlOrgSystemUnit insert(String orgSystemId, String name, String parentOrgSystemUnitId) {
-        EmlOrgSystemUnit emlOrgSystemUnit = new EmlOrgSystemUnit();
+    public EmlOrgUnit insert(String orgId, String name, String parentOrgUnitId) {
+        EmlOrgUnit emlOrgSystemUnit = new EmlOrgUnit();
         emlOrgSystemUnit.setId("OSU" + idProvider.next());
-        emlOrgSystemUnit.setOrgSystemId(orgSystemId);
+        emlOrgSystemUnit.setOrgSystemId(orgId);
         emlOrgSystemUnit.setName(name);
-        emlOrgSystemUnit.setParentOrgSystemUnitId(parentOrgSystemUnitId);
+        emlOrgSystemUnit.setParentOrgSystemUnitId(parentOrgUnitId);
         em.persist(emlOrgSystemUnit);
         return emlOrgSystemUnit;
     }
 
-    public EmlOrgSystemUnit select(String orgSystemId, String name) {
-        EmlOrgSystemUnit emlOrgSystemUnit = em.createQuery("SELECT orgSystemUnit FROM EmlOrgSystemUnit orgSystemUnit WHERE orgSystemUnit.orgSystemId = :orgSystemId AND orgSystemUnit.name = :name", EmlOrgSystemUnit.class)
-                .setParameter("orgSystemId", orgSystemId)
-                .setParameter("name", name)
+    public EmlOrgUnit select(String orgId, String orgUnitId) {
+        EmlOrgUnit emlOrgSystemUnit = em.createQuery("SELECT orgSystemUnit FROM EmlOrgUnit orgSystemUnit WHERE orgSystemUnit.orgSystemId = :orgId AND orgSystemUnit.id = :orgUnitId", EmlOrgUnit.class)
+                .setParameter("orgId", orgId)
+                .setParameter("orgUnitId", orgUnitId)
                 .getSingleResult();
         return emlOrgSystemUnit;
     }
 
-    public void delete(EmlOrgSystemUnit emlOrgSystemUnit) {
+    public void delete(EmlOrgUnit emlOrgSystemUnit) {
         em.remove(emlOrgSystemUnit);
     }
 }

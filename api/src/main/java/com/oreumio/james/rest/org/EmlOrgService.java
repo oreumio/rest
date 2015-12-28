@@ -18,84 +18,84 @@ import java.util.List;
 public class EmlOrgService {
 
     @Autowired
-    private EmlOrgSystemDao orgSystemDao;
+    private EmlOrgDao orgSystemDao;
 
     @Autowired
-    private EmlOrgSystemUnitDao orgSystemUnitDao;
+    private EmlOrgUnitDao orgSystemUnitDao;
 
     @Autowired
     private EmlUserOrgDao emlUserOrgDao;
 
-    public List<EmlOrgSystemVo> listSystems(String groupId) {
-        List<EmlOrgSystemVo> emlOrgSystemVoList = new ArrayList<EmlOrgSystemVo>();
+    public List<EmlOrgVo> listSystems(String groupId) {
+        List<EmlOrgVo> emlOrgSystemVoList = new ArrayList<EmlOrgVo>();
 
-        List<EmlOrgSystem> emlOrgSystemList = orgSystemDao.list(groupId);
-        for (EmlOrgSystem emlOrgSystem : emlOrgSystemList) {
-            emlOrgSystemVoList.add(new EmlOrgSystemVo(emlOrgSystem));
+        List<EmlOrg> emlOrgSystemList = orgSystemDao.list(groupId);
+        for (EmlOrg emlOrgSystem : emlOrgSystemList) {
+            emlOrgSystemVoList.add(new EmlOrgVo(emlOrgSystem));
         }
         return emlOrgSystemVoList;
     }
 
     @Transactional(value = "rest_tm")
-    public EmlOrgSystemVo addSystem(String groupId, String name) {
-        EmlOrgSystem emlOrgSystem = orgSystemDao.insert(groupId, name);
-        return new EmlOrgSystemVo(emlOrgSystem);
+    public EmlOrgVo addSystem(String groupId, String orgName) {
+        EmlOrg emlOrgSystem = orgSystemDao.insert(groupId, orgName);
+        return new EmlOrgVo(emlOrgSystem);
     }
 
     @Transactional(value = "rest_tm")
-    public void removeSystem(String groupId, String name) {
-        EmlOrgSystem emlOrgSystem = orgSystemDao.select(groupId, name);
+    public void removeSystem(String groupId, String orgId) {
+        EmlOrg emlOrgSystem = orgSystemDao.select(groupId, orgId);
         orgSystemDao.delete(emlOrgSystem);
     }
 
-    public List<EmlOrgSystemUnitVo> listSystemUnits(String systemId) {
-        List<EmlOrgSystemUnitVo> emlOrgSystemUnitVoList = new ArrayList<EmlOrgSystemUnitVo>();
+    public List<EmlOrgUnitVo> listSystemUnits(String groupId, String systemId) {
+        List<EmlOrgUnitVo> emlOrgSystemUnitVoList = new ArrayList<EmlOrgUnitVo>();
 
-        List<EmlOrgSystemUnit> emlOrgSystemUnitList = orgSystemUnitDao.list(systemId);
-        for (EmlOrgSystemUnit emlOrgSystemUnit : emlOrgSystemUnitList) {
-            emlOrgSystemUnitVoList.add(new EmlOrgSystemUnitVo(emlOrgSystemUnit));
+        List<EmlOrgUnit> emlOrgSystemUnitList = orgSystemUnitDao.list(systemId);
+        for (EmlOrgUnit emlOrgSystemUnit : emlOrgSystemUnitList) {
+            emlOrgSystemUnitVoList.add(new EmlOrgUnitVo(emlOrgSystemUnit));
         }
         return emlOrgSystemUnitVoList;
     }
 
-    public List<EmlOrgSystemUnitVo> listSubSystemUnits(String systemUnitId) {
-        List<EmlOrgSystemUnitVo> emlOrgSystemUnitVoList = new ArrayList<EmlOrgSystemUnitVo>();
+    public List<EmlOrgUnitVo> listSubSystemUnits(String systemUnitId) {
+        List<EmlOrgUnitVo> emlOrgSystemUnitVoList = new ArrayList<EmlOrgUnitVo>();
 
-        List<EmlOrgSystemUnit> emlOrgSystemUnitList = orgSystemUnitDao.listSubSystemUnits(systemUnitId);
-        for (EmlOrgSystemUnit emlOrgSystemUnit : emlOrgSystemUnitList) {
-            emlOrgSystemUnitVoList.add(new EmlOrgSystemUnitVo(emlOrgSystemUnit));
+        List<EmlOrgUnit> emlOrgSystemUnitList = orgSystemUnitDao.listSubSystemUnits(systemUnitId);
+        for (EmlOrgUnit emlOrgSystemUnit : emlOrgSystemUnitList) {
+            emlOrgSystemUnitVoList.add(new EmlOrgUnitVo(emlOrgSystemUnit));
         }
         return emlOrgSystemUnitVoList;
     }
 
     @Transactional(value = "rest_tm")
-    public EmlOrgSystemUnitVo addSystemUnit(String systemId, String systemUnitName, String parentOrgSystemUnitId) {
-        EmlOrgSystemUnit emlOrgSystemUnit = orgSystemUnitDao.insert(systemId, systemUnitName, parentOrgSystemUnitId);
-        return new EmlOrgSystemUnitVo(emlOrgSystemUnit);
+    public EmlOrgUnitVo addSystemUnit(String orgId, String orgUnitName, String parentOrgUnitId) {
+        EmlOrgUnit emlOrgSystemUnit = orgSystemUnitDao.insert(orgId, orgUnitName, parentOrgUnitId);
+        return new EmlOrgUnitVo(emlOrgSystemUnit);
     }
 
     @Transactional(value = "rest_tm")
-    public void removeSystemUnit(String systemId, String systemUnitName) {
-        EmlOrgSystemUnit emlOrgSystemUnit = orgSystemUnitDao.select(systemId, systemUnitName);
+    public void removeSystemUnit(String orgId, String orgUnitId) {
+        EmlOrgUnit emlOrgSystemUnit = orgSystemUnitDao.select(orgId, orgUnitId);
         orgSystemUnitDao.delete(emlOrgSystemUnit);
     }
 
     @Transactional(value = "rest_tm")
-    public EmlUserOrgVo addSystemUnitUser(String systemUnitId, String userId) {
-        EmlUserOrg emlOrgSystemUnitUser = emlUserOrgDao.insert(systemUnitId, userId);
+    public EmlUserOrgVo addSystemUnitUser(String orgId, String orgUnitId, String userId) {
+        EmlUserOrg emlOrgSystemUnitUser = emlUserOrgDao.insert(orgUnitId, userId);
         return new EmlUserOrgVo(emlOrgSystemUnitUser);
     }
 
     @Transactional(value = "rest_tm")
-    public void removeSystemUnitUser(String systemUnitId, String userId) {
-        EmlUserOrg emlOrgSystemUnitUser = emlUserOrgDao.select(systemUnitId, userId);
+    public void removeSystemUnitUser(String orgId, String orgUnitId, String userId) {
+        EmlUserOrg emlOrgSystemUnitUser = emlUserOrgDao.select(orgUnitId, userId);
         emlUserOrgDao.delete(emlOrgSystemUnitUser);
     }
 
     @Transactional(value = "rest_tm")
-    public List<EmlUserOrgVo> listSystemUnitUsers(String systemUnitId) {
+    public List<EmlUserOrgVo> listSystemUnitUsers(String orgId, String orgUnitId) {
         List<EmlUserOrgVo> emlUserOrgVoList = new ArrayList<EmlUserOrgVo>();
-        List<EmlUserOrg> emlOrgSystemUnitUsers = emlUserOrgDao.list(systemUnitId);
+        List<EmlUserOrg> emlOrgSystemUnitUsers = emlUserOrgDao.list(orgUnitId);
         for (EmlUserOrg emlUserOrg : emlOrgSystemUnitUsers) {
             emlUserOrgVoList.add(new EmlUserOrgVo(emlUserOrg));
         }

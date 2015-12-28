@@ -9,9 +9,9 @@ public class EmlUserOrgVo {
 
     private String id;
 
-    private String orgSystemId;
+    private String orgId;
 
-    private String orgSystemUnitId;
+    private String orgUnitId;
 
     private String userId;
 
@@ -20,8 +20,7 @@ public class EmlUserOrgVo {
 
     public EmlUserOrgVo(EmlUserOrg emlUserOrg) {
         id = emlUserOrg.getId();
-        orgSystemId = emlUserOrg.getOrgSystemId();
-        orgSystemUnitId = emlUserOrg.getOrgSystemUnitId();
+        orgUnitId = emlUserOrg.getOrgSystemUnitId();
         userId = emlUserOrg.getUserId();
     }
 
@@ -33,20 +32,20 @@ public class EmlUserOrgVo {
         this.id = id;
     }
 
-    public String getOrgSystemId() {
-        return orgSystemId;
+    public String getOrgId() {
+        return orgId;
     }
 
-    public void setOrgSystemId(String orgSystemId) {
-        this.orgSystemId = orgSystemId;
+    public void setOrgId(String orgId) {
+        this.orgId = orgId;
     }
 
-    public String getOrgSystemUnitId() {
-        return orgSystemUnitId;
+    public String getOrgUnitId() {
+        return orgUnitId;
     }
 
-    public void setOrgSystemUnitId(String orgSystemUnitId) {
-        this.orgSystemUnitId = orgSystemUnitId;
+    public void setOrgUnitId(String orgUnitId) {
+        this.orgUnitId = orgUnitId;
     }
 
     public String getUserId() {
@@ -61,8 +60,8 @@ public class EmlUserOrgVo {
     public String toString() {
         return "EmlUserOrg{" +
                 "id='" + id + '\'' +
-                ", orgSystemId='" + orgSystemId + '\'' +
-                ", orgSystemUnitId='" + orgSystemUnitId + '\'' +
+                ", orgId='" + orgId + '\'' +
+                ", orgUnitId='" + orgUnitId + '\'' +
                 ", userId='" + userId + '\'' +
                 '}';
     }

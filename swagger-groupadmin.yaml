@@ -1,0 +1,436 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: 'OreumIO James REST API'
+  description: >
+   OreumIO James API 는 사용자가 자신의 데이타에 접근할 수 있게 해줍니다.
+host: localhost:8083
+produces:
+  - application/json
+  - text/html
+  - text/plain
+paths:
+  /login.do:
+    post:
+      description: |
+        로그인한다.
+      parameters:
+        - name: groupId
+          in: query
+          description: 그룹 아이디
+          type: string
+        - name: clientId
+          in: query
+          description: 클라이언트 아이디
+          type: string
+      responses:
+        '200':
+          description: Successful response
+  /users.do:
+    get:
+      security:
+        - basic: []
+      description: |
+        사용자를 검색한다.
+      parameters:
+        - name: pageNo
+          in: query
+          description: 페이지 번호
+          type: integer
+        - name: pageSize
+          in: query
+          description: 페이지 크기
+          type: integer
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/User'
+    post:
+      description: |
+        사용자를 등록한다.
+      parameters:
+        - in: body
+          name: body
+          description: 사용자 오브젝트
+          required: false
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        '200':
+          description: Successful response
+  /users/{userId}.do:
+    get:
+      parameters:
+        - $ref: '#/parameters/userId'
+      description: |
+        사용자의 정보를 얻는다.
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/User'
+  /users/{userId}/suspend.do:
+    post:
+      description: |
+        사용자를 정지시킨다.
+      parameters:
+        - $ref: '#/parameters/userId'
+      responses:
+        '200':
+          description: Successful response
+  /users/{userId}/resume.do:
+    post:
+      description: |
+        사용자를 재개시킨다.
+      parameters:
+        - $ref: '#/parameters/userId'
+      responses:
+        '200':
+          description: Successful response
+  /users/{userId}/changeQuota.do:
+    post:
+      description: |
+        사용자의 계획 용량을 변경한다.
+      parameters:
+        - $ref: '#/parameters/userId'
+        - name: quota
+          in: query
+          description: 사용자 계획 용량
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Successful response
+  /orgs.do:
+    get:
+      description: |
+        조직을 검색한다.
+      parameters:
+        - name: pageNo
+          in: query
+          description: 페이지 번호
+          type: integer
+        - name: pageSize
+          in: query
+          description: 페이지 크기
+          type: integer
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Org'
+    post:
+      description: |
+        조직을 등록한다.
+      parameters:
+        - in: body
+          name: body
+          description: 조직 오브젝트
+          required: false
+          schema:
+            $ref: '#/definitions/Org'
+      responses:
+        '200':
+          description: Successful response
+  /orgs/{orgId}.do:
+    get:
+      parameters:
+        - $ref: '#/parameters/orgId'
+      description: |
+        조직의 정보를 얻는다.
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/Org'
+    delete:
+      parameters:
+        - $ref: '#/parameters/orgId'
+      description: |
+        조직을 삭제한다.
+      responses:
+        '200':
+          description: Successful response
+  /orgs/{orgId}/orgUnits.do:
+    get:
+      description: |
+        조직 단위를 검색한다.
+      parameters:
+        - $ref: '#/parameters/orgId'
+        - name: pageNo
+          in: query
+          description: 페이지 번호
+          type: integer
+        - name: pageSize
+          in: query
+          description: 페이지 크기
+          type: integer
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Org'
+    post:
+      description: |
+        조직 단위를 등록한다.
+      parameters:
+        - $ref: '#/parameters/orgId'
+        - in: body
+          name: body
+          description: 조직 단위 오브젝트
+          required: false
+          schema:
+            $ref: '#/definitions/OrgUnit'
+      responses:
+        '200':
+          description: Successful response
+  /orgs/{orgId}/orgUnits/{orgUnitId}.do:
+    get:
+      parameters:
+        - $ref: '#/parameters/orgId'
+        - $ref: '#/parameters/orgUnitId'
+      description: |
+        조직 단위의 정보를 얻는다.
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/OrgUnit'
+    delete:
+      parameters:
+        - $ref: '#/parameters/orgId'
+        - $ref: '#/parameters/orgUnitId'
+      description: |
+        조직 단위를 삭제한다.
+      responses:
+        '200':
+          description: Successful response
+  /orgs/{orgId}/orgUnits/{orgUnitId}/users.do:
+    get:
+      description: |
+        조직 단위의 사용자를 검색한다.
+      parameters:
+        - $ref: '#/parameters/orgId'
+        - $ref: '#/parameters/orgUnitId'
+        - name: pageNo
+          in: query
+          description: 페이지 번호
+          type: integer
+        - name: pageSize
+          in: query
+          description: 페이지 크기
+          type: integer
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/User'
+    post:
+      description: |
+        조직 단위의 사용자를 등록한다.
+      parameters:
+        - $ref: '#/parameters/orgId'
+        - $ref: '#/parameters/orgUnitId'
+        - in: body
+          name: body
+          description: 사용자 오브젝트
+          required: false
+          schema:
+            $ref: '#/definitions/OrgUnitUser'
+      responses:
+        '200':
+          description: Successful response
+  /orgs/{orgId}/orgUnits/{orgUnitId}/users/{userId}.do:
+    get:
+      parameters:
+        - $ref: '#/parameters/orgId'
+        - $ref: '#/parameters/orgUnitId'
+        - $ref: '#/parameters/userId'
+      description: |
+        조직 단위의 사용자의 정보를 얻는다.
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/User'
+    delete:
+      parameters:
+        - $ref: '#/parameters/orgId'
+        - $ref: '#/parameters/orgUnitId'
+        - $ref: '#/parameters/userId'
+      description: |
+        조직 단위의 사용자를 삭제한다.
+      responses:
+        '200':
+          description: Successful response
+definitions:
+  Client:
+    type: object
+    properties:
+      clientId:
+        type: string
+        description: 고객 아이디
+      description:
+        type: string
+        description: 고객 설명
+      displayName:
+        type: string
+        description: 고객 표시명
+      state:
+        type: string
+        description: 고객 상태. 정상, 정지, 삭제.
+  Group:
+    type: object
+    properties:
+      groupId:
+        type: string
+        description: 그룹 아이디
+      clientId:
+        type: string
+        description: 고객 아이디
+      description:
+        type: string
+        description: 그룹 설명
+      displayName:
+        type: string
+        description: 그룹 표시명
+      quota:
+        type: integer
+        format: int32
+        description: 용량
+      config:
+        type: string
+        description: 그룹 설정
+      state:
+        type: string
+        description: 그룹 상태. 정상, 정지, 삭제.
+      domainName:
+        type: string
+        description: 주 도메인명
+      secondaryDomainNames:
+        type: array
+        items:
+          type: string
+          description: 도메인명.
+  User:
+    type: object
+    properties:
+      id:
+        type: string
+        description: 사용자 아이디
+      groupId:
+        type: string
+        description: 그룹 아이디
+      userName:
+        type: string
+        description: 사용자명. 이메일 주소의 지역부.
+      domainName:
+        type: string
+        description: 도메인명. 이메일 주소의 도메인부.
+      displayName:
+        type: string
+        description: 사용자 표시명
+      socketEnabled:
+        type: string
+        description: POP3/IMAP 사용여부.
+      state:
+        type: string
+        description: 사용자 상태. 정상(N), 정지(R), 삭제(D).
+      quota:
+        type: integer
+        format: int32
+        description: 계획 용량
+      serverConfig:
+        type: string
+        description: 서버를 위한 사용자 설정
+      clientConfig:
+        type: string
+        description: 클라이언트를 위한 사용자 설정
+  Org:
+    type: object
+    properties:
+      orgId:
+        type: string
+        description: 조직 아이디. 0 회사, 1 부서, 2 직위, 3 직무, 4 직책, 5 기타
+      groupId:
+        type: string
+        description: 그룹 아이디
+      displayName:
+        type: string
+        description: 조직 표시명
+  OrgUnit:
+    type: object
+    properties:
+      orgUnitId:
+        type: string
+        description: 조직 단위 아이디
+      orgId:
+        type: string
+        description: 조직 아이디
+      displayName:
+        type: string
+        description: 조직 표시명
+      parentOrgNodeId:
+        type: string
+        description: 부모 조직 단위 아이디
+  OrgUnitUser:
+    type: object
+    properties:
+      orgUnitId:
+        type: string
+        description: 조직 단위 아이디
+      orgId:
+        type: string
+        description: 조직 아이디
+      userId:
+        type: string
+        description: 사용자 아이디
+parameters:
+  userId:
+    name: userId
+    in: path
+    description: 사용자 아이디
+    required: true
+    type: string
+  orgId:
+    name: orgId
+    in: path
+    description: 조직 아이디
+    required: true
+    type: string
+  orgUnitId:
+    name: orgUnitId
+    in: path
+    description: 조직 단위 아이디
+    required: true
+    type: string
+securityDefinitions:
+  basic:
+    type: basic
+    description: HTTP 인증
+  key:
+    type: apiKey
+    description: API 키를 사용한 인증
+    in: header
+    name: access_token

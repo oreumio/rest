@@ -1,28 +1,33 @@
 package com.oreumio.james.rest.org;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * 조직 체계 정의
  *
  * @author Jhonson choi (jhonsonchoi@gmail.com)
  */
-public class EmlOrgSystemVo {
+@Entity
+@Table(name = "EML_ORG_SYSTEM")
+public class EmlOrg {
 
     /**
      * 조직 체계 아이디
      */
+    @Id
+    @Column(name = "ORG_SYSTEM_ID", nullable = false, length = 30)
     private String id;
 
+    @Column(name = "GROUP_ID", nullable = false, length = 30)
     private String groupId;
 
+    @Column(name = "ORG_SYSTEM_DISPLAY_NAME", nullable = false)
     private String name;
 
-    public EmlOrgSystemVo() {
-    }
-
-    public EmlOrgSystemVo(EmlOrgSystem emlOrgSystem) {
-        id = emlOrgSystem.getId();
-        groupId = emlOrgSystem.getGroupId();
-        name = emlOrgSystem.getName();
+    public EmlOrg() {
     }
 
     public String getId() {
@@ -51,7 +56,7 @@ public class EmlOrgSystemVo {
 
     @Override
     public String toString() {
-        return "EmlOrgSystemVo{" +
+        return "EmlOrgSystem{" +
                 "id='" + id + '\'' +
                 ", groupId='" + groupId + '\'' +
                 ", name='" + name + '\'' +

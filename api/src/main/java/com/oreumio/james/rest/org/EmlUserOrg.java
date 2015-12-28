@@ -18,9 +18,6 @@ public class EmlUserOrg {
     @Column(name = "ID", nullable = false, length = 30)
     private String id;
 
-    @Column(name = "ORG_SYSTEM_ID", nullable = false, length = 30)
-    private String orgSystemId;
-
     @Column(name = "ORG_SYSTEM_UNIT_ID", nullable = false, length = 30)
     private String orgSystemUnitId;
 
@@ -36,14 +33,6 @@ public class EmlUserOrg {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getOrgSystemId() {
-        return orgSystemId;
-    }
-
-    public void setOrgSystemId(String orgSystemId) {
-        this.orgSystemId = orgSystemId;
     }
 
     public String getOrgSystemUnitId() {
@@ -66,7 +55,6 @@ public class EmlUserOrg {
     public String toString() {
         return "EmlUserOrg{" +
                 "id='" + id + '\'' +
-                ", orgSystemId='" + orgSystemId + '\'' +
                 ", orgSystemUnitId='" + orgSystemUnitId + '\'' +
                 ", userId='" + userId + '\'' +
                 '}';

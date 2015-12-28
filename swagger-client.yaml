@@ -27,6 +27,13 @@ paths:
     post:
       description: |
         그룹을 등록한다.
+      parameters:
+        - in: body
+          name: body
+          description: 그룹 오브젝트
+          required: true
+          schema:
+            $ref: '#/definitions/Group'
       responses:
         '200':
           description: Successful response
@@ -230,6 +237,10 @@ paths:
 definitions:
   Group:
     type: object
+    required:
+      - clientId
+      - displayName
+      - quota
     properties:
       id:
         type: string

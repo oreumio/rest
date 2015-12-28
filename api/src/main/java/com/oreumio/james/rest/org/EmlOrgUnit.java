@@ -12,7 +12,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "EML_ORG_SYSTEM_UNIT")
-public class EmlOrgSystemUnit {
+public class EmlOrgUnit {
 
     /**
      * 조직 단위 아이디
@@ -27,10 +27,10 @@ public class EmlOrgSystemUnit {
     @Column(name = "ORG_SYSTEM_DISPLAY_NAME", nullable = false)
     private String name;
 
-    @Column(name = "PARENT_ORG_SYSTEM_UNIT_ID", nullable = false, length = 30)
+    @Column(name = "PARENT_ORG_SYSTEM_UNIT_ID", length = 30)
     private String parentOrgSystemUnitId;
 
-    public EmlOrgSystemUnit() {
+    public EmlOrgUnit() {
     }
 
     public String getId() {
