@@ -124,26 +124,22 @@ public class EmlMailFormVo implements Serializable {
         mailFrom = new ArrayList<EmlMailFormFromVo>();
         for (EmlMailFormFrom emlAddress : emlMailForm.getMailFrom()) {
             EmlMailFormFromVo emlMailFormFromVo = new EmlMailFormFromVo(emlAddress);
-            emlMailFormFromVo.setMailForm(this);
             mailFrom.add(emlMailFormFromVo);
 
         }
         mailTo = new ArrayList<EmlMailFormToVo>();
         for (EmlMailFormTo emlAddress : emlMailForm.getMailTo()) {
             EmlMailFormToVo emlMailFormToVo = new EmlMailFormToVo(emlAddress);
-            emlMailFormToVo.setMailForm(this);
             mailTo.add(emlMailFormToVo);
         }
         mailCc = new ArrayList<EmlMailFormCcVo>();
         for (EmlMailFormCc emlAddress : emlMailForm.getMailCc()) {
             EmlMailFormCcVo emlMailFormCcVo = new EmlMailFormCcVo(emlAddress);
-            emlMailFormCcVo.setMailForm(this);
             mailCc.add(emlMailFormCcVo);
         }
         mailBcc = new ArrayList<EmlMailFormBccVo>();
         for (EmlMailFormBcc emlAddress : emlMailForm.getMailBcc()) {
             EmlMailFormBccVo emlMailFormBccVo = new EmlMailFormBccVo(emlAddress);
-            emlMailFormBccVo.setMailForm(this);
             mailBcc.add(emlMailFormBccVo);
         }
 //        fileList = null;

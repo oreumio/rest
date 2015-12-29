@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
  * @author Jhonson choi (jhonsonchoi@gmail.com)
  */
 @Controller
-@RequestMapping("send")
 public class SendController {
 
     @Autowired

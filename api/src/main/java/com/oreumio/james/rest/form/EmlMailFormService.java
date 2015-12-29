@@ -36,6 +36,17 @@ public class EmlMailFormService {
     }
 
     @Transactional("rest_tm")
+    public EmlMailFormVo get(String userId, String mailFormId) {
+        EmlMailForm mailForm = emlMailFormDao.select(userId, mailFormId);
+        return new EmlMailFormVo(mailForm);
+    }
+
+    @Transactional("rest_tm")
+    public void update(String userId, String mailFormId, EmlMailFormVo mailFormVo) {
+        EmlMailForm mailForm = emlMailFormDao.select(userId, mailFormId);
+    }
+
+    @Transactional("rest_tm")
     public EmlMailFormVo add(EmlMailFormVo emlMailFormVo) {
         EmlMailForm emlMailForm = new EmlMailForm(emlMailFormVo);
         emlMailForm.setId(idProvider.next());

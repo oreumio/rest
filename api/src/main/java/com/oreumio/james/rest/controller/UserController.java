@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Jhonson choi (jhonsonchoi@gmail.com)
@@ -82,9 +83,10 @@ public class UserController {
 
     @RequestMapping(value = "users/{userId}/changePassword", method = RequestMethod.POST)
     @ResponseBody
-    public void changePassword(HttpServletRequest request, @PathVariable String userId, String password) {
+    public void changePassword(HttpServletRequest request, @PathVariable String userId, @RequestParam String newPassword) {
+//        String newPassword = form;
         SessionVo sessionVo = SessionUtil.getSession(request);
-        logger.debug("changePassword userId=" + userId);
-        userService.changePassword(sessionVo.getGroupId(), userId, password);
+        logger.debug("changePassword userId=" + userId + ", newPassword=" + newPassword);
+        userService.changePassword(sessionVo.getGroupId(), userId, newPassword);
     }
 }

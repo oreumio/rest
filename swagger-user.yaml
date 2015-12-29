@@ -1,0 +1,602 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: 'OreumIO James REST API'
+  description: >
+   OreumIO James API 는 사용자가 자신의 데이타에 접근할 수 있게 해줍니다.
+host: localhost:8083
+produces:
+  - application/json
+  - text/html
+  - text/plain
+paths:
+  /users/{userId}.do:
+    get:
+      description: |
+        사용자 자신의 정보를 조회한다.
+      parameters:
+        - $ref: '#/parameters/userId'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/User'
+  /users/{userId}/changePassword.do:
+    post:
+      description: |
+        사용자의 패스워드를 변경한다.
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - $ref: '#/parameters/userId'
+        - name: newPassword
+          in: formData
+          description: 새 패스워드
+          type: string
+      responses:
+        '200':
+          description: Successful response
+  /users/{userId}/getQuota.do:
+    get:
+      description: |
+        사용자의 사용량 실적을 조회한다.
+      parameters:
+        - $ref: '#/parameters/userId'
+      responses:
+        '200':
+          description: Successful response
+  /groups/{groupId}.do:
+    get:
+      description: |
+        그룹 정보를 조회한다.
+      parameters:
+        - $ref: '#/parameters/groupId'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/Group'
+  /send.do:
+    post:
+      description: |
+        메세지를 발신한다.
+      parameters:
+        - name: body
+          in : body
+          description: 메세지 오브젝트
+          schema:
+            $ref: '#/definitions/Message'
+      responses:
+        '200':
+          description: Successful response
+  /mailboxes.do:
+    get:
+      description: |
+        메일박스를 검색한다.
+      responses:
+        '200':
+          description: Successful response
+    post:
+      description: |
+        메일박스를 생성한다.
+      parameters:
+        - name: mailboxName
+          in: query
+          description: 메일박스 이름
+          type: string
+      responses:
+        '200':
+          description: Successful response
+  /mailboxes/{mailboxId}.do:
+    delete:
+      description: |
+        메일박스를 삭제한다.
+      parameters:
+        - $ref: '#/parameters/mailboxId'
+      responses:
+        '200':
+          description: Successful response
+  /mailboxes/{mailboxId}/changeName.do:
+    post:
+      description: |
+        메일박스 이름을 변경한다.
+      parameters:
+        - $ref: '#/parameters/mailboxId'
+        - name: newMailboxName
+          in: query
+          description: 메일박스 새 이름
+          type: string
+      responses:
+        '200':
+          description: Successful response
+  /messages.do:
+    get:
+      description: |
+        메일을 검색한다.
+      responses:
+        '200':
+          description: Successful response
+    post:
+      description: |
+        메일을 추가한다.
+      responses:
+        '200':
+          description: Successful response
+  /messages/{messageId}.do:
+    get:
+      description: |
+        메일을 조회한다.
+      parameters:
+        - $ref: '#/parameters/messageId'
+      responses:
+        '200':
+          description: Successful response
+  /messages/{messageId}/changeFlags.do:
+    post:
+      description: |
+        메일의 플래그를 변경한다.
+      parameters:
+        - $ref: '#/parameters/messageId'
+      responses:
+        '200':
+          description: Successful response
+  /sentMessages.do:
+    get:
+      description: |
+        발신 메일 추적 정보를 검색한다.
+      responses:
+        '200':
+          description: Successful response
+    post:
+      description: |
+        발신 메일 추적 정보를 추가한다.
+      responses:
+        '200':
+          description: Successful response
+  /sentMessages/{messageId}.do:
+    get:
+      description: |
+        발신 메일 추적 정보를 조회한다.
+      parameters:
+        - $ref: '#/parameters/messageId'
+      responses:
+        '200':
+          description: Successful response
+    delete:
+      description: |
+        발신 메일 추적 정보를 삭제한다.
+      parameters:
+        - $ref: '#/parameters/messageId'
+      responses:
+        '200':
+          description: Successful response
+  /reservedMessages.do:
+    get:
+      description: |
+        예약 메일을 검색한다.
+      responses:
+        '200':
+          description: Successful response
+    post:
+      description: |
+        예약 메일을 추가한다.
+      responses:
+        '200':
+          description: Successful response
+  /reservedMessages/{messageId}.do:
+    get:
+      description: |
+        예약 메일을 조회한다.
+      parameters:
+        - $ref: '#/parameters/messageId'
+      responses:
+        '200':
+          description: Successful response
+    delete:
+      description: |
+        예약 메일을 삭제한다.
+      parameters:
+        - $ref: '#/parameters/messageId'
+      responses:
+        '200':
+          description: Successful response
+    put:
+      description: |
+        예약 메일을 변경한다.
+      parameters:
+        - $ref: '#/parameters/messageId'
+      responses:
+        '200':
+          description: Successful response
+  /forms.do:
+    get:
+      description: |
+        초안 메일을 검색한다.
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Message'
+    post:
+      description: |
+        초안 메일을 추가한다.
+      parameters:
+        - name: body
+          in : body
+          description: 메세지 오브젝트
+          schema:
+            $ref: '#/definitions/Message'
+      responses:
+        '200':
+          description: Successful response
+  /forms/{mailFormId}.do:
+    get:
+      description: |
+        초안 메일을 조회한다.
+      parameters:
+        - $ref: '#/parameters/mailFormId'
+      responses:
+        '200':
+          description: Successful response
+    delete:
+      description: |
+        초안 메일을 삭제한다.
+      parameters:
+        - $ref: '#/parameters/mailFormId'
+      responses:
+        '200':
+          description: Successful response
+    put:
+      description: |
+        초안 메일을 변경한다.
+      parameters:
+        - $ref: '#/parameters/mailFormId'
+        - name: body
+          in: body
+          description: 메세지 오브젝트
+          schema:
+            $ref: '#/definitions/Message'
+      responses:
+        '200':
+          description: Successful response
+  /files.do:
+    get:
+      description: |
+        파일 메타 정보를 검색한다.
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/File'
+    post:
+      description: |
+        파일 메타 정보를 추가한다.
+      parameters:
+        - name: body
+          in: body
+          description: 파일 오브젝트
+          schema:
+            $ref: '#/definitions/File'
+      responses:
+        '200':
+          description: Successful response
+  /files/{fileId}.do:
+    get:
+      description: |
+        파일 메타 정보를 조회한다.
+      parameters:
+        - $ref: '#/parameters/fileId'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/File'
+    delete:
+      description: |
+        파일 메타 정보를 삭제한다.
+      parameters:
+        - $ref: '#/parameters/fileId'
+      responses:
+        '200':
+          description: Successful response
+  /config.do:
+    get:
+      description: |
+        설정을 조회한다.
+      responses:
+        '200':
+          description: Successful response
+    put:
+      description: |
+        설정을 변경한다.
+      responses:
+        '200':
+          description: Successful response
+  /orgs.do:
+    get:
+      description: |
+        조직을 검색한다.
+      responses:
+        '200':
+          description: Successful response
+  /orgs/{orgId}/orgUnits.do:
+    get:
+      description: |
+        조직 단위를 검색한다.
+      parameters:
+        - $ref: '#/parameters/orgId'
+      responses:
+        '200':
+          description: Successful response
+  /orgs/{orgId}/orgUnits/{orgUnitId}/users.do:
+    get:
+      description: |
+        조직 단위 구성원(사용자)를 검색한다.
+      parameters:
+        - $ref: '#/parameters/orgId'
+        - $ref: '#/parameters/orgUnitId'
+      responses:
+        '200':
+          description: Successful response
+definitions:
+  Message:
+    type: object
+    properties:
+      userId:
+        type: string
+        description: 사용자 아이디
+      subject:
+        type: string
+        description: 제목
+      content:
+        type: string
+        description: 내용
+      fileList:
+        type: string
+        description: 파일 아이디 목록
+      fileDownEndDe:
+        type: string
+        description: 다운로드 기한
+      mailFrom:
+        type: array
+        items:
+          $ref: '#/definitions/Address'
+        description: 보낸 사람 주소
+      mailTo:
+        type: array
+        items:
+          $ref: '#/definitions/Address'
+        description: 수신자 주소 목록
+      mailCc:
+        type: array
+        items:
+          $ref: '#/definitions/Address'
+        description: 참고 수신자 주소 목록
+      mailBcc:
+        type: array
+        items:
+          $ref: '#/definitions/Address'
+        description: 비밀 참고 수신자 주소 목록
+      priority:
+        type: string
+        description: 중요도
+      separateSendYn:
+        type: string
+        description: 개별 발송 여부
+      massiveMailYn:
+        type: string
+        description: 대용량 첨부 메일 여부
+      password:
+        type: string
+        description: 보안 메일 패스워드
+      passwordYn:
+        type: string
+        description: 보안 메일 여부
+      mode:
+        type: string
+        description: 발송 후 페이지
+      afterPage:
+        type: string
+        description: 발송 후 페이지
+      reservDt:
+        type: string
+        description: 예약 시각
+      timeZoneId:
+        type: string
+        description: 타임존
+      mailIdList:
+        type: array
+        items:
+          type: string
+          description: 관련 메일 아이디 목록
+      storeExpireDe:
+        type: string
+        description: 저장 기한
+      mailReadRecpinYn:
+        type: string
+        description: 읽음 추적 여부
+  Address:
+      type: object
+      required:
+        - address
+      properties:
+        address:
+          type: string
+          description: 이메일주소
+        personal:
+          type: string
+          description: 이메일 이름
+  Client:
+    type: object
+    properties:
+      clientId:
+        type: string
+        description: 고객 아이디
+      description:
+        type: string
+        description: 고객 설명
+      displayName:
+        type: string
+        description: 고객 표시명
+      state:
+        type: string
+        description: 고객 상태. 정상, 정지, 삭제.
+  Group:
+    type: object
+    properties:
+      groupId:
+        type: string
+        description: 그룹 아이디
+      clientId:
+        type: string
+        description: 고객 아이디
+      description:
+        type: string
+        description: 그룹 설명
+      displayName:
+        type: string
+        description: 그룹 표시명
+      quota:
+        type: integer
+        format: int32
+        description: 용량
+      config:
+        type: string
+        description: 그룹 설정
+      state:
+        type: string
+        description: 그룹 상태. 정상, 정지, 삭제.
+      domainName:
+        type: string
+        description: 주 도메인명
+      secondaryDomainNames:
+        type: array
+        items:
+          type: string
+          description: 도메인명.
+  User:
+    type: object
+    properties:
+      userId:
+        type: string
+        description: 사용자 아이디
+      groupId:
+        type: string
+        description: 그룹 아이디
+      userName:
+        type: string
+        description: 사용자명
+      domainName:
+        type: string
+        description: 도메인명
+      description:
+        type: string
+        description: 사용자 설명
+      displayName:
+        type: string
+        description: 사용자 표시명
+      quota:
+        type: integer
+        format: int32
+        description: 용량
+      config:
+        type: string
+        description: 사용자 설정
+      state:
+        type: string
+        description: 사용자 상태. 정상, 정지, 삭제.
+  Org:
+    type: object
+    properties:
+      orgId:
+        type: string
+        description: 조직 아이디. 0 회사, 1 부서, 2 직위, 3 직무, 4 직책, 5 기타
+      groupId:
+        type: string
+        description: 그룹 아이디
+      displayName:
+        type: string
+        description: 조직 표시명
+  OrgUnit:
+    type: object
+    properties:
+      orgUnitId:
+        type: string
+        description: 조직 단위 아이디
+      orgId:
+        type: string
+        description: 조직 아이디
+      displayName:
+        type: string
+        description: 조직 단위 표시명
+      parentOrgUnitId:
+        type: string
+        description: 부모 조직 단위 아이디
+  File:
+    type: object
+    properties:
+      fileId:
+        type: string
+        description: 파일 아이디
+      description:
+        type: string
+        description: 파일 설명
+      displayName:
+        type: string
+        description: 파일 표시명
+      state:
+        type: string
+        description: 파일 상태. 정상, 정지, 삭제.
+parameters:
+  userId:
+    name: userId
+    in: path
+    description: 사용자 아이디
+    required: true
+    type: string
+  groupId:
+    name: groupId
+    in: path
+    description: 그룹 아이디
+    required: true
+    type: string
+  orgId:
+    name: orgId
+    in: path
+    description: 조직 아이디
+    required: true
+    type: string
+  orgUnitId:
+    name: orgUnitId
+    in: path
+    description: 조직 단위 아이디
+    required: true
+    type: string
+  mailboxId:
+    name: mailboxId
+    in: path
+    description: 메일박스 아이디
+    required: true
+    type: string
+  messageId:
+    name: messageId
+    in: path
+    description: 메세지 아이디
+    required: true
+    type: string
+  mailFormId:
+    name: mailFormId
+    in: path
+    description: 메세지 폼 아이디
+    required: true
+    type: string
+  fileId:
+    name: fileId
+    in: path
+    description: 파일 아이디
+    required: true
+    type: string

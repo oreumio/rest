@@ -7,8 +7,6 @@ public class EmlMailFormCcVo implements EmlAddressVo {
 
     private String id;
 
-    private EmlMailFormVo mailForm;
-
     private String address;
 
     private String personal;
@@ -27,14 +25,6 @@ public class EmlMailFormCcVo implements EmlAddressVo {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public EmlMailFormVo getMailForm() {
-        return mailForm;
-    }
-
-    public void setMailForm(EmlMailFormVo mailForm) {
-        this.mailForm = mailForm;
     }
 
     public String getAddress() {

@@ -45,18 +45,15 @@ paths:
         '200':
           description: Successful response
           schema:
-            type: object
-            properties:
-              data:
-                type: array
-                items:
-                  $ref: '#/definitions/User'
+            type: array
+            items:
+              $ref: '#/definitions/User'
     post:
       description: |
         사용자를 등록한다.
       parameters:
-        - in: body
-          name: body
+        - name: body
+          in: body
           description: 사용자 오브젝트
           required: false
           schema:
@@ -124,18 +121,15 @@ paths:
         '200':
           description: Successful response
           schema:
-            type: object
-            properties:
-              data:
-                type: array
-                items:
-                  $ref: '#/definitions/Org'
+            type: array
+            items:
+              $ref: '#/definitions/Org'
     post:
       description: |
         조직을 등록한다.
       parameters:
-        - in: body
-          name: body
+        - name: body
+          in: body
           description: 조직 오브젝트
           required: false
           schema:
@@ -180,19 +174,16 @@ paths:
         '200':
           description: Successful response
           schema:
-            type: object
-            properties:
-              data:
-                type: array
-                items:
-                  $ref: '#/definitions/Org'
+            type: array
+            items:
+              $ref: '#/definitions/OrgUnit'
     post:
       description: |
         조직 단위를 등록한다.
       parameters:
         - $ref: '#/parameters/orgId'
-        - in: body
-          name: body
+        - name: body
+          in: body
           description: 조직 단위 오브젝트
           required: false
           schema:
@@ -240,12 +231,9 @@ paths:
         '200':
           description: Successful response
           schema:
-            type: object
-            properties:
-              data:
-                type: array
-                items:
-                  $ref: '#/definitions/User'
+            type: array
+            items:
+              $ref: '#/definitions/User'
     post:
       description: |
         조직 단위의 사용자를 등록한다.
@@ -255,7 +243,6 @@ paths:
         - in: body
           name: body
           description: 사용자 오브젝트
-          required: false
           schema:
             $ref: '#/definitions/OrgUnitUser'
       responses:

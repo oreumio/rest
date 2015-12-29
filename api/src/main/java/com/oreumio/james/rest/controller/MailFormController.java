@@ -8,9 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -19,7 +17,6 @@ import java.util.List;
  * @author Jhonson choi (jhonsonchoi@gmail.com)
  */
 @Controller
-@RequestMapping("form")
 public class MailFormController {
 
     private static Logger logger = LoggerFactory.getLogger(MailFormController.class);
@@ -27,36 +24,59 @@ public class MailFormController {
     @Autowired
     private EmlMailFormService emlMailFormService;
 
-    @RequestMapping("list")
+    @RequestMapping(value = "forms", method = RequestMethod.GET)
     @ResponseBody
     public List<EmlMailFormVo> list(HttpServletRequest request) {
+        logger.debug("메일 폼을 검색합니다.");
+
         SessionVo sessionVo = SessionUtil.getSession(request);
 
         return emlMailFormService.list(sessionVo.getUserId());
     }
 
-    @RequestMapping("add")
+    @RequestMapping(value = "forms", method = RequestMethod.POST)
     @ResponseBody
-    public EmlMailFormVo add(HttpServletRequest request, @RequestBody EmlMailFormVo emlMailFormVo) {
-        logger.debug("" + emlMailFormVo);
+    public EmlMailFormVo post(HttpServletRequest request, @RequestBody EmlMailFormVo mailFormVo) {
+        logger.debug("메일 폼을 추가합니다." + mailFormVo);
 
         SessionVo sessionVo = SessionUtil.getSession(request);
 
-        emlMailFormVo.setUserId(sessionVo.getUserId());
+        mailFormVo.setUserId(sessionVo.getUserId());
 
         try {
-            return emlMailFormService.add(emlMailFormVo);
+            return emlMailFormService.add(mailFormVo);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    @RequestMapping("remove")
+    @RequestMapping(value = "forms/{mailFormId}", method = RequestMethod.GET)
     @ResponseBody
-    public void remove(HttpServletRequest request, String emlMailFormId) {
+    public EmlMailFormVo get(HttpServletRequest request, @PathVariable String mailFormId) {
+        logger.debug("메일 폼을 조회합니다.: mailFormId=" + mailFormId);
+
         SessionVo sessionVo = SessionUtil.getSession(request);
 
-        emlMailFormService.remove(sessionVo.getUserId(), emlMailFormId);
+        return emlMailFormService.get(sessionVo.getUserId(), mailFormId);
+    }
+
+    @RequestMapping(value = "forms/{mailFormId}", method = RequestMethod.PUT)
+    @ResponseBody
+    public void put(HttpServletRequest request, @PathVariable String mailFormId, @RequestBody EmlMailFormVo mailFormVo) {
+        logger.debug("메일 폼을 변경합니다.: mailFormId=" + mailFormId + ", mailFormVo" + mailFormVo);
+        SessionVo sessionVo = SessionUtil.getSession(request);
+
+        emlMailFormService.update(sessionVo.getUserId(), mailFormId, mailFormVo);
+    }
+
+    @RequestMapping(value = "forms/{mailFormId}", method = RequestMethod.DELETE)
+    @ResponseBody
+    public void delete(HttpServletRequest request, @PathVariable String mailFormId) {
+        logger.debug("메일 폼을 삭제합니다.: mailFormId=" + mailFormId);
+
+        SessionVo sessionVo = SessionUtil.getSession(request);
+
+        emlMailFormService.remove(sessionVo.getUserId(), mailFormId);
     }
 }

@@ -18,18 +18,15 @@ paths:
         '200':
           description: Successful response
           schema:
-            type: object
-            properties:
-              data:
-                type: array
-                items:
-                  $ref: '#/definitions/Group'
+            type: array
+            items:
+              $ref: '#/definitions/Group'
     post:
       description: |
         그룹을 등록한다.
       parameters:
-        - in: body
-          name: body
+        - name: body
+          in: body
           description: 그룹 오브젝트
           required: true
           schema:
@@ -37,6 +34,8 @@ paths:
       responses:
         '200':
           description: Successful response
+          schema:
+            $ref: '#/definitions/Group'
   /groups/{groupId}.do:
     get:
       description: |
@@ -121,6 +120,9 @@ paths:
       responses:
         '200':
           description: Successful response
+          type: array
+          items:
+            $ref: '#/definitions/GroupDomain'
     post:
       description: |
         그룹이 사용할 도메인을 등록한다.
@@ -139,12 +141,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            type: object
-            properties:
-              data:
-                type: array
-                items:
-                  $ref: '#/definitions/GroupDomain'
+            $ref: '#/definitions/GroupDomain'
   /groups/{groupId}/domains/{domainId}.do:
     delete:
       description: |
@@ -181,6 +178,9 @@ paths:
       responses:
         '200':
           description: Successful response
+          type: array
+          items:
+            $ref: '#/definitions/GroupSecDomain'
     post:
       description: |
         그룹 부 도메인을 추가한다.
@@ -204,12 +204,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            type: object
-            properties:
-              data:
-                type: array
-                items:
-                  $ref: '#/definitions/GroupSecDomain'
+            $ref: '#/definitions/GroupSecDomain'
   /groups/{groupId}/domains/{domainId}/secDomains/{secDomainId}.do:
     delete:
       description: |

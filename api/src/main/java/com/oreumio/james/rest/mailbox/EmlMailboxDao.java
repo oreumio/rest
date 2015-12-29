@@ -31,12 +31,14 @@ public class EmlMailboxDao {
         this.idProvider = idProvider;
     }
 
-    public List<EmlMailbox> list(String userId, String mailboxName) {
-        return em.createQuery("SELECT mailbox FROM EmlMailbox mailbox WHERE mailbox.userId = :userId AND substring(mailbox.name, 1, :length) = :mailboxName", EmlMailbox.class)
+    public List<EmlMailbox> list(String userId) {
+        return em.createQuery("SELECT mailbox FROM EmlMailbox mailbox WHERE mailbox.userId = :userId", EmlMailbox.class)
                 .setParameter("userId", userId)
-                .setParameter("mailboxName", mailboxName)
-                .setParameter("length", mailboxName.length())
                 .getResultList();
+    }
+
+    public EmlMailbox select(long mailboxId) {
+        return em.find(EmlMailbox.class, mailboxId);
     }
 
     public EmlMailbox get(String userId, String mailboxName) {
@@ -44,5 +46,13 @@ public class EmlMailboxDao {
                 .setParameter("userId", userId)
                 .setParameter("mailboxName", mailboxName)
                 .getSingleResult();
+    }
+
+    public void insert(EmlMailbox mailbox) {
+        em.persist(mailbox);
+    }
+
+    public void delete(EmlMailbox mailbox) {
+        em.remove(mailbox);
     }
 }
