@@ -22,33 +22,32 @@
            http://www.springframework.org/schema/security/spring-security.xsd">
 
     <http>
-
+        <intercept-url method="OPTIONS" pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+        <intercept-url pattern="/users/*.do" access="ROLE_USER"/>
+        <intercept-url pattern="/**" access="ROLE_ADMIN" />
 <!--
         <custom-filter after="EXCEPTION_TRANSLATION_FILTER" ref="ajaxSessionTimeoutFilter"/>
 -->
 
-        <!-- login form 설정 -->
-        <form-login
-                login-page="/sub/common/login/cmmLogin.do"
-                authentication-failure-url="/sub/common/login/cmmLogin.do"
-                username-parameter="username"
-                password-parameter="password"
-                />
+        <http-basic entry-point-ref="authenticationEntryPoint" />
+
         <!-- logout 설정 -->
-        <logout logout-success-url="/sub/common/login/cmmLogin.do"
-                logout-url="/data/common/login/selectLogoutFlag.do"
-                invalidate-session="true"
-                delete-cookies="JSESSIONID" />
+        <logout />
+
         <!-- 중복 로그인 차단 설정 -->
         <!-- remember-me 같은 비 UI 를 사용한 로그인의 경우 401 에러가 보내지지만, 에러페이지를 사용하고 싶다면, session-authentication-error-url 을 사용 -->
+<!--
         <session-management session-fixation-protection="newSession" session-authentication-error-url="http://www.naver.com">
+-->
             <!-- 첫번째 로그인을 해제하는 설정 -->
 <!--
             <concurrency-control max-sessions="1" />
 -->
             <!-- 두번째 로그인을 막는 설정. authentication-failure-url 로 보내진다. -->
+<!--
             <concurrency-control max-sessions="1" error-if-maximum-exceeded="true" expired-url="/service/common/exception/expiredSession.do" />
         </session-management>
+-->
     </http>
 
     <authentication-manager alias="authenticationManager">
@@ -74,17 +73,29 @@
 
     <!-- 사용자 인증 처리 -->
 <!--
-    <beans:bean id="myUserDetailsService"
-    class="com.oreumio.james.webmail.common.login.security.MyUserDetailsService"/>
+    <beans:bean id="myUserDetailsService" class="com.oreumio.james.webmail.common.login.security.MyUserDetailsService"/>
 -->
 
-    <beans:bean name="bcryptEncoder"
-    class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+    <beans:bean name="bcryptEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 
 
     <!-- spring security를 사용한 session timeout check 설정 -->
 <!--
     <beans:bean id="ajaxSessionTimeoutFilter" class="com.oreumio.james.webmail.framework.filter.AjaxSessionTimeoutFilter" />
 -->
+    <beans:bean id="mySuccessHandler"
+                class="com.oreumio.james.rest.session.MySavedRequestAwareAuthenticationSuccessHandler"/>
+    <beans:bean id="myFailureHandler" class=
+            "org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler"/>
 
+    <beans:bean id="basicAuthenticationFilter"
+          class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter">
+        <beans:property name="authenticationManager" ref="authenticationManager"/>
+        <beans:property name="authenticationEntryPoint" ref="authenticationEntryPoint"/>
+    </beans:bean>
+
+    <beans:bean id="authenticationEntryPoint"
+          class="org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint">
+        <beans:property name="realmName" value="Name Of Your Realm"/>
+    </beans:bean>
 </beans:beans>

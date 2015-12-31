@@ -9,6 +9,8 @@ paths:
     get:
       description: |
         고객 정보를 검색한다.
+      security:
+        - basic: []
       responses:
         '200':
           description: Successful response
@@ -16,6 +18,8 @@ paths:
     post:
       description: |
         고객을 등록한다.
+      security:
+        - basic: []
       responses:
         '200':
           description: Successful response
@@ -23,6 +27,8 @@ paths:
     get:
       description: |
         고객의 정보를 얻는다.
+      security:
+        - basic: []
       responses:
         '200':
           description: Successful response
@@ -30,6 +36,8 @@ paths:
     post:
       description: |
         고객을 해지한다.
+      security:
+        - basic: []
       responses:
         '200':
           description: Successful response
@@ -37,6 +45,8 @@ paths:
     post:
       description: |
         고객이 사용할 도메인을 등록한다.
+      security:
+        - basic: []
       responses:
         '200':
           description: Successful response
@@ -55,6 +65,8 @@ paths:
     get:
       description: |
         고객 도메인 목록을 구한다.
+      security:
+        - basic: []
       responses:
         '200':
           description: Successful response
@@ -62,6 +74,8 @@ paths:
     get:
       description: |
         그룹 정보를 검색한다.
+      security:
+        - basic: []
       responses:
         '200':
           description: Successful response
@@ -69,6 +83,8 @@ paths:
     post:
       description: |
         그룹을 등록한다.
+      security:
+        - basic: []
       responses:
         '200':
           description: Successful response
@@ -76,6 +92,8 @@ paths:
     get:
       description: |
         그룹의 정보를 얻는다.
+      security:
+        - basic: []
       responses:
         '200':
           description: Successful response
@@ -83,6 +101,8 @@ paths:
     delete:
       description: |
         그룹을 삭제한다.
+      security:
+        - basic: []
       responses:
         '200':
           description: Successful response
@@ -90,6 +110,8 @@ paths:
     post:
       description: |
         그룹 용량을 변경한다.
+      security:
+        - basic: []
       responses:
         '200':
           description: Successful response
@@ -97,6 +119,8 @@ paths:
     post:
       description: |
         그룹의 상태를 변경한다.
+      security:
+        - basic: []
       responses:
         '200':
           description: Successful response
@@ -104,6 +128,8 @@ paths:
     post:
       description: |
         그룹의 상태를 변경한다.
+      security:
+        - basic: []
       responses:
         '200':
           description: Successful response
@@ -111,6 +137,8 @@ paths:
     post:
       description: |
         그룹이 사용할 도메인을 등록한다.
+      security:
+        - basic: []
       responses:
         '200':
           description: Successful response
@@ -129,6 +157,8 @@ paths:
     get:
       description: |
         그룹 도메인 목록을 구한다.
+      security:
+        - basic: []
       responses:
         '200':
           description: Successful response
@@ -136,6 +166,8 @@ paths:
     delete:
       description: |
         그룹 도메인을 삭제한다.
+      security:
+        - basic: []
       responses:
         '200':
           description: Successful response
@@ -143,6 +175,8 @@ paths:
     post:
       description: |
         그룹 부 도메인 목록을 구한다.
+      security:
+        - basic: []
       responses:
         '200':
           description: Successful response
@@ -150,6 +184,8 @@ paths:
     post:
       description: |
         그룹 부 도메인을 추가한다.
+      security:
+        - basic: []
       responses:
         '200':
           description: Successful response
@@ -157,6 +193,8 @@ paths:
     delete:
       description: |
         그룹 부 도메인을 삭제한다.
+      security:
+        - basic: []
       responses:
         '200':
           description: Successful response
@@ -165,6 +203,8 @@ paths:
     post:
       description: |
         사용자를 추가한다.
+      security:
+        - basic: []
       responses:
         '200':
           description: Successful response
@@ -272,3 +312,7 @@ definitions:
       parentOrganizationNodeId:
         type: string
         description: 부모 조직 단위 아이디
+securityDefinitions:
+  basic:
+    type: basic
+    description: HTTP 인증

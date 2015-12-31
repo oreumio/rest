@@ -14,6 +14,8 @@ paths:
     get:
       description: |
         그룹 정보를 검색한다.
+      security:
+        - basic: []
       responses:
         '200':
           description: Successful response
@@ -24,6 +26,8 @@ paths:
     post:
       description: |
         그룹을 등록한다.
+      security:
+        - basic: []
       parameters:
         - name: body
           in: body
@@ -40,6 +44,8 @@ paths:
     get:
       description: |
         그룹의 정보를 얻는다.
+      security:
+        - basic: []
       parameters:
         - name: groupId
           in: path
@@ -54,6 +60,8 @@ paths:
     delete:
       description: |
         그룹을 삭제한다.
+      security:
+        - basic: []
       parameters:
         - name: groupId
           in: path
@@ -67,6 +75,8 @@ paths:
     post:
       description: |
         그룹 용량을 변경한다.
+      security:
+        - basic: []
       parameters:
         - name: groupId
           in: path
@@ -85,6 +95,8 @@ paths:
     post:
       description: |
         그룹의 상태를 변경한다.
+      security:
+        - basic: []
       parameters:
         - name: groupId
           in: path
@@ -98,6 +110,8 @@ paths:
     post:
       description: |
         그룹의 상태를 변경한다.
+      security:
+        - basic: []
       parameters:
         - name: groupId
           in: path
@@ -111,6 +125,8 @@ paths:
     get:
       description: |
         그룹 도메인 목록을 구한다.
+      security:
+        - basic: []
       parameters:
         - name: groupId
           in: path
@@ -126,6 +142,8 @@ paths:
     post:
       description: |
         그룹이 사용할 도메인을 등록한다.
+      security:
+        - basic: []
       parameters:
         - name: groupId
           in: path
@@ -146,6 +164,8 @@ paths:
     delete:
       description: |
         그룹 도메인을 삭제한다.
+      security:
+        - basic: []
       parameters:
         - name: groupId
           in: path
@@ -164,6 +184,8 @@ paths:
     get:
       description: |
         그룹 부 도메인 목록을 구한다.
+      security:
+        - basic: []
       parameters:
         - name: groupId
           in: path
@@ -184,6 +206,8 @@ paths:
     post:
       description: |
         그룹 부 도메인을 추가한다.
+      security:
+        - basic: []
       parameters:
         - name: groupId
           in: path
@@ -209,6 +233,8 @@ paths:
     delete:
       description: |
         그룹 부 도메인을 삭제한다.
+      security:
+        - basic: []
       parameters:
         - name: groupId
           in: path
@@ -373,3 +399,7 @@ definitions:
       groupSecDomainName:
         type: string
         description: 그룹 도메인명
+securityDefinitions:
+  basic:
+    type: basic
+    description: HTTP 인증

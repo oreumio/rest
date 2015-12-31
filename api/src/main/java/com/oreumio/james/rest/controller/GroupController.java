@@ -50,9 +50,18 @@ public class GroupController {
         }
     }
 
+    /**
+     * org.springframework.security.authentication.UsernamePasswordAuthenticationToken 오브젝트가 Principal 로 옴.
+     *
+     * @param principal
+     * @param request
+     * @param groupId
+     * @return
+     */
     @RequestMapping(value = "groups/{groupId}", method = RequestMethod.GET)
     @ResponseBody
-    public EmlGroupVo get(HttpServletRequest request, @PathVariable String groupId) {
+    public EmlGroupVo get(java.security.Principal principal, HttpServletRequest request, @PathVariable String groupId) {
+        logger.debug("그룹을 조회합니다.: groupId=" + groupId+ ", principal=" + principal.getName());
         SessionVo sessionVo = SessionUtil.getSession(request);
         return groupService.get(sessionVo.getClientId(), groupId);
     }
