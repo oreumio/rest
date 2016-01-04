@@ -39,10 +39,19 @@ public class UserController {
     @RequestMapping(value = "users", method = RequestMethod.POST)
     @ResponseBody
     public EmlUserVo add(HttpServletRequest request, @RequestBody EmlUserVo emlUserVo) {
-        EmlUserVo userVo = userService.getByName(request.getUserPrincipal().getName());
+
+        String groupId = null;
+
+        try {
+            EmlUserVo userVo = userService.getByName(request.getUserPrincipal().getName());
+            groupId = userVo.getGroupId();
+        } catch (Exception e) {
+            logger.warn("사용자 정보를 얻을 수 없습니다.", e);
+            groupId = emlUserVo.getGroupId();
+        }
 
         logger.debug("add emlUserVo=" + emlUserVo);
-        return userService.add(userVo.getGroupId(), emlUserVo);
+        return userService.add(groupId, emlUserVo);
     }
 
     @RequestMapping(value = "users/{userId}", method = RequestMethod.GET)

@@ -330,6 +330,13 @@ public class EmlUser implements Serializable {
 		this.updDt = new Date();
 	}
 
+    @PrePersist
+    public void PrePersist() {
+        if (updDt == null) {
+            this.updDt = new Date();
+        }
+    }
+
     @Override
     public String toString() {
         return "EmlUser{" +

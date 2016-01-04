@@ -69,15 +69,6 @@
     </bean>
 
     <!--
-      Groupware
-    -->
-    <bean id="groupware-emf" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-        <property name="persistenceUnitManager" ref="emlpum"/>
-        <property name="jpaVendorAdapter" ref="vendorAdapter"/>
-        <property name="persistenceUnitName" value="groupware"/>
-    </bean>
-
-    <!--
       James Webmail
     -->
     <bean id="james-rest-emf" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
@@ -110,10 +101,6 @@
 
     <bean id="mail_tm" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="james-data-emf" />
-    </bean>
-
-    <bean id="gw_tm" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="groupware-emf" />
     </bean>
 
     <bean id="rest_tm" class="org.springframework.orm.jpa.JpaTransactionManager">

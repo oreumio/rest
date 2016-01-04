@@ -112,9 +112,9 @@ public class GroupController {
 
     @RequestMapping(value = "groups/{groupId}/domains", method = RequestMethod.POST)
     @ResponseBody
-    public EmlGroupDomainVo addDomain(HttpServletRequest request, @PathVariable String groupId, String domainName) {
+    public EmlGroupDomainVo addDomain(HttpServletRequest request, @PathVariable String groupId, @RequestBody EmlGroupDomainVo groupDomainVo) {
         SessionVo sessionVo = SessionUtil.getSession(request);
-        return groupService.addDomain(sessionVo.getClientId(), groupId, domainName);
+        return groupService.addDomain(sessionVo.getClientId(), groupId, groupDomainVo.getGroupDomainName());
     }
 
     @RequestMapping(value = "groups/{groupId}/domains/{domainId}", method = RequestMethod.DELETE)
