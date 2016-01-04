@@ -13,6 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
+ * 고객을 관리하는 API 를 제공하는 클래스입니다.
+ * 주로 시스템 관리자가 사용합니다.
+ *
+ * 주요 기능으로, 고객 관리(검색, 등록, 해지, 정보 변경, 도메인 등록 및 해지)가 있습니다.
+ *
  * @author Jhonson choi (jhonsonchoi@gmail.com)
  */
 @Controller
