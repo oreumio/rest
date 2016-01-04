@@ -39,8 +39,16 @@ public class EmlUserService implements EmlUserSupportService {
         return new EmlUserVo(emlUser);
     }
 
-    public EmlUserVo getByName(String userName, String domainName) {
-        EmlUser emlUser = userDao.selectUser(userName, domainName);
+    public EmlUserVo getByName(String principal) {
+        int i = principal.indexOf("@");
+        String userName = principal.substring(0, i);
+        String host = principal.substring(i + 1);
+        EmlUser emlUser = userDao.selectUser(userName, host);
+        return new EmlUserVo(emlUser);
+    }
+
+    public EmlUserVo getByName(String userName, String host) {
+        EmlUser emlUser = userDao.selectUser(userName, host);
         return new EmlUserVo(emlUser);
     }
 

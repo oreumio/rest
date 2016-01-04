@@ -5,7 +5,7 @@ package com.oreumio.james.rest.group;
  */
 public class EmlClientVo {
     private String id;
-    private String name;
+    private String displayName;
     private String state;
     private long quota;
 
@@ -14,7 +14,7 @@ public class EmlClientVo {
 
     public EmlClientVo(EmlClient emlClient) {
         id = emlClient.getId();
-        name = emlClient.getName();
+        displayName = emlClient.getDisplayName();
         state = emlClient.getState();
         quota = emlClient.getQuota();
     }
@@ -27,12 +27,12 @@ public class EmlClientVo {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getDisplayName() {
+        return displayName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public String getState() {
@@ -55,7 +55,7 @@ public class EmlClientVo {
     public String toString() {
         return "EmlClientVo{" +
                 "id='" + id + '\'' +
-                ", name='" + name + '\'' +
+                ", displayName='" + displayName + '\'' +
                 ", state='" + state + '\'' +
                 ", quota=" + quota +
                 '}';

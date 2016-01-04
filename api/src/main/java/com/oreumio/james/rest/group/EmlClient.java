@@ -25,7 +25,7 @@ public class EmlClient implements Serializable {
 	private String id;
 
 	@Column(name = "CLIENT_DISPLAY_NAME", nullable = false)
-	private String name;
+	private String displayName;
 
 	/**
 	 * 상태(N:정상,R:중지,D:삭제)
@@ -40,6 +40,12 @@ public class EmlClient implements Serializable {
 
 	}
 
+    public EmlClient(EmlClientVo clientVo) {
+        displayName = clientVo.getDisplayName();
+        state = clientVo.getState();
+        quota = clientVo.getQuota();
+    }
+
     public String getId() {
         return id;
     }
@@ -48,12 +54,12 @@ public class EmlClient implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getDisplayName() {
+        return displayName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public String getState() {
@@ -76,7 +82,7 @@ public class EmlClient implements Serializable {
     public String toString() {
         return "EmlClient{" +
                 "id='" + id + '\'' +
-                ", name='" + name + '\'' +
+                ", displayName='" + displayName + '\'' +
                 ", state='" + state + '\'' +
                 ", quota=" + quota +
                 '}';

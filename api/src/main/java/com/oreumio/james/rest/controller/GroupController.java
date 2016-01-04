@@ -1,19 +1,14 @@
 package com.oreumio.james.rest.controller;
 
-import com.oreumio.james.rest.group.EmlGroupDomainVo;
-import com.oreumio.james.rest.group.EmlGroupSecDomainVo;
-import com.oreumio.james.rest.group.EmlGroupService;
-import com.oreumio.james.rest.group.EmlGroupVo;
+import com.oreumio.james.rest.group.*;
 import com.oreumio.james.rest.session.SessionUtil;
 import com.oreumio.james.rest.session.SessionVo;
+import com.oreumio.james.rest.user.EmlUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -29,6 +24,9 @@ public class GroupController {
     @Autowired
     private EmlGroupService groupService;
 
+    @Autowired
+    private EmlClientService clientService;
+
     @RequestMapping(value = "groups", method = RequestMethod.GET)
     @ResponseBody
     public List<EmlGroupVo> list(HttpServletRequest request) {
@@ -38,7 +36,7 @@ public class GroupController {
 
     @RequestMapping(value = "groups", method = RequestMethod.POST)
     @ResponseBody
-    public EmlGroupVo add(HttpServletRequest request, EmlGroupVo emlGroupVo) {
+    public EmlGroupVo add(HttpServletRequest request, @RequestBody EmlGroupVo emlGroupVo) {
         SessionVo sessionVo = SessionUtil.getSession(request);
         logger.debug("그룹을 추가합니다: " + emlGroupVo);
         try {
@@ -53,15 +51,14 @@ public class GroupController {
     /**
      * org.springframework.security.authentication.UsernamePasswordAuthenticationToken 오브젝트가 Principal 로 옴.
      *
-     * @param principal
      * @param request
      * @param groupId
      * @return
      */
     @RequestMapping(value = "groups/{groupId}", method = RequestMethod.GET)
     @ResponseBody
-    public EmlGroupVo get(java.security.Principal principal, HttpServletRequest request, @PathVariable String groupId) {
-        logger.debug("그룹을 조회합니다.: groupId=" + groupId+ ", principal=" + principal.getName());
+    public EmlGroupVo get(HttpServletRequest request, @PathVariable String groupId) {
+        logger.debug("그룹을 조회합니다.: groupId=" + groupId);
         SessionVo sessionVo = SessionUtil.getSession(request);
         return groupService.get(sessionVo.getClientId(), groupId);
     }

@@ -37,7 +37,7 @@ public class EmlUser implements Serializable {
 	private String userName;
 
     @Column(name = "DOMAIN_NAME", nullable = false)
-    private String domainName;
+    private String host;
 
     /** Hashed password */
     @Column(name = "PWD", nullable = false, length = 100)
@@ -131,7 +131,7 @@ public class EmlUser implements Serializable {
         this();
         groupId = emlUserVo.getGroupId();
         userName = emlUserVo.getUserName();
-        domainName = emlUserVo.getDomainName();
+        host = emlUserVo.getHost();
         password = emlUserVo.getPassword();
         displayName = emlUserVo.getDisplayName();
         quota = emlUserVo.getQuota();
@@ -290,12 +290,12 @@ public class EmlUser implements Serializable {
 		this.userName = userName;
 	}
 
-    public String getDomainName() {
-        return domainName;
+    public String getHost() {
+        return host;
     }
 
-    public void setDomainName(String domainName) {
-        this.domainName = domainName;
+    public void setHost(String host) {
+        this.host = host;
     }
 
     public String getPassword() {

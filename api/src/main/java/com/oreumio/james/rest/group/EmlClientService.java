@@ -1,9 +1,11 @@
 package com.oreumio.james.rest.group;
 
+import com.oreumio.james.util.IdProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +20,9 @@ public class EmlClientService {
 
     @Autowired
     private EmlClientDomainDao clientDomainDao;
+
+    @Resource(name = "idProvider")
+    private IdProvider<String> idProvider;
 
     public EmlClientVo get(String clientId) {
         EmlClient emlClient = clientDao.selectClient(clientId);
@@ -34,39 +39,50 @@ public class EmlClientService {
     }
 
     @Transactional(value = "rest_tm")
-    public EmlClientVo register(String clientName, long quota) {
-        EmlClient emlClient = clientDao.insert(clientName, "R", quota);
-        return new EmlClientVo(emlClient);
+    public EmlClientVo register(EmlClientVo clientVo) {
+        EmlClient emlClient = new EmlClient(clientVo);
+        emlClient.setId(idProvider.next());
+        clientDao.insert(emlClient);
+        return clientVo;
     }
 
     @Transactional(value = "rest_tm")
     public void unregister(String clientId) {
-        clientDao.delete(clientId);
+        EmlClient client = clientDao.select(clientId);
+        clientDao.delete(client);
     }
 
     @Transactional(value = "rest_tm")
-    public void updateName(String clientId, String clientName) {
-        clientDao.updateName(clientId, clientName);
+    public void updateName(String clientId, String displayName) {
+        EmlClient client = clientDao.select(clientId);
+        client.setDisplayName(displayName);
     }
 
     @Transactional(value = "rest_tm")
     public void updateQuota(String clientId, long clientQuota) {
-        clientDao.updateQuota(clientId, clientQuota);
+        EmlClient client = clientDao.select(clientId);
+        client.setQuota(clientQuota);
     }
 
     @Transactional(value = "rest_tm")
     public void updateState(String clientId, String clientState) {
-        clientDao.updateState(clientId, clientState);
+        EmlClient client = clientDao.select(clientId);
+        client.setState(clientState);
     }
 
     @Transactional(value = "rest_tm")
     public void addDomain(String clientId, String domain) {
-        clientDomainDao.insert(clientId, domain);
+        EmlClientDomain clientDomain = new EmlClientDomain();
+        clientDomain.setId(idProvider.next());
+        clientDomain.setClientId(clientId);
+        clientDomain.setDomain(domain);
+        clientDomainDao.insert(clientDomain);
     }
 
     @Transactional(value = "rest_tm")
     public void removeDomain(String clientId, String domain) {
-        clientDomainDao.delete(clientId, domain);
+        EmlClientDomain clientDomain = clientDomainDao.select(clientId, domain);
+        clientDomainDao.delete(clientDomain);
     }
 
     @Transactional(value = "rest_tm")

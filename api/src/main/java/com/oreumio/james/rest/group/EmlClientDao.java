@@ -25,19 +25,12 @@ public class EmlClientDao {
 	@PersistenceContext(unitName = "rest")
 	private EntityManager em;
 
-    @Resource(name = "idProvider")
-    private IdProvider<String> idProvider;
-
 	/**
 	 * @param em EntityManager
 	 */
 	public void setEntityManager(EntityManager em) {
 		this.em = em;
 	}
-
-    public void setIdProvider(IdProvider<String> idProvider) {
-        this.idProvider = idProvider;
-    }
 
 	/**
 	 * 고객 정보를 가져온다.
@@ -54,38 +47,16 @@ public class EmlClientDao {
         return clientList;
     }
 
-    public EmlClient insert(String clientName, String clientState, long clientQuota) {
-        EmlClient emlClient = new EmlClient();
-        emlClient.setId("C" + 1);
-        emlClient.setName(clientName);
-        emlClient.setState(clientState);
-        emlClient.setQuota(clientQuota);
-        em.persist(emlClient);
-        return emlClient;
+    public void insert(EmlClient client) {
+        em.persist(client);
     }
 
-    public void delete(String clientId) {
-        EmlClient emlClient = em.find(EmlClient.class, clientId);
-        em.remove(emlClient);
+    public EmlClient select(String clientId) {
+        EmlClient client = em.find(EmlClient.class, clientId);
+        return client;
     }
 
-    public void updateName(String clientId, String clientName) {
-        EmlClient emlClient = em.find(EmlClient.class, clientId);
-        emlClient.setName(clientName);
+    public void delete(EmlClient client) {
+        em.remove(client);
     }
-
-    public void updateQuota(String clientId, long clientQuota) {
-        EmlClient emlClient = em.find(EmlClient.class, clientId);
-        emlClient.setQuota(clientQuota);
-    }
-
-    public void updateState(String clientId, String clientState) {
-        EmlClient emlClient = em.find(EmlClient.class, clientId);
-        emlClient.setState(clientState);
-    }
-
-    public EmlGroupConfigVo selectGroupConfig(String groupId) {
-        EmlClient group = em.find(EmlClient.class, groupId);
-		return null;
-	}
 }

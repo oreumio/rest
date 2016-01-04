@@ -10,7 +10,7 @@ public class EmlUserVo {
     private String id;
     private String groupId;
     private String userName;
-    private String domainName;
+    private String host;
     private String password;
     private String displayName;
     private String socketEnabled;
@@ -31,7 +31,7 @@ public class EmlUserVo {
         id = emlUser.getId();
         groupId = emlUser.getGroupId();
         userName = emlUser.getUserName();
-        domainName = emlUser.getDomainName();
+        host = emlUser.getHost();
         password = emlUser.getPassword();
         displayName = emlUser.getDisplayName();
         socketEnabled = emlUser.getSocketEnabled();
@@ -70,12 +70,12 @@ public class EmlUserVo {
         this.userName = userName;
     }
 
-    public String getDomainName() {
-        return domainName;
+    public String getHost() {
+        return host;
     }
 
-    public void setDomainName(String domainName) {
-        this.domainName = domainName;
+    public void setHost(String host) {
+        this.host = host;
     }
 
     public String getPassword() {
@@ -180,7 +180,7 @@ public class EmlUserVo {
                 "id='" + id + '\'' +
                 ", groupId='" + groupId + '\'' +
                 ", userName='" + userName + '\'' +
-                ", domainName='" + domainName + '\'' +
+                ", host='" + host + '\'' +
                 ", displayName='" + displayName + '\'' +
                 ", socketEnabled='" + socketEnabled + '\'' +
                 ", apprMailExceptYn='" + apprMailExceptYn + '\'' +

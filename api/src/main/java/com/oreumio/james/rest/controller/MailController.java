@@ -5,6 +5,8 @@ import com.oreumio.james.rest.message.EmlMailService;
 import com.oreumio.james.rest.message.EmlMailVo;
 import com.oreumio.james.rest.session.SessionUtil;
 import com.oreumio.james.rest.session.SessionVo;
+import com.oreumio.james.rest.user.EmlUserService;
+import com.oreumio.james.rest.user.EmlUserVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,15 +29,18 @@ public class MailController {
     @Autowired
     EmlMailService emlMailService;
 
+    @Autowired
+    private EmlUserService userService;
+
     @RequestMapping("list")
     @ResponseBody
     public List<EmlMailVo> list(HttpServletRequest request, String mailboxName) {
-        SessionVo sessionVo = SessionUtil.getSession(request);
+        EmlUserVo userVo = userService.getByName(request.getUserPrincipal().getName());
 
         logger.debug("메일 목록을 구합니다.: mailboxName=" + mailboxName);
 
         try {
-            return emlMailService.list(sessionVo.getUserId(), mailboxName);
+            return emlMailService.list(userVo.getId(), mailboxName);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -45,8 +50,8 @@ public class MailController {
     @RequestMapping("search")
     @ResponseBody
     public List<EmlMailVo> search(HttpServletRequest request, EmlMailSearchVo emlMailSearchVo) {
-        SessionVo sessionVo = SessionUtil.getSession(request);
+        EmlUserVo userVo = userService.getByName(request.getUserPrincipal().getName());
 
-        return emlMailService.search(sessionVo.getUserId(), emlMailSearchVo);
+        return emlMailService.search(userVo.getId(), emlMailSearchVo);
     }
 }

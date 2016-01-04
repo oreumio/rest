@@ -87,6 +87,7 @@
         <class>com.oreumio.james.rest.group.EmlGroupDomain</class>
         <class>com.oreumio.james.rest.group.EmlGroupSecDomain</class>
         <class>com.oreumio.james.rest.user.EmlUser</class>
+        <class>com.oreumio.james.rest.user.EmlUserRole</class>
         <class>com.oreumio.james.rest.org.EmlUserOrg</class>
         <class>com.oreumio.james.rest.org.EmlOrg</class>
         <class>com.oreumio.james.rest.org.EmlOrgUnit</class>

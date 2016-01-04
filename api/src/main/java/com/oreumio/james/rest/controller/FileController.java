@@ -2,6 +2,7 @@ package com.oreumio.james.rest.controller;
 
 import com.oreumio.james.rest.file.EmlFileService;
 import com.oreumio.james.rest.file.EmlFileVo;
+import com.oreumio.james.rest.user.EmlUserService;
 import com.oreumio.james.rest.util.FileUtil;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -37,6 +38,9 @@ public class FileController {
 
     @Autowired
     private EmlFileService emlFileService;
+
+    @Autowired
+    private EmlUserService userService;
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @ResponseBody

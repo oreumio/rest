@@ -98,6 +98,49 @@ paths:
       responses:
         '200':
           description: Successful response
+  /users/{userId}/roles.do:
+    get:
+      description: |
+        사용자 역할을 검색한다.
+      security:
+        - basic: []
+      parameters:
+        - $ref: '#/parameters/userId'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Role'
+    post:
+      description: |
+        사용자 역할을 등록한다.
+      security:
+        - basic: []
+      parameters:
+        - $ref: '#/parameters/userId'
+        - name: body
+          in: body
+          description: 사용자 역할 오브젝트
+          required: false
+          schema:
+            $ref: '#/definitions/Role'
+      responses:
+        '200':
+          description: Successful response
+  /users/{userId}/roles/{roleId}.do:
+    delete:
+      description: |
+        사용자 역할을 삭제한다.
+      security:
+        - basic: []
+      parameters:
+        - $ref: '#/parameters/userId'
+        - $ref: '#/parameters/roleId'
+      responses:
+        '200':
+          description: Successful response
   /orgs.do:
     get:
       description: |
@@ -352,7 +395,7 @@ definitions:
         description: 사용자명. 이메일 주소의 지역부.
       domainName:
         type: string
-        description: 도메인명. 이메일 주소의 도메인부.
+        description: 도메인명. 이메일 주소의 도메인부. 인증 시에 사용하는 호스트로 포트를 포함함.
       displayName:
         type: string
         description: 사용자 표시명
@@ -372,6 +415,15 @@ definitions:
       clientConfig:
         type: string
         description: 클라이언트를 위한 사용자 설정
+  Role:
+    type: object
+    properties:
+      roleId:
+        type: string
+        description: 역할 아이디
+      displayName:
+        type: string
+        description: 역할 표시명
   Org:
     type: object
     properties:
@@ -416,6 +468,12 @@ parameters:
     name: userId
     in: path
     description: 사용자 아이디
+    required: true
+    type: string
+  roleId:
+    name: roleId
+    in: path
+    description: 사용자 역할 아이디
     required: true
     type: string
   orgId:

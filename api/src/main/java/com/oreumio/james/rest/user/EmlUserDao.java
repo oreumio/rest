@@ -38,12 +38,12 @@ public class EmlUserDao {
         return em.find(EmlUser.class, userId);
     }
 
-    public EmlUser selectUser(String userName, String domainName) {
+    public EmlUser selectUser(String userName, String host) {
 
-        EmlUser emlUser = em.createQuery("SELECT a FROM EmlUser a, EmlGroupDomain b WHERE a.groupId = b.groupId AND a.state = :state AND a.userName = :userName AND b.groupDomain = :domainName", EmlUser.class)
+        EmlUser emlUser = em.createQuery("SELECT user FROM EmlUser user WHERE user.host = :host AND user.state = :state AND user.userName = :userName", EmlUser.class)
                 .setParameter("state", "N")
                 .setParameter("userName", userName)
-                .setParameter("domainName", domainName.toLowerCase())
+                .setParameter("host", host)
                 .getSingleResult();
 
         return emlUser;

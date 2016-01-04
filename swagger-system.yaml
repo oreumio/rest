@@ -3,9 +3,10 @@ info:
   version: 1.0.0
   title: 'OreumIO James REST API'
   description: >
-   OreumIO James API 는 사용자가 자신의 데이타에 접근할 수 있게 해줍니다.
+    OreumIO James API 는 시스템 관리자가 관리할 수 있게 해줍니다.
+host: localhost:8083
 paths:
-  /clients:
+  /clients.do:
     get:
       description: |
         고객 정보를 검색한다.
@@ -14,197 +15,127 @@ paths:
       responses:
         '200':
           description: Successful response
-  /clients:
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Client'
     post:
       description: |
         고객을 등록한다.
       security:
         - basic: []
+      parameters:
+        - name: body
+          in: body
+          description: 클라이언트 오브젝트
+          required: true
+          schema:
+            $ref: '#/definitions/Client'
       responses:
         '200':
           description: Successful response
-  /clients/{client-id}:
+          schema:
+            $ref: '#/definitions/Client'
+  /clients/{clientId}.do:
     get:
       description: |
         고객의 정보를 얻는다.
       security:
         - basic: []
+      parameters:
+        - $ref: '#/parameters/clientId'
       responses:
         '200':
           description: Successful response
-  /clients/{client-id}/unregister:
+  /clients/{clientId}/changeDisplayName.do:
     post:
       description: |
-        고객을 해지한다.
+        고객의 표시명을 변경한다.
       security:
         - basic: []
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - $ref: '#/parameters/clientId'
+        - name: displayName
+          in: formData
+          description: 클라이언트 쿼타
+          required: true
+          type: string
       responses:
         '200':
           description: Successful response
-  /clients/{client-id}/domains:
+  /clients/{clientId}/changeQuota.do:
     post:
       description: |
-        고객이 사용할 도메인을 등록한다.
+        고객의 쿼타를 변경한다.
       security:
         - basic: []
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - $ref: '#/parameters/clientId'
+        - name: quota
+          in: formData
+          description: 클라이언트 쿼타
+          required: true
+          type: integer
       responses:
         '200':
           description: Successful response
-          schema:
-            title: ArrayOfPersons
-            type: array
-            items:
-              title: Person
-              type: object
-              properties:
-                name:
-                  type: string
-                single:
-                  type: boolean
-  /clients/{client-id}/domains:
+  /clients/{clientId}/changeState.do:
+    post:
+      description: |
+        고객의 상태를 변경한다.
+      security:
+        - basic: []
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - $ref: '#/parameters/clientId'
+        - name: state
+          in: formData
+          description: 클라이언트 상태
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+  /clients/{clientId}/domains.do:
     get:
       description: |
         고객 도메인 목록을 구한다.
       security:
         - basic: []
+      parameters:
+        - $ref: '#/parameters/clientId'
       responses:
         '200':
           description: Successful response
-  /groups:
-    get:
-      description: |
-        그룹 정보를 검색한다.
-      security:
-        - basic: []
-      responses:
-        '200':
-          description: Successful response
-  /groups:
     post:
       description: |
-        그룹을 등록한다.
+        고객이 사용할 도메인을 등록한다.
       security:
         - basic: []
+      parameters:
+        - $ref: '#/parameters/clientId'
+        - name: domain
+          in: formData
+          description: 클라이언트 도메인
+          required: true
+          type: string
       responses:
         '200':
           description: Successful response
-  /groups/{group-id}:
-    get:
-      description: |
-        그룹의 정보를 얻는다.
-      security:
-        - basic: []
-      responses:
-        '200':
-          description: Successful response
-  /groups/{group-id}:
+  /clients/{clientId}/domains/{domainId}.do:
     delete:
       description: |
-        그룹을 삭제한다.
+        고객 도메인을 삭제한다.
       security:
         - basic: []
-      responses:
-        '200':
-          description: Successful response
-  /groups/{group-id}/changeQuota:
-    post:
-      description: |
-        그룹 용량을 변경한다.
-      security:
-        - basic: []
-      responses:
-        '200':
-          description: Successful response
-  /groups/{group-id}/suspend:
-    post:
-      description: |
-        그룹의 상태를 변경한다.
-      security:
-        - basic: []
-      responses:
-        '200':
-          description: Successful response
-  /groups/{group-id}/resume:
-    post:
-      description: |
-        그룹의 상태를 변경한다.
-      security:
-        - basic: []
-      responses:
-        '200':
-          description: Successful response
-  /groups/{group-id}/domains:
-    post:
-      description: |
-        그룹이 사용할 도메인을 등록한다.
-      security:
-        - basic: []
-      responses:
-        '200':
-          description: Successful response
-          schema:
-            title: ArrayOfPersons
-            type: array
-            items:
-              title: Person
-              type: object
-              properties:
-                name:
-                  type: string
-                single:
-                  type: boolean
-  /groups/{group-id}/domains:
-    get:
-      description: |
-        그룹 도메인 목록을 구한다.
-      security:
-        - basic: []
-      responses:
-        '200':
-          description: Successful response
-  /groups/{group-id}/domains/{domain-id}:
-    delete:
-      description: |
-        그룹 도메인을 삭제한다.
-      security:
-        - basic: []
-      responses:
-        '200':
-          description: Successful response
-  /groups/{group-id}/domains/{domain-id}/secDomains:
-    post:
-      description: |
-        그룹 부 도메인 목록을 구한다.
-      security:
-        - basic: []
-      responses:
-        '200':
-          description: Successful response
-  /groups/{group-id}/domains/{domain-id}/secDomains:
-    post:
-      description: |
-        그룹 부 도메인을 추가한다.
-      security:
-        - basic: []
-      responses:
-        '200':
-          description: Successful response
-  /groups/{group-id}/domains/{domain-id}/secDomains/{secDomain-id}:
-    delete:
-      description: |
-        그룹 부 도메인을 삭제한다.
-      security:
-        - basic: []
-      responses:
-        '200':
-          description: Successful response
-
-  /users
-    post:
-      description: |
-        사용자를 추가한다.
-      security:
-        - basic: []
+      parameters:
+        - $ref: '#/parameters/clientId'
+        - $ref: '#/parameters/domainId'
       responses:
         '200':
           description: Successful response
@@ -215,12 +146,12 @@ definitions:
       clientId:
         type: string
         description: 고객 아이디
-      description:
-        type: string
-        description: 고객 설명
       displayName:
         type: string
         description: 고객 표시명
+      quota:
+        type: integer
+        description: 고객 쿼타
       state:
         type: string
         description: 고객 상태. 정상, 정지, 삭제.
@@ -255,63 +186,33 @@ definitions:
       secondaryDomainNames:
         type: array
         items:
-          type: String
+          type: string
           description: 도메인명.
-  User:
-    type: object
-    properties:
-      userId:
-        type: string
-        description: 사용자 아이디
-      groupId:
-        type: string
-        description: 그룹 아이디
-      userName:
-        type: string
-        description: 사용자명
-      domainName:
-        type: string
-        description: 도메인명
-      description:
-        type: string
-        description: 사용자 설명
-      displayName:
-        type: string
-        description: 사용자 표시명
-      quota:
-        type: integer
-        format: int32
-        description: 용량
-      config:
-        type: string
-        description: 사용자 설정
-      state:
-        type: string
-        description: 사용자 상태. 정상, 정지, 삭제.
-  Organization:
-    type: object
-    properties:
-      organizationId:
-        type: string
-        description: 조직 아이디. 0: 회사, 1: 부서, 2: 직위, 3: 직무, 4: 직책, 5: 기타
-      groupId:
-        type: string
-        description: 그룹 아이디
-      displayName:
-        type: string
-        description: 조직 표시명
-  OrganizationHi
-    type: object
-    properties:
-      organizationNodeId:
-        type: string
-        description: 조직 단위 아이디
-      organizationId:
-        type: string
-        description: 조직 아이디
-      parentOrganizationNodeId:
-        type: string
-        description: 부모 조직 단위 아이디
+parameters:
+  clientId:
+    name: clientId
+    in: path
+    description: 고객 아이디
+    required: true
+    type: string
+  groupId:
+    name: groupId
+    in: path
+    description: 그룹 아이디
+    required: true
+    type: string
+  domainId:
+    name: domainId
+    in: path
+    description: 도메인 아이디
+    required: true
+    type: string
+  secDomainId:
+    name: secDomainId
+    in: path
+    description: 부 도메인 아이디
+    required: true
+    type: string
 securityDefinitions:
   basic:
     type: basic

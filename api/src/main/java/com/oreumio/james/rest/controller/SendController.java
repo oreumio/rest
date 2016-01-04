@@ -4,6 +4,8 @@ import com.oreumio.james.rest.form.EmlMailFormVo;
 import com.oreumio.james.rest.send.SendService;
 import com.oreumio.james.rest.session.SessionUtil;
 import com.oreumio.james.rest.session.SessionVo;
+import com.oreumio.james.rest.user.EmlUserService;
+import com.oreumio.james.rest.user.EmlUserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,12 +24,16 @@ public class SendController {
     @Autowired
     SendService sendService;
 
+    @Autowired
+    private EmlUserService userService;
+
     @RequestMapping(value = "send", method = RequestMethod.POST)
     @ResponseBody
     public String insertSendMail(HttpServletRequest request, @RequestBody EmlMailFormVo emlMailFormVo)
             throws Exception {
-        SessionVo sessionVo = SessionUtil.getSession(request);
-        emlMailFormVo.setUserId(sessionVo.getUserId());
+        EmlUserVo userVo = userService.getByName(request.getUserPrincipal().getName());
+
+        emlMailFormVo.setUserId(userVo.getId());
 /*
         emlMailFormVo.setEmail(session.getEmail());
         emlMailFormVo.setDeptId(session.getDeptId());

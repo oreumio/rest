@@ -21,15 +21,24 @@
            http://www.springframework.org/schema/security
            http://www.springframework.org/schema/security/spring-security.xsd">
 
-    <http>
+    <http entry-point-ref="authenticationEntryPoint">
         <intercept-url method="OPTIONS" pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
         <intercept-url pattern="/users/*.do" access="ROLE_USER"/>
+        <intercept-url pattern="/groups/*.do" access="ROLE_USER"/>
+        <intercept-url pattern="/orgs/*.do" access="ROLE_USER"/>
+        <intercept-url pattern="/clients.do" access="ROLE_SA"/>
+        <intercept-url pattern="/clients/*/*.do" access="ROLE_SA"/>
+        <intercept-url pattern="/clients/*/domains/*.do" access="ROLE_SA"/>
         <intercept-url pattern="/**" access="ROLE_ADMIN" />
 <!--
         <custom-filter after="EXCEPTION_TRANSLATION_FILTER" ref="ajaxSessionTimeoutFilter"/>
 -->
+        <custom-filter position="BASIC_AUTH_FILTER" ref="myFilter" />
 
+
+<!--
         <http-basic entry-point-ref="authenticationEntryPoint" />
+-->
 
         <!-- logout 설정 -->
         <logout />
@@ -51,15 +60,13 @@
     </http>
 
     <authentication-manager alias="authenticationManager">
-<!--
-        <authentication-provider ref="myap"/>
--->
         <authentication-provider>
             <user-service>
-                <user name="jhonson" password="hello" authorities="ROLE_USER, ROLE_ADMIN" />
-                <user name="bob" password="bobspassword" authorities="ROLE_USER" />
+                <user name="sa@localhost:8083" password="letmein" authorities="ROLE_SA" />
             </user-service>
         </authentication-provider>
+
+        <authentication-provider user-service-ref="myUserDetailsService"/>
 <!--
         <authentication-provider user-service-ref="myUserDetailsService">
             <password-encoder ref="bcryptEncoder"/>
@@ -72,9 +79,7 @@
 -->
 
     <!-- 사용자 인증 처리 -->
-<!--
-    <beans:bean id="myUserDetailsService" class="com.oreumio.james.webmail.common.login.security.MyUserDetailsService"/>
--->
+    <beans:bean id="myUserDetailsService" class="com.oreumio.james.rest.filter.MyUserDetailsService"/>
 
     <beans:bean name="bcryptEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 
@@ -98,4 +103,11 @@
           class="org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint">
         <beans:property name="realmName" value="Name Of Your Realm"/>
     </beans:bean>
+
+
+    <beans:bean name="myFilter" class="com.oreumio.james.rest.filter.MyBasicAuthenticationFilter">
+        <beans:constructor-arg index="0" ref="authenticationManager"/>
+        <beans:constructor-arg index="1" ref="authenticationEntryPoint"/>
+    </beans:bean>
+
 </beans:beans>

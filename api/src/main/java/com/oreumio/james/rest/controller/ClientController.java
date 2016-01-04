@@ -3,80 +3,84 @@ package com.oreumio.james.rest.controller;
 import com.oreumio.james.rest.group.EmlClientDomainVo;
 import com.oreumio.james.rest.group.EmlClientService;
 import com.oreumio.james.rest.group.EmlClientVo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
  * @author Jhonson choi (jhonsonchoi@gmail.com)
  */
 @Controller
-@RequestMapping("client")
 public class ClientController {
+
+    private static Logger logger = LoggerFactory.getLogger(ClientController.class);
 
     @Autowired
     private EmlClientService clientService;
 
-    @RequestMapping("get")
+    @RequestMapping(value = "clients", method = RequestMethod.GET)
     @ResponseBody
-    public EmlClientVo get(String id) {
-        return clientService.get(id);
-    }
-
-    @RequestMapping("list")
-    @ResponseBody
-    public List<EmlClientVo> list() {
+    public List<EmlClientVo> list(HttpServletRequest request) {
         return clientService.list();
     }
 
-    @RequestMapping("register")
+    @RequestMapping(value = "clients", method = RequestMethod.POST)
     @ResponseBody
-    public EmlClientVo register(String name, long quota) {
-        return clientService.register(name, quota);
+    public EmlClientVo add(HttpServletRequest request, @RequestBody EmlClientVo clientVo) {
+        return clientService.register(clientVo);
     }
 
-    @RequestMapping("unregister")
+    @RequestMapping(value = "clients/{clientId}", method = RequestMethod.GET)
     @ResponseBody
-    public void unregister(String id) {
-        clientService.unregister(id);
+    public EmlClientVo get(HttpServletRequest request, @PathVariable String clientId) {
+        return clientService.get(clientId);
     }
 
-    @RequestMapping("changeName")
+    @RequestMapping(value = "clients/{clientId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public void changeName(String id, String name) {
-        clientService.updateName(id, name);
+    public void remove(HttpServletRequest request, @PathVariable String clientId) {
+        clientService.unregister(clientId);
     }
 
-    @RequestMapping("changeQuota")
+    @RequestMapping(value = "clients/{clientId}/changeDisplayName", method = RequestMethod.POST)
     @ResponseBody
-    public void changeQuota(String id, long quota) {
-        clientService.updateQuota(id, quota);
+    public void changeName(HttpServletRequest request, @PathVariable String clientId, String displayName) {
+        clientService.updateName(clientId, displayName);
     }
 
-    @RequestMapping("changeState")
+    @RequestMapping(value = "clients/{clientId}/changeQuota", method = RequestMethod.POST)
     @ResponseBody
-    public void changeState(String id, String state) {
-        clientService.updateState(id, state);
+    public void changeQuota(HttpServletRequest request, @PathVariable String clientId, long quota) {
+        clientService.updateQuota(clientId, quota);
     }
 
-    @RequestMapping("addDomain")
+    @RequestMapping(value = "clients/{clientId}/changeState", method = RequestMethod.POST)
     @ResponseBody
-    public void addDomain(String id, String domain) {
-        clientService.addDomain(id, domain);
+    public void changeState(HttpServletRequest request, @PathVariable String clientId, String state) {
+        clientService.updateState(clientId, state);
     }
 
-    @RequestMapping("removeDomain")
+    @RequestMapping(value = "clients/{clientId}/domains", method = RequestMethod.POST)
     @ResponseBody
-    public void removeDomain(String id, String domain) {
-        clientService.removeDomain(id, domain);
+    public void addDomain(HttpServletRequest request, @PathVariable String clientId, String domain) {
+        clientService.addDomain(clientId, domain);
     }
 
-    @RequestMapping("listDomains")
+    @RequestMapping(value = "clients/{clientId}/domains", method = RequestMethod.GET)
     @ResponseBody
-    public List<EmlClientDomainVo> listDomains(String id) {
-        return clientService.listDomains(id);
+    public List<EmlClientDomainVo> listDomains(HttpServletRequest request, @PathVariable String clientId) {
+        return clientService.listDomains(clientId);
+    }
+
+    @RequestMapping(value = "clients/{clientId}/domains/{domainId}", method = RequestMethod.DELETE)
+    @ResponseBody
+    public void removeDomain(HttpServletRequest request, @PathVariable String clientId, @PathVariable String domainId) {
+        logger.debug("고객 도메인을 삭제합니다.: clientId=" + clientId + ", domainId=" + domainId);
+        clientService.removeDomain(clientId, domainId);
     }
 }

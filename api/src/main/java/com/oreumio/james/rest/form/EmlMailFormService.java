@@ -47,7 +47,8 @@ public class EmlMailFormService {
     }
 
     @Transactional("rest_tm")
-    public EmlMailFormVo add(EmlMailFormVo emlMailFormVo) {
+    public EmlMailFormVo add(String userId, EmlMailFormVo emlMailFormVo) {
+        emlMailFormVo.setUserId(userId);
         EmlMailForm emlMailForm = new EmlMailForm(emlMailFormVo);
         emlMailForm.setId(idProvider.next());
         for (EmlMailFormFrom emlMailFormFrom : emlMailForm.getMailFrom()) {
