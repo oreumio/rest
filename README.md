@@ -2,6 +2,8 @@
 
 OreumIO James REST API
 
+자세한 사항은 위키를 참조하세요. (https://github.com/oreumio/rest/wiki)
+
 ## 오름아이오 메일 API 서버
 
 오름아이오 메일 API 서버는 메일 서버 기능을 HTTP 기반의 API로 제공합니다.
@@ -17,8 +19,6 @@ OreumIO James REST API
 조직의 의사결정을 위한 기능을 제공합니다.
 
 사용자간 파일, 일정 등의 리소스 공유 기능을 제공합니다.
-
-자세한 사항은 위키를 참조하세요. (https://github.com/oreumio/rest/wiki)
 
 ## 사용자 API 스펙 구성
 
