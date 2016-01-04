@@ -41,6 +41,13 @@ public class EmlClientDao {
 		return em.find(EmlClient.class, clientId);
 	}
 
+    public EmlClient selectClient(String userName, String host) {
+        EmlClient client = em.createQuery("SELECT client FROM EmlClient client WHERE client.userName = :userName", EmlClient.class)
+                .setParameter("userName", userName)
+                .getSingleResult();
+        return client;
+    }
+
     public List<EmlClient> list() {
         List<EmlClient> clientList = em.createQuery("SELECT client FROM EmlClient client", EmlClient.class)
                 .getResultList();

@@ -91,9 +91,9 @@ public class EmlUser implements Serializable {
 	/**
 	 * 수정 일시
 	 */
-	@Column(name = "UPD_DT")
+	@Column(name = "UPDATE_TS")
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date updDt;
+	private Date updateTs;
 
 	/**
 	 * 설정값
@@ -105,13 +105,6 @@ public class EmlUser implements Serializable {
     @Lob
     @Column(name = "USER_CLIENT_CONFIG")
     private String clientConfig;
-
-	/**
-	 * 조직도 동기화 시간
-	 */
-	@Column(name = "ORG_REG_DT")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date orgRegDt;
 
 	/**
 	 * Constructor.
@@ -127,15 +120,16 @@ public class EmlUser implements Serializable {
         state = "R";
 	}
 
-    public EmlUser(EmlUserVo emlUserVo) {
+    public EmlUser(EmlUserVo userVo) {
         this();
-        groupId = emlUserVo.getGroupId();
-        userName = emlUserVo.getUserName();
-        host = emlUserVo.getHost();
-        password = emlUserVo.getPassword();
-        displayName = emlUserVo.getDisplayName();
-        quota = emlUserVo.getQuota();
-        serverConfig = emlUserVo.getServerConfig();
+        groupId = userVo.getGroupId();
+        userName = userVo.getUserName();
+        host = userVo.getHost();
+        password = userVo.getPassword();
+        alg = userVo.getAlg();
+        displayName = userVo.getDisplayName();
+        quota = userVo.getQuota();
+        serverConfig = userVo.getServerConfig();
     }
 
 	/**
@@ -230,20 +224,6 @@ public class EmlUser implements Serializable {
 		this.attachmentMaxSize = attachmentMaxSize;
 	}
 
-	/**
-	 * @return the updDt
-	 */
-	public Date getUpdDt() {
-		return updDt;
-	}
-
-	/**
-	 * @param updDt the updDt to set
-	 */
-	public void setUpdDt(Date updDt) {
-		this.updDt = updDt;
-	}
-
     public String getServerConfig() {
         return serverConfig;
     }
@@ -259,20 +239,6 @@ public class EmlUser implements Serializable {
     public void setClientConfig(String clientConfig) {
         this.clientConfig = clientConfig;
     }
-
-    /**
-	 * @return the orgRegDt
-	 */
-	public Date getOrgRegDt() {
-		return orgRegDt;
-	}
-
-	/**
-	 * @param orgRegDt the orgRegDt to set
-	 */
-	public void setOrgRegDt(Date orgRegDt) {
-		this.orgRegDt = orgRegDt;
-	}
 
     public String getMailAutodelExceptYn() {
         return mailAutodelExceptYn;
@@ -322,19 +288,16 @@ public class EmlUser implements Serializable {
         this.displayName = displayName;
     }
 
-    /**
-	 * 수정시 수정 일시 입력
-	 */
-	@PreUpdate
-	public void setUpdDt() {
-		this.updDt = new Date();
-	}
-
     @PrePersist
     public void PrePersist() {
-        if (updDt == null) {
-            this.updDt = new Date();
+        if (updateTs == null) {
+            this.updateTs = new Date();
         }
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.updateTs = new Date();
     }
 
     @Override
@@ -349,10 +312,8 @@ public class EmlUser implements Serializable {
                 ", state='" + state + '\'' +
                 ", quota=" + quota +
                 ", attachmentMaxSize=" + attachmentMaxSize +
-                ", updDt=" + updDt +
                 ", serverConfig='" + serverConfig + '\'' +
                 ", clientConfig='" + clientConfig + '\'' +
-                ", orgRegDt=" + orgRegDt +
                 '}';
     }
 }

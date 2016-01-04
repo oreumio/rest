@@ -1,5 +1,7 @@
 package com.oreumio.james.rest.filter;
 
+import com.oreumio.james.rest.group.EmlClientService;
+import com.oreumio.james.rest.group.EmlClientVo;
 import com.oreumio.james.rest.user.EmlUserRoleService;
 import com.oreumio.james.rest.user.EmlUserRoleVo;
 import com.oreumio.james.rest.user.EmlUserService;
@@ -20,43 +22,41 @@ import java.util.List;
 /**
  * @author Jhonson choi (jhonsonchoi@gmail.com)
  */
-public class MyUserDetailsService implements UserDetailsService {
+public class ClientUserDetailsService implements UserDetailsService {
 
-    private static Logger logger = LoggerFactory.getLogger(MyUserDetailsService.class);
+    private static Logger logger = LoggerFactory.getLogger(ClientUserDetailsService.class);
+
+    private static List<GrantedAuthority> grantedAuthorityList = new ArrayList<GrantedAuthority>();
 
     @Autowired
-    private EmlUserService userService;
+    private EmlClientService clientService;
 
-    @Autowired
-    private EmlUserRoleService userRoleService;
+    public ClientUserDetailsService() {
+        grantedAuthorityList.add(new SimpleGrantedAuthority("ROLE_CLIENT"));
+    }
 
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
 
-        logger.debug("사용자 인증을 위한 정보를 취득합니다.: username=" + username);
+        logger.debug("고객 인증을 위한 정보를 취득합니다.: username=" + username);
 
         int i = username.indexOf("@");
 
         if (i > -1) {
-            final EmlUserVo userVo = userService.getByName(username.substring(0, i), username.substring(i + 1));
-            final List<EmlUserRoleVo> userRoleVoList = userRoleService.list(userVo.getId());
+            final EmlClientVo clientVo = clientService.getByName(username.substring(0, i), username.substring(i + 1));
 
-            logger.debug("사용자 정보를 취득했습니다.: " + userVo);
+            logger.debug("고객 정보를 취득했습니다.: " + clientVo);
 
             return new UserDetails() {
 
                 @Override
                 public Collection<? extends GrantedAuthority> getAuthorities() {
-                    List<GrantedAuthority> grantedAuthorityList = new ArrayList<GrantedAuthority>();
-                    for (EmlUserRoleVo userRoleVo : userRoleVoList) {
-                        grantedAuthorityList.add(new SimpleGrantedAuthority(userRoleVo.getRoleId()));
-                    }
                     return grantedAuthorityList;
                 }
 
                 @Override
                 public String getPassword() {
-                    return userVo.getPassword();
+                    return clientVo.getPassword();
                 }
 
                 @Override

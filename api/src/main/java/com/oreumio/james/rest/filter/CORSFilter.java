@@ -12,6 +12,10 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ *
+ * @author Jhonson choi (jhonsonchoi@gmail.com)
+ */
 public class CORSFilter extends OncePerRequestFilter {
 
     private String corsAllowedOrigins;

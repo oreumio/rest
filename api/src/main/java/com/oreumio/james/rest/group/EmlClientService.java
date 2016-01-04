@@ -29,6 +29,19 @@ public class EmlClientService {
         return new EmlClientVo(emlClient);
     }
 
+    public EmlClientVo getByName(String principal) {
+        int i = principal.indexOf("@");
+        String userName = principal.substring(0, i);
+        String host = principal.substring(i + 1);
+        EmlClient client = clientDao.selectClient(userName, host);
+        return new EmlClientVo(client);
+    }
+
+    public EmlClientVo getByName(String userName, String host) {
+        EmlClient client = clientDao.selectClient(userName, host);
+        return new EmlClientVo(client);
+    }
+
     public List<EmlClientVo> list() {
         List<EmlClient> emlClientList = clientDao.list();
         List<EmlClientVo> emlClientVoList = new ArrayList<EmlClientVo>();

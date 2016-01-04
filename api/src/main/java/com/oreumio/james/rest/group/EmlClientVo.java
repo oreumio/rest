@@ -5,6 +5,10 @@ package com.oreumio.james.rest.group;
  */
 public class EmlClientVo {
     private String id;
+    private String userName;
+    private String host;
+    private String password;
+    private String alg;
     private String displayName;
     private String state;
     private long quota;
@@ -12,11 +16,15 @@ public class EmlClientVo {
     public EmlClientVo() {
     }
 
-    public EmlClientVo(EmlClient emlClient) {
-        id = emlClient.getId();
-        displayName = emlClient.getDisplayName();
-        state = emlClient.getState();
-        quota = emlClient.getQuota();
+    public EmlClientVo(EmlClient client) {
+        id = client.getId();
+        userName = client.getUserName();
+        host = client.getHost();
+        password = client.getPassword();
+        alg = client.getAlg();
+        displayName = client.getDisplayName();
+        state = client.getState();
+        quota = client.getQuota();
     }
 
     public String getId() {
@@ -25,6 +33,38 @@ public class EmlClientVo {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getAlg() {
+        return alg;
+    }
+
+    public void setAlg(String alg) {
+        this.alg = alg;
     }
 
     public String getDisplayName() {
@@ -55,6 +95,10 @@ public class EmlClientVo {
     public String toString() {
         return "EmlClientVo{" +
                 "id='" + id + '\'' +
+                ", userName='" + userName + '\'' +
+                ", host='" + host + '\'' +
+                ", password='" + password + '\'' +
+                ", alg='" + alg + '\'' +
                 ", displayName='" + displayName + '\'' +
                 ", state='" + state + '\'' +
                 ", quota=" + quota +

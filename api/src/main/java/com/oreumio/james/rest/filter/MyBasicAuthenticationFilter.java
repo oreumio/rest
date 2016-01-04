@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by jchoi on 1/2/16.
+ * @author Jhonson choi (jhonsonchoi@gmail.com)
  */
 public class MyBasicAuthenticationFilter extends GenericFilterBean {
 

@@ -12,6 +12,7 @@ public class EmlUserVo {
     private String userName;
     private String host;
     private String password;
+    private String alg;
     private String displayName;
     private String socketEnabled;
     private String apprMailExceptYn;
@@ -19,10 +20,8 @@ public class EmlUserVo {
     private String state;
     private long quota;
     private long attachmentMaxSize;
-    private Date updDt;
     private String serverConfig;
     private String clientConfig;
-    private Date orgRegDt;
 
     public EmlUserVo() {
     }
@@ -40,10 +39,8 @@ public class EmlUserVo {
         state = emlUser.getState();
         quota = emlUser.getQuota();
         attachmentMaxSize = emlUser.getAttachmentMaxSize();
-        updDt = emlUser.getUpdDt();
         serverConfig = emlUser.getServerConfig();
         clientConfig = emlUser.getClientConfig();
-        orgRegDt = emlUser.getOrgRegDt();
     }
 
     public String getId() {
@@ -84,6 +81,14 @@ public class EmlUserVo {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getAlg() {
+        return alg;
+    }
+
+    public void setAlg(String alg) {
+        this.alg = alg;
     }
 
     public String getDisplayName() {
@@ -142,14 +147,6 @@ public class EmlUserVo {
         this.attachmentMaxSize = attachmentMaxSize;
     }
 
-    public Date getUpdDt() {
-        return updDt;
-    }
-
-    public void setUpdDt(Date updDt) {
-        this.updDt = updDt;
-    }
-
     public String getServerConfig() {
         return serverConfig;
     }
@@ -166,14 +163,6 @@ public class EmlUserVo {
         this.clientConfig = clientConfig;
     }
 
-    public Date getOrgRegDt() {
-        return orgRegDt;
-    }
-
-    public void setOrgRegDt(Date orgRegDt) {
-        this.orgRegDt = orgRegDt;
-    }
-
     @Override
     public String toString() {
         return "EmlUserVo{" +
@@ -188,10 +177,8 @@ public class EmlUserVo {
                 ", state='" + state + '\'' +
                 ", quota=" + quota +
                 ", attachmentMaxSize=" + attachmentMaxSize +
-                ", updDt=" + updDt +
                 ", serverConfig='" + serverConfig + '\'' +
                 ", clientConfig='" + clientConfig + '\'' +
-                ", orgRegDt=" + orgRegDt +
                 '}';
     }
 }
