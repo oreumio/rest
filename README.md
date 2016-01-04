@@ -41,6 +41,25 @@ logback.xml
 -- 그룹 관리자 사용자의 API: swagger-groupadmin.yaml 참조
 -- 보통 사용자의 API: swagger-user.yaml 참조
 
+- 시스템 사용자 설정
+
+META-INF/spring/security-spring.xml
+
+user-service 엘러먼트의 user 엘러먼트의 내용을 변경하거나, 엘러먼트를 추가 또는 삭제하면 됩니다.
+
+- 고객, 그룹, 보통 사용자 추가
+
+샘플인 index.jsp 의 내용을 참고
+
+- 메일 보내기
+
+샘플인 send.jsp 의 내용을 참고
+
+- 파일 업로드
+
+샘플인 upload.jsp 의 내용을 참고
+
+
 보통 사용자의 기능:
  패스워드 변경
 
