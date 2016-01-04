@@ -23,11 +23,11 @@ $ bin/activemq start
 
 -- 데이터베이스 설정
 
-james-database.properties: 데이터베이스 접속 정보
+WEB-INF/classes/james-database.properties: 데이터베이스 접속 정보
 
 -- 데이터베이스 초기화
 
-META-INF/persistence.xml: JPA 영속성 설정
+WEB-INF/classes/META-INF/persistence.xml: JPA 영속성 설정
 
 create 로 되어 있는 hibernate.hbm2ddl.auto 속성을 살려서 기동하면 DDL 실행에 의해서 데이터베이스를 초기화할 수 있습니다.
 
@@ -35,7 +35,7 @@ create 로 되어 있는 hibernate.hbm2ddl.auto 속성을 살려서 기동하면
 
 -- 서버 로깅 설정
 
-logback.xml
+WEB-INF/classes/logback.xml
 
 - 사용자 API 스펙
 
