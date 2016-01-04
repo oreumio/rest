@@ -18,9 +18,9 @@ OreumIO James REST API
 
 사용자간 파일, 일정 등의 리소스 공유 기능을 제공합니다.
 
-[[API 서버의 실행 방법|server-start]]
+자세한 사항은 위키를 참조하세요. (https://github.com/oreumio/rest/wiki)
 
-- 사용자 API 스펙
+## 사용자 API 스펙
 
 -- 시스템 사용자의 API: swagger-system.yaml 참조
 -- 고객 사용자의 API: swagger-client.yaml 참조
