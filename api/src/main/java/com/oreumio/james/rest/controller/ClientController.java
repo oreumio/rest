@@ -26,55 +26,73 @@ public class ClientController {
     @RequestMapping(value = "clients", method = RequestMethod.GET)
     @ResponseBody
     public List<EmlClientVo> list(HttpServletRequest request) {
+        logger.debug("고객을 검색합니다.");
+
         return clientService.list();
     }
 
     @RequestMapping(value = "clients", method = RequestMethod.POST)
     @ResponseBody
     public EmlClientVo add(HttpServletRequest request, @RequestBody EmlClientVo clientVo) {
+        logger.debug("고객을 추가합니다.: " + clientVo);
+
         return clientService.register(clientVo);
     }
 
     @RequestMapping(value = "clients/{clientId}", method = RequestMethod.GET)
     @ResponseBody
     public EmlClientVo get(HttpServletRequest request, @PathVariable String clientId) {
+        logger.debug("고객의 정보를 취득합니다.: clientId=" + clientId);
+
         return clientService.get(clientId);
     }
 
     @RequestMapping(value = "clients/{clientId}", method = RequestMethod.DELETE)
     @ResponseBody
     public void remove(HttpServletRequest request, @PathVariable String clientId) {
+        logger.debug("고객을 해지합니다.: clientId=" + clientId);
+
         clientService.unregister(clientId);
     }
 
     @RequestMapping(value = "clients/{clientId}/changeDisplayName", method = RequestMethod.POST)
     @ResponseBody
     public void changeName(HttpServletRequest request, @PathVariable String clientId, String displayName) {
+        logger.debug("고객의 표시명을 변경합니다.: clientId=" + clientId + ", displayName=" + displayName);
+
         clientService.updateName(clientId, displayName);
     }
 
     @RequestMapping(value = "clients/{clientId}/changeQuota", method = RequestMethod.POST)
     @ResponseBody
     public void changeQuota(HttpServletRequest request, @PathVariable String clientId, long quota) {
+        logger.debug("고객의 쿼타를 변경합니다.: clientId=" + clientId + ", quota=" + quota);
+
         clientService.updateQuota(clientId, quota);
     }
 
     @RequestMapping(value = "clients/{clientId}/changeState", method = RequestMethod.POST)
     @ResponseBody
     public void changeState(HttpServletRequest request, @PathVariable String clientId, String state) {
-        clientService.updateState(clientId, state);
-    }
+        logger.debug("고객의 상태를 변경합니다.: clientId=" + clientId + ", state=" + state);
 
-    @RequestMapping(value = "clients/{clientId}/domains", method = RequestMethod.POST)
-    @ResponseBody
-    public void addDomain(HttpServletRequest request, @PathVariable String clientId, String domain) {
-        clientService.addDomain(clientId, domain);
+        clientService.updateState(clientId, state);
     }
 
     @RequestMapping(value = "clients/{clientId}/domains", method = RequestMethod.GET)
     @ResponseBody
     public List<EmlClientDomainVo> listDomains(HttpServletRequest request, @PathVariable String clientId) {
+        logger.debug("고객 도메인을 검색합니다.: clientId=" + clientId);
+
         return clientService.listDomains(clientId);
+    }
+
+    @RequestMapping(value = "clients/{clientId}/domains", method = RequestMethod.POST)
+    @ResponseBody
+    public void addDomain(HttpServletRequest request, @PathVariable String clientId, String domain) {
+        logger.debug("고객 도메인을 추가합니다.: clientId=" + clientId + ", domainId=" + domain);
+
+        clientService.addDomain(clientId, domain);
     }
 
     @RequestMapping(value = "clients/{clientId}/domains/{domainId}", method = RequestMethod.DELETE)

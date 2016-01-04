@@ -117,6 +117,8 @@ paths:
         고객이 사용할 도메인을 등록한다.
       security:
         - basic: []
+      consumes:
+        - application/x-www-form-urlencoded
       parameters:
         - $ref: '#/parameters/clientId'
         - name: domain
