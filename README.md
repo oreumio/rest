@@ -1,6 +1,4 @@
-# rest
-
-OreumIO James REST API
+# OreumIO James RESTful API
 
 오름아이오 메일 API 서버는 메일 서버 기능을 HTTP 기반의 API로 제공합니다.
 자세한 사항은 위키를 참조하세요. (https://github.com/oreumio/rest/wiki)
