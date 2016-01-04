@@ -10,20 +10,18 @@ produces:
   - text/html
   - text/plain
 paths:
-  /users/{userId}.do:
+  /user.do:
     get:
       description: |
         사용자 자신의 정보를 조회한다.
       security:
         - basic: []
-      parameters:
-        - $ref: '#/parameters/userId'
       responses:
         '200':
           description: Successful response
           schema:
             $ref: '#/definitions/User'
-  /users/{userId}/changePassword.do:
+  /user/changePassword.do:
     post:
       description: |
         사용자의 패스워드를 변경한다.
@@ -32,7 +30,10 @@ paths:
       consumes:
         - application/x-www-form-urlencoded
       parameters:
-        - $ref: '#/parameters/userId'
+        - name: oldPassword
+          in: formData
+          description: 현재 패스워드
+          type: string
         - name: newPassword
           in: formData
           description: 새 패스워드
@@ -40,25 +41,21 @@ paths:
       responses:
         '200':
           description: Successful response
-  /users/{userId}/getQuota.do:
+  /user/getQuota.do:
     get:
       description: |
         사용자의 사용량 실적을 조회한다.
       security:
         - basic: []
-      parameters:
-        - $ref: '#/parameters/userId'
       responses:
         '200':
           description: Successful response
-  /groups/{groupId}.do:
+  /group.do:
     get:
       description: |
         그룹 정보를 조회한다.
       security:
         - basic: []
-      parameters:
-        - $ref: '#/parameters/groupId'
       responses:
         '200':
           description: Successful response

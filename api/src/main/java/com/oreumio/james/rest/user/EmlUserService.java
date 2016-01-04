@@ -110,6 +110,14 @@ public class EmlUserService implements EmlUserSupportService {
         emlUser.setPassword(password);
     }
 
+    @Transactional(value = "rest_tm")
+    public void changePassword(String groupId, String userId, String oldPassword, String newPassword) {
+        EmlUser emlUser = userDao.selectUser(userId);
+        if (oldPassword.equals(emlUser.getPassword())) {
+            emlUser.setPassword(newPassword);
+        }
+    }
+
     @Override
     public String getPersonal(String address, String lang) {
         String userName = null, domainName = null;

@@ -261,7 +261,6 @@ definitions:
   Group:
     type: object
     required:
-      - clientId
       - displayName
       - quota
     properties:
