@@ -13,6 +13,8 @@ OreumIO James REST API
 
 War 로 패키징 되어 있는 파일을 사용하여 실행하면 됩니다.
 
+실행환경을 반영하기 위해서 설정을 변경할 필요가 있으면, 다운로드한 war 파일을 풀어서, 변경이 필요한 파일을 손봅니다.
+
 ※ 전제조건으로 RDBMS와 MQ(ActiveMQ) 를 실행시켜야 합니다.
 
 -- 참고: Apache ActiveMQ(v 5.12.0) 실행
