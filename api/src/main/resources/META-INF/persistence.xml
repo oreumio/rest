@@ -9,69 +9,6 @@
 <persistence version="2.1"
              xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
-<!--
-            <property name="hibernate.hbm2ddl.auto" value="update" />
--->
-
-    <persistence-unit name="groupware" transaction-type="RESOURCE_LOCAL">
-        <!-- 4.3 -->
-        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <!-- 4.2 -->
-<!--
-        <provider>org.hibernate.ejb.HibernatePersistence</provider>
--->
-
-        <class>com.oreumio.james.webmail.common.organization.model.OrgEmployee</class>
-        <class>com.oreumio.james.webmail.common.organization.model.OrgCompany</class>
-        <class>com.oreumio.james.webmail.common.organization.model.OrgCompanyI18n</class>
-        <class>com.oreumio.james.webmail.common.organization.model.OrgCompanyRelation</class>
-        <class>com.oreumio.james.webmail.common.organization.model.OrgCompanyRelationConfig</class>
-        <class>com.oreumio.james.webmail.common.organization.model.OrgCompanyRelationTarget</class>
-        <class>com.oreumio.james.webmail.common.organization.model.OrgCompanyGroup</class>
-        <class>com.oreumio.james.webmail.common.organization.model.OrgPerson</class>
-        <class>com.oreumio.james.webmail.common.organization.model.OrgPersonI18n</class>
-        <class>com.oreumio.james.webmail.common.organization.model.OrgPersonPhotoFile</class>
-        <class>com.oreumio.james.webmail.common.organization.model.OrgPosition</class>
-        <class>com.oreumio.james.webmail.common.organization.model.OrgPositionI18n</class>
-        <class>com.oreumio.james.webmail.common.organization.model.OrgDepartment</class>
-        <class>com.oreumio.james.webmail.common.organization.model.OrgDepartmentI18n</class>
-        <class>com.oreumio.james.webmail.common.organization.model.OrgDepartmentCharge</class>
-        <class>com.oreumio.james.webmail.common.organization.model.OrgMyDepartment</class>
-        <class>com.oreumio.james.webmail.common.organization.model.OrgOffice</class>
-        <class>com.oreumio.james.webmail.common.organization.model.OrgOfficeI18n</class>
-        <class>com.oreumio.james.webmail.common.organization.model.OrgDuty</class>
-        <class>com.oreumio.james.webmail.common.organization.model.OrgDutyI18n</class>
-        <class>com.oreumio.james.webmail.common.organization.model.OrgUserGroup</class>
-        <class>com.oreumio.james.webmail.common.organization.model.OrgUserGroupI18n</class>
-        <class>com.oreumio.james.webmail.common.organization.model.OrgUserGroupTarget</class>
-
-        <class>com.oreumio.james.webmail.common.organization.vo.CmmOrgUserGroupTargetVo</class>
-        <class>com.oreumio.james.webmail.common.autocomplete.vo.CmmAutoCompleteResultVo</class>
-
-        <class>com.oreumio.james.webmail.common.address.model.AdrAddress</class>
-        <class>com.oreumio.james.webmail.common.address.model.AdrGroup</class>
-        <class>com.oreumio.james.webmail.common.address.model.AdrLink</class>
-        <class>com.oreumio.james.webmail.common.address.model.AdrPersonConfig</class>
-
-        <class>com.oreumio.james.webmail.common.authority.model.CmmAuthority</class>
-
-        <class>com.oreumio.james.webmail.common.authorityuser.model.CmmAuthorityUser</class>
-
-        <class>com.oreumio.james.webmail.common.admin.model.CmmConfig</class>
-        <class>com.oreumio.james.webmail.common.personconfig.model.CmmPersonConfig</class>
-<!--
-        <class>com.oreumio.james.webmail.common.admin.model.CmmCapacity</class>
-        <class>com.oreumio.james.webmail.common.admin.model.CmmIpFilter</class>
--->
-        <class>com.oreumio.james.webmail.common.autosave.model.CmmAutoSave</class>
-
-        <exclude-unlisted-classes/>
-        <properties>
-            <property name="hibernate.hbm2ddl.auto" value="update"/>
-        </properties>
-
-    </persistence-unit>
-
 
     <persistence-unit name="rest" transaction-type="RESOURCE_LOCAL">
         <!-- 4.3 -->
@@ -132,9 +69,7 @@
 
         <exclude-unlisted-classes/>
         <properties>
-<!--
             <property name="hibernate.hbm2ddl.auto" value="create"/>
--->
         </properties>
 
     </persistence-unit>

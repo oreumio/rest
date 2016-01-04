@@ -1,12 +1,47 @@
 # rest
 
-Apache James REST API
+OreumIO James REST API
 
 메일 서버의 서비스를 RESTful API로 제공하는 것을 목표로 합니다.
 
-사용자의 기능:
- 1. 로그인
- 2. 로그아웃
+사용자에는 시스템 관리자, 고객, 그룹 관리자, 보통 사용자가 있습니다.
+
+- 서버의 실행 방법
+
+War 로 패키징 되어 있는 파일을 사용하여 실행하면 됩니다.
+
+※ 전제조건으로 RDBMS와 MQ(ActiveMQ) 를 실행시켜야 합니다.
+
+-- 참고: Apache ActiveMQ(v 5.12.0) 실행
+
+activemq.apache.org 에서 실행파일을 다운받아서 실행합니다.
+
+$ bin/activemq start
+
+-- 데이터베이스 설정
+
+james-database.properties: 데이터베이스 접속 정보
+
+-- 데이터베이스 초기화
+
+META-INF/persistence.xml: JPA 영속성 설정
+
+create 로 되어 있는 hibernate.hbm2ddl.auto 속성을 살려서 기동하면 DDL 실행에 의해서 데이터베이스를 초기화할 수 있습니다.
+
+※ 두 번째 실행할 때는 hibernate.hbm2ddl.auto 속성을 코멘트로 만들어야 데이터베이스 초기화를 막을 수 있습니다.
+
+-- 서버 로깅 설정
+
+logback.xml
+
+- 사용자 API 스펙
+
+-- 시스템 사용자의 API: swagger-system.yaml 참조
+-- 고객 사용자의 API: swagger-client.yaml 참조
+-- 그룹 관리자 사용자의 API: swagger-groupadmin.yaml 참조
+-- 보통 사용자의 API: swagger-user.yaml 참조
+
+보통 사용자의 기능:
  패스워드 변경
 
  메일 보내기:
