@@ -136,9 +136,10 @@ paths:
       responses:
         '200':
           description: Successful response
-          type: array
-          items:
-            $ref: '#/definitions/GroupDomain'
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/GroupDomain'
     post:
       description: |
         그룹이 사용할 도메인을 등록한다.
@@ -200,9 +201,10 @@ paths:
       responses:
         '200':
           description: Successful response
-          type: array
-          items:
-            $ref: '#/definitions/GroupSecDomain'
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/GroupSecDomain'
     post:
       description: |
         그룹 부 도메인을 추가한다.
