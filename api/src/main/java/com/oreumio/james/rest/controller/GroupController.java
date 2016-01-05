@@ -133,7 +133,7 @@ public class GroupController {
 
     @RequestMapping(value = "groups/{groupId}/domains", method = RequestMethod.POST)
     @ResponseBody
-    public EmlGroupDomainVo addDomain(HttpServletRequest request, @PathVariable String groupId, EmlGroupDomainVo groupDomainVo) {
+    public EmlGroupDomainVo addDomain(HttpServletRequest request, @PathVariable String groupId, @RequestBody EmlGroupDomainVo groupDomainVo) {
         logger.debug("그룹 도메인을 추가합니다.: groupId=" + groupId);
 
         EmlClientVo clientVo = clientService.getByName(request.getUserPrincipal().getName());
@@ -160,11 +160,11 @@ public class GroupController {
 
     @RequestMapping(value = "groups/{groupId}/domains/{domainId}/secDomains", method = RequestMethod.POST)
     @ResponseBody
-    public EmlGroupSecDomainVo addSecDomain(HttpServletRequest request, @PathVariable String groupId, @PathVariable String domainId, String secDomainName) {
-        logger.debug("그룹의 부 도메인을 추가합니다.: groupId=" + groupId + ", domainId=" + domainId + ", secDomainName=" + secDomainName);
+    public EmlGroupSecDomainVo addSecDomain(HttpServletRequest request, @PathVariable String groupId, @PathVariable String domainId, @RequestBody EmlGroupSecDomainVo groupSecDomainVo) {
+        logger.debug("그룹의 부 도메인을 추가합니다.: groupId=" + groupId + ", domainId=" + domainId + ", " + groupSecDomainVo);
 
         EmlClientVo clientVo = clientService.getByName(request.getUserPrincipal().getName());
-        return groupService.addSecDomain(clientVo.getId(), groupId, domainId, secDomainName);
+        return groupService.addSecDomain(clientVo.getId(), groupId, domainId, groupSecDomainVo.getGroupSecDomainName());
     }
 
     @RequestMapping(value = "groups/{groupId}/domains/{domainId}/secDomains/{secDomainId}", method = RequestMethod.DELETE)
