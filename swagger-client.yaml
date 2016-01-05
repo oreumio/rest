@@ -145,13 +145,15 @@ paths:
         그룹이 사용할 도메인을 등록한다.
       security:
         - basic: []
+      consumes:
+        - application/x-www-form-urlencoded
       parameters:
         - name: groupId
           in: path
           description: 그룹 아이디
           required: true
           type: string
-        - name: domainName
+        - name: groupDomainName
           in: query
           description: 도메인명
           required: true
@@ -210,6 +212,8 @@ paths:
         그룹 부 도메인을 추가한다.
       security:
         - basic: []
+      consumes:
+        - application/x-www-form-urlencoded
       parameters:
         - name: groupId
           in: path
@@ -222,8 +226,8 @@ paths:
           required: true
           type: string
         - name: secDomainName
-          in: query
-          description: 도메인 아이디
+          in: formData
+          description: 부 도메인 이름
           required: true
           type: string
       responses:

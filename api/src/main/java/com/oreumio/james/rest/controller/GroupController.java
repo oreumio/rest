@@ -133,7 +133,7 @@ public class GroupController {
 
     @RequestMapping(value = "groups/{groupId}/domains", method = RequestMethod.POST)
     @ResponseBody
-    public EmlGroupDomainVo addDomain(HttpServletRequest request, @PathVariable String groupId, @RequestBody EmlGroupDomainVo groupDomainVo) {
+    public EmlGroupDomainVo addDomain(HttpServletRequest request, @PathVariable String groupId, EmlGroupDomainVo groupDomainVo) {
         logger.debug("그룹 도메인을 추가합니다.: groupId=" + groupId);
 
         EmlClientVo clientVo = clientService.getByName(request.getUserPrincipal().getName());

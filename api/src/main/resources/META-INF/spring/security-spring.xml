@@ -24,9 +24,13 @@
     <http entry-point-ref="authenticationEntryPoint">
         <intercept-url method="OPTIONS" pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
         <intercept-url pattern="/clients**" access="ROLE_SA"/>
+        <intercept-url pattern="/clients/**" access="ROLE_SA"/>
         <intercept-url pattern="/groups**" access="ROLE_SA, ROLE_CLIENT, ROLE_USER"/>
+        <intercept-url pattern="/groups/**" access="ROLE_SA, ROLE_CLIENT, ROLE_USER"/>
         <intercept-url pattern="/users**" access="ROLE_SA, ROLE_GA, ROLE_USER"/>
+        <intercept-url pattern="/users/**" access="ROLE_SA, ROLE_GA, ROLE_USER"/>
         <intercept-url pattern="/orgs**" access="ROLE_SA, ROLE_GA, ROLE_USER"/>
+        <intercept-url pattern="/orgs/**" access="ROLE_SA, ROLE_GA, ROLE_USER"/>
         <intercept-url pattern="/**" access="ROLE_SA, ROLE_ADMIN" />
 <!--
         <custom-filter after="EXCEPTION_TRANSLATION_FILTER" ref="ajaxSessionTimeoutFilter"/>
