@@ -1,9 +1,9 @@
 swagger: '2.0'
 info:
   version: 1.0.0
-  title: 'OreumIO James REST API'
+  title: 'OreumIO James SA API'
   description: >
-    OreumIO James API 는 시스템 관리자가 관리할 수 있게 해줍니다.
+    OreumIO James SA API 는 시스템 관리자가 시스템을 관리할 수 있게 해줍니다.
 host: localhost:8083
 paths:
   /clients.do:
