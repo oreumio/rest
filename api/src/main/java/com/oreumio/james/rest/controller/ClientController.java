@@ -94,16 +94,17 @@ public class ClientController {
 
     @RequestMapping(value = "clients/{clientId}/domains", method = RequestMethod.POST)
     @ResponseBody
-    public void addDomain(HttpServletRequest request, @PathVariable String clientId, String domain) {
-        logger.debug("고객 도메인을 추가합니다.: clientId=" + clientId + ", domainId=" + domain);
+    public void addDomain(HttpServletRequest request, @PathVariable String clientId, @RequestBody EmlClientDomainVo clientDomainVo) {
+        logger.debug("고객 도메인을 추가합니다.: clientId=" + clientId + ", " + clientDomainVo);
 
-        clientService.addDomain(clientId, domain);
+        clientService.addDomain(clientId, clientDomainVo.getClientDomainName());
     }
 
-    @RequestMapping(value = "clients/{clientId}/domains/{domainId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "clients/{clientId}/domains/{clientDomainId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public void removeDomain(HttpServletRequest request, @PathVariable String clientId, @PathVariable String domainId) {
-        logger.debug("고객 도메인을 삭제합니다.: clientId=" + clientId + ", domainId=" + domainId);
-        clientService.removeDomain(clientId, domainId);
+    public void removeDomain(HttpServletRequest request, @PathVariable String clientId, @PathVariable String clientDomainId) {
+        logger.debug("고객 도메인을 삭제합니다.: clientId=" + clientId + ", clientDomainId=" + clientDomainId);
+
+        clientService.removeDomain(clientId, clientDomainId);
     }
 }

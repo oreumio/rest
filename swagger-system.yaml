@@ -117,19 +117,18 @@ paths:
         고객이 사용할 도메인을 등록한다.
       security:
         - basic: []
-      consumes:
-        - application/x-www-form-urlencoded
       parameters:
         - $ref: '#/parameters/clientId'
-        - name: domain
-          in: formData
+        - name: body
+          in: body
           description: 클라이언트 도메인
           required: true
-          type: string
+          schema:
+            $ref: '#/definitions/ClientDomain'
       responses:
         '200':
           description: Successful response
-  /clients/{clientId}/domains/{domainId}.do:
+  /clients/{clientId}/domains/{clientDomainId}.do:
     delete:
       description: |
         고객 도메인을 삭제한다.
@@ -137,7 +136,7 @@ paths:
         - basic: []
       parameters:
         - $ref: '#/parameters/clientId'
-        - $ref: '#/parameters/domainId'
+        - $ref: '#/parameters/clientDomainId'
       responses:
         '200':
           description: Successful response
@@ -202,6 +201,18 @@ definitions:
         items:
           type: string
           description: 도메인명.
+  ClientDomain:
+    type: object
+    properties:
+      clientDomainId:
+        type: string
+        description: 고객 도메인 아이디
+      clientId:
+        type: string
+        description: 고객 아이디
+      clientDomainName:
+        type: string
+        description: 고객 도메인
 parameters:
   clientId:
     name: clientId
@@ -215,16 +226,10 @@ parameters:
     description: 그룹 아이디
     required: true
     type: string
-  domainId:
-    name: domainId
+  clientDomainId:
+    name: clientDomainId
     in: path
-    description: 도메인 아이디
-    required: true
-    type: string
-  secDomainId:
-    name: secDomainId
-    in: path
-    description: 부 도메인 아이디
+    description: 고객 도메인 아이디
     required: true
     type: string
 securityDefinitions:
