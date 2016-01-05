@@ -88,10 +88,12 @@ paths:
         사용자의 계획 용량을 변경한다.
       security:
         - basic: []
+      consumes:
+        - application/x-www-form-urlencoded
       parameters:
         - $ref: '#/parameters/userId'
         - name: quota
-          in: query
+          in: formData
           description: 사용자 계획 용량
           required: true
           type: integer
@@ -115,7 +117,7 @@ paths:
               $ref: '#/definitions/Role'
     post:
       description: |
-        사용자 역할을 등록한다.
+        사용자 역할을 부여한다.
       security:
         - basic: []
       parameters:
@@ -132,7 +134,7 @@ paths:
   /users/{userId}/roles/{roleId}.do:
     delete:
       description: |
-        사용자 역할을 삭제한다.
+        사용자 역할을 박탈한다.
       security:
         - basic: []
       parameters:
