@@ -77,6 +77,8 @@ paths:
         그룹 용량을 변경한다.
       security:
         - basic: []
+      consumes:
+        - application/x-www-form-urlencoded
       parameters:
         - name: groupId
           in: path
@@ -84,7 +86,7 @@ paths:
           required: true
           type: string
         - name: quota
-          in: query
+          in: formData
           description: 그룹 쿼타
           required: true
           type: integer
