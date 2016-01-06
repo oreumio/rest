@@ -4,16 +4,56 @@ info:
   title: 'OreumIO James GA API'
   description: >
     OreumIO James GA API 는 그룹관리자가 그룹을 관리할 수 있게 해줍니다.
+    그룹 설정 관리
+    사용자 관리
+    조직 관리
 host: localhost:8083
 produces:
   - application/json
   - text/html
   - text/plain
 paths:
+  /group.do:
+    get:
+      description: |
+        그룹 정보를 조회한다.
+      security:
+        - basic: []
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/Group'
+  /group/getQuota.do:
+    post:
+      description: |
+        그룹의 사용량 실적을 조회한다.
+      security:
+        - basic: []
+      responses:
+        '200':
+          description: Successful response
+  /group/changeConfig.do:
+    post:
+      description: |
+        그룹 설정을 변경한다.
+      security:
+        - basic: []
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: config
+          in: formData
+          description: 그룹 설정
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
   /users.do:
     get:
       description: |
-        사용자를 검색한다.
+        사용자를 검색한다. 사용자 사용량 실적을 포함.
       security:
         - basic: []
       parameters:
@@ -50,7 +90,7 @@ paths:
   /users/{userId}.do:
     get:
       description: |
-        사용자의 정보를 얻는다.
+        사용자의 정보를 얻는다. 사용량 실적을 포함.
       security:
         - basic: []
       parameters:
@@ -75,6 +115,17 @@ paths:
     post:
       description: |
         사용자를 재개시킨다.
+      security:
+        - basic: []
+      parameters:
+        - $ref: '#/parameters/userId'
+      responses:
+        '200':
+          description: Successful response
+  /users/{userId}/getQuota.do:
+    post:
+      description: |
+        사용자의 실적 용량을 취득한다.
       security:
         - basic: []
       parameters:
@@ -206,19 +257,15 @@ paths:
   /orgs/{orgId}/orgUnits.do:
     get:
       description: |
-        조직 단위를 검색한다.
+        하위 조직 단위를 검색한다.
       security:
         - basic: []
       parameters:
         - $ref: '#/parameters/orgId'
-        - name: pageNo
+        - name: parentOrgUnitId
           in: query
-          description: 페이지 번호
-          type: integer
-        - name: pageSize
-          in: query
-          description: 페이지 크기
-          type: integer
+          description: 상위 조직 단위 아이디
+          type: string
       responses:
         '200':
           description: Successful response
@@ -267,7 +314,7 @@ paths:
       responses:
         '200':
           description: Successful response
-  /orgs/{orgId}/orgUnits/{orgUnitId}/users.do:
+  /orgs/{orgId}/orgUnits/{orgUnitId}/members.do:
     get:
       description: |
         조직 단위의 사용자를 검색한다.
@@ -276,21 +323,17 @@ paths:
       parameters:
         - $ref: '#/parameters/orgId'
         - $ref: '#/parameters/orgUnitId'
-        - name: pageNo
+        - name: inclusive
           in: query
-          description: 페이지 번호
-          type: integer
-        - name: pageSize
-          in: query
-          description: 페이지 크기
-          type: integer
+          description: 하위 조직단위 포함 여부
+          type: boolean
       responses:
         '200':
           description: Successful response
           schema:
             type: array
             items:
-              $ref: '#/definitions/User'
+              $ref: '#/definitions/OrgUnitUser'
     post:
       description: |
         조직 단위의 사용자를 등록한다.
@@ -299,15 +342,15 @@ paths:
       parameters:
         - $ref: '#/parameters/orgId'
         - $ref: '#/parameters/orgUnitId'
-        - in: body
-          name: body
+        - name: body
+          in: body
           description: 사용자 오브젝트
           schema:
             $ref: '#/definitions/OrgUnitUser'
       responses:
         '200':
           description: Successful response
-  /orgs/{orgId}/orgUnits/{orgUnitId}/users/{userId}.do:
+  /orgs/{orgId}/orgUnits/{orgUnitId}/members/{userId}.do:
     get:
       description: |
         조직 단위의 사용자의 정보를 얻는다.
@@ -321,7 +364,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/User'
+            $ref: '#/definitions/OrgUnitUser'
     delete:
       description: |
         조직 단위의 사용자를 삭제한다.
@@ -335,21 +378,6 @@ paths:
         '200':
           description: Successful response
 definitions:
-  Client:
-    type: object
-    properties:
-      clientId:
-        type: string
-        description: 고객 아이디
-      description:
-        type: string
-        description: 고객 설명
-      displayName:
-        type: string
-        description: 고객 표시명
-      state:
-        type: string
-        description: 고객 상태. 정상, 정지, 삭제.
   Group:
     type: object
     properties:
