@@ -204,14 +204,42 @@ paths:
         메일을 검색한다.
       security:
         - basic: []
+      parameters:
+        - name: pageNo
+          in: query
+          description: 페이지 번호
+          type: integer
+        - name: pageSize
+          in: query
+          description: 페이지 크기
+          type: integer
+        - name: labelId
+          in: query
+          description: 레이블 아이디
+          type: string
+        - name: mailboxId
+          in: query
+          description: 메일박스 아이디
+          type: string
       responses:
         '200':
           description: Successful response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Message'
     post:
       description: |
         메일을 추가한다.
       security:
         - basic: []
+      parameters:
+        - name: body
+          in: body
+          description: 메세지 오브젝트
+          required: true
+          schema:
+            $ref: '#/definitions/Message'
       responses:
         '200':
           description: Successful response
@@ -233,14 +261,16 @@ paths:
         사용자 플래그, 별표, 삭제 플래그(삭제에 의해서 도중에 붙여짐), 읽은 상태(고정 플래그로 해야 하는 것 아닌가)
       security:
         - basic: []
+      consumes:
+        - application/x-www-form-urlencoded
       parameters:
         - $ref: '#/parameters/messageId'
         - name: op
-          in: query
+          in: formData
           description: 플래그 적용방법. set, add, remove.
           type: string
         - name: newFlags
-          in: query
+          in: formData
           description: 새 플래그들
           type: array
           items:
@@ -254,10 +284,12 @@ paths:
         메일의 문자세트를 변경한다.
       security:
         - basic: []
+      consumes:
+        - application/x-www-form-urlencoded
       parameters:
         - $ref: '#/parameters/messageId'
         - name: newCharSet
-          in: query
+          in: formData
           description: 새 문자세트
           type: string
       responses:
