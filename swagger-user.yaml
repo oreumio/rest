@@ -95,9 +95,9 @@ paths:
       security:
         - basic: []
       parameters:
-        - name: mailboxName
+        - name: mailboxId
           in: query
-          description: 부모 메일박스 이름
+          description: 부모 메일박스 아이디
           type: string
       responses:
         '200':
@@ -108,10 +108,12 @@ paths:
       security:
         - basic: []
       parameters:
-        - name: mailboxName
-          in: query
-          description: 메일박스 이름
-          type: string
+        - name: body
+          in: body
+          description: 메일박스 오브젝트
+          required: true
+          schema:
+            $ref: '#/definitions/Mailbox'
       responses:
         '200':
           description: Successful response
@@ -140,6 +142,10 @@ paths:
           in: formData
           description: 메일박스 새 이름
           type: string
+        - name: newDisplayName
+          in: formData
+          description: 메일박스 새 표시명
+          type: string
       responses:
         '200':
           description: Successful response
@@ -150,9 +156,9 @@ paths:
       security:
         - basic: []
       parameters:
-        - name: labelName
+        - name: labelId
           in: query
-          description: 부모 레이블 이름
+          description: 부모 레이블 아이디
           type: string
       responses:
         '200':
@@ -163,10 +169,12 @@ paths:
       security:
         - basic: []
       parameters:
-        - name: labelName
-          in: query
-          description: 레이블 이름
-          type: string
+        - name: body
+          in: body
+          description: 레이블 오브젝트
+          required: true
+          schema:
+            $ref: '#/definitions/Label'
       responses:
         '200':
           description: Successful response
@@ -181,6 +189,8 @@ paths:
       responses:
         '200':
           description: Successful response
+          schema:
+            $ref: '#/definitions/Label'
   /labels/{labelId}/changeName.do:
     post:
       description: |
@@ -254,6 +264,8 @@ paths:
       responses:
         '200':
           description: Successful response
+          schema:
+            $ref: '#/definitions/Message'
   /messages/{messageId}/changeFlags.do:
     post:
       description: |
@@ -538,17 +550,48 @@ paths:
       responses:
         '200':
           description: Successful response
-    put:
+  /reservedMessages/{mailFormId}/changeDateTime.do:
+    post:
       description: |
         예약 메일을 변경한다. 즉시 발송을 포함해서 발송 시각을 변경하는 것만 가능.
       security:
         - basic: []
+      consumes:
+        - application/x-www-form-urlencoded
       parameters:
         - $ref: '#/parameters/mailFormId'
+        - name: newDateTime
+          in: formData
+          description: 새 발신시각
+          type: string
       responses:
         '200':
           description: Successful response
 definitions:
+  Mailbox:
+    type: object
+    properties:
+      id:
+        type: string
+        description: 메일박스 아이디
+      name:
+        type: string
+        description: 메일박스명
+      displayName:
+        type: string
+        description: 메일박스 표시명
+  Label:
+    type: object
+    properties:
+      id:
+        type: string
+        description: 레이블 아이디
+      name:
+        type: string
+        description: 레이블 명
+      displayName:
+        type: string
+        description: 레이블 표시명
   MailForm:
     type: object
     properties:
