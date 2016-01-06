@@ -10,10 +10,30 @@ produces:
   - text/html
   - text/plain
 paths:
+  /client.do:
+    get:
+      description: |
+        고객의 정보를 조회한다.
+      security:
+        - basic: []
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/Client'
+  /client/getQuotaUsage.do:
+    post:
+      description: |
+        고객의 사용량 실적을 조회한다.
+      security:
+        - basic: []
+      responses:
+        '200':
+          description: Successful response
   /groups.do:
     get:
       description: |
-        그룹 정보를 검색한다.
+        그룹 정보를 검색한다. 그룹 쿼타 사용량 정보 포함.
       security:
         - basic: []
       responses:
@@ -47,11 +67,7 @@ paths:
       security:
         - basic: []
       parameters:
-        - name: groupId
-          in: path
-          description: 그룹 아이디
-          required: true
-          type: string
+        - $ref: '#/parameters/groupId'
       responses:
         '200':
           description: Successful response
@@ -63,11 +79,18 @@ paths:
       security:
         - basic: []
       parameters:
-        - name: groupId
-          in: path
-          description: 그룹 아이디
-          required: true
-          type: string
+        - $ref: '#/parameters/groupId'
+      responses:
+        '200':
+          description: Successful response
+  /groups/{groupId}/getQuotaUsage.do:
+    post:
+      description: |
+        그룹의 사용량 실적을 조회한다.
+      security:
+        - basic: []
+      parameters:
+        - $ref: '#/parameters/groupId'
       responses:
         '200':
           description: Successful response
@@ -80,11 +103,7 @@ paths:
       consumes:
         - application/x-www-form-urlencoded
       parameters:
-        - name: groupId
-          in: path
-          description: 그룹 아이디
-          required: true
-          type: string
+        - $ref: '#/parameters/groupId'
         - name: quota
           in: formData
           description: 그룹 쿼타
@@ -100,11 +119,7 @@ paths:
       security:
         - basic: []
       parameters:
-        - name: groupId
-          in: path
-          description: 그룹 아이디
-          required: true
-          type: string
+        - $ref: '#/parameters/groupId'
       responses:
         '200':
           description: Successful response
@@ -115,11 +130,7 @@ paths:
       security:
         - basic: []
       parameters:
-        - name: groupId
-          in: path
-          description: 그룹 아이디
-          required: true
-          type: string
+        - $ref: '#/parameters/groupId'
       responses:
         '200':
           description: Successful response
@@ -130,11 +141,7 @@ paths:
       security:
         - basic: []
       parameters:
-        - name: groupId
-          in: path
-          description: 그룹 아이디
-          required: true
-          type: string
+        - $ref: '#/parameters/groupId'
       responses:
         '200':
           description: Successful response
@@ -148,11 +155,7 @@ paths:
       security:
         - basic: []
       parameters:
-        - name: groupId
-          in: path
-          description: 그룹 아이디
-          required: true
-          type: string
+        - $ref: '#/parameters/groupId'
         - name: body
           in: body
           description: 그룹 도메인
@@ -171,16 +174,8 @@ paths:
       security:
         - basic: []
       parameters:
-        - name: groupId
-          in: path
-          description: 그룹 아이디
-          required: true
-          type: string
-        - name: domainId
-          in: path
-          description: 도메인 아이디
-          required: true
-          type: string
+        - $ref: '#/parameters/groupId'
+        - $ref: '#/parameters/domainId'
       responses:
         '200':
           description: Successful response
@@ -191,16 +186,8 @@ paths:
       security:
         - basic: []
       parameters:
-        - name: groupId
-          in: path
-          description: 그룹 아이디
-          required: true
-          type: string
-        - name: domainId
-          in: path
-          description: 도메인 아이디
-          required: true
-          type: string
+        - $ref: '#/parameters/groupId'
+        - $ref: '#/parameters/domainId'
       responses:
         '200':
           description: Successful response
@@ -214,16 +201,8 @@ paths:
       security:
         - basic: []
       parameters:
-        - name: groupId
-          in: path
-          description: 그룹 아이디
-          required: true
-          type: string
-        - name: domainId
-          in: path
-          description: 도메인 아이디
-          required: true
-          type: string
+        - $ref: '#/parameters/groupId'
+        - $ref: '#/parameters/domainId'
         - name: body
           in: body
           description: 그룹 부 도메인
@@ -242,26 +221,41 @@ paths:
       security:
         - basic: []
       parameters:
-        - name: groupId
-          in: path
-          description: 그룹 아이디
-          required: true
-          type: string
-        - name: domainId
-          in: path
-          description: 도메인 아이디
-          required: true
-          type: string
-        - name: secDomainId
-          in: path
-          description: 부 도메인 아이디
-          required: true
-          type: string
+        - $ref: '#/parameters/groupId'
+        - $ref: '#/parameters/domainId'
+        - $ref: '#/parameters/secDomainId'
       responses:
         '200':
           description: Successful response
 
 definitions:
+  Client:
+    type: object
+    properties:
+      id:
+        type: string
+        description: 고객 아이디
+      displayName:
+        type: string
+        description: 고객 표시명
+      userName:
+        type: string
+        description: 고객 사용자 아이디
+      password:
+        type: string
+        description: 패스워드
+      alg:
+        type: string
+        description: 패스워드 알고리즘
+      host:
+        type: string
+        description: 접속 호스트
+      quota:
+        type: integer
+        description: 고객 쿼타
+      state:
+        type: string
+        description: 고객 상태. 정상, 정지, 삭제.
   Group:
     type: object
     required:
@@ -404,6 +398,25 @@ definitions:
       groupSecDomainName:
         type: string
         description: 그룹 도메인명
+parameters:
+  groupId:
+    name: groupId
+    in: path
+    description: 그룹 아이디
+    required: true
+    type: string
+  domainId:
+    name: domainId
+    in: path
+    description: 도메인 아이디
+    required: true
+    type: string
+  secDomainId:
+    name: secDomainId
+    in: path
+    description: 부 도메인 아이디
+    required: true
+    type: string
 securityDefinitions:
   basic:
     type: basic

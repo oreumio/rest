@@ -24,7 +24,7 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/Group'
-  /group/getQuota.do:
+  /group/getQuotaUsage.do:
     post:
       description: |
         그룹의 사용량 실적을 조회한다.

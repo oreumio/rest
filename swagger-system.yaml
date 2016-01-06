@@ -6,10 +6,30 @@ info:
     OreumIO James SA API 는 시스템 관리자가 시스템을 관리할 수 있게 해줍니다.
 host: localhost:8083
 paths:
+  /system.do:
+    get:
+      description: |
+        시스템의 정보를 조회한다.
+      security:
+        - basic: []
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/System'
+  /system/getQuotaUsage.do:
+    post:
+      description: |
+        시스템의 사용량 실적을 조회한다.
+      security:
+        - basic: []
+      responses:
+        '200':
+          description: Successful response
   /clients.do:
     get:
       description: |
-        고객 정보를 검색한다.
+        고객 정보를 검색한다. 클라이언트 사용량 정보 포함.
       security:
         - basic: []
       responses:
@@ -39,7 +59,18 @@ paths:
   /clients/{clientId}.do:
     get:
       description: |
-        고객의 정보를 얻는다.
+        고객의 정보를 얻는다. 클라이언트 사용량 정보 포함.
+      security:
+        - basic: []
+      parameters:
+        - $ref: '#/parameters/clientId'
+      responses:
+        '200':
+          description: Successful response
+  /clients/{clientId}/getQuotaUsage.do:
+    post:
+      description: |
+        클라이언트의 사용량 실적을 조회한다.
       security:
         - basic: []
       parameters:
@@ -141,6 +172,18 @@ paths:
         '200':
           description: Successful response
 definitions:
+  System:
+    type: object
+    properties:
+      id:
+        type: string
+        description: 시스템 아이디
+      displayName:
+        type: string
+        description: 시스템 표시명
+      quota:
+        type: integer
+        description: 시스템 쿼타
   Client:
     type: object
     properties:
@@ -168,39 +211,6 @@ definitions:
       state:
         type: string
         description: 고객 상태. 정상, 정지, 삭제.
-  Group:
-    type: object
-    properties:
-      id:
-        type: string
-        description: 그룹 아이디
-      clientId:
-        type: string
-        description: 고객 아이디
-      description:
-        type: string
-        description: 그룹 설명
-      displayName:
-        type: string
-        description: 그룹 표시명
-      quota:
-        type: integer
-        format: int32
-        description: 용량
-      config:
-        type: string
-        description: 그룹 설정
-      state:
-        type: string
-        description: 그룹 상태. 정상, 정지, 삭제.
-      domainName:
-        type: string
-        description: 주 도메인명
-      secDomainNames:
-        type: array
-        items:
-          type: string
-          description: 부 도메인명 목록.
   ClientDomain:
     type: object
     properties:
@@ -220,14 +230,8 @@ parameters:
     description: 고객 아이디
     required: true
     type: string
-  groupId:
-    name: groupId
-    in: path
-    description: 그룹 아이디
-    required: true
-    type: string
-  clientDomainId:
-    name: clientDomainId
+  domainId:
+    name: domainId
     in: path
     description: 고객 도메인 아이디
     required: true
