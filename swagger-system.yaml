@@ -128,7 +128,7 @@ paths:
       responses:
         '200':
           description: Successful response
-  /clients/{clientId}/domains/{clientDomainId}.do:
+  /clients/{clientId}/domains/{domainId}.do:
     delete:
       description: |
         고객 도메인을 삭제한다.
@@ -136,7 +136,7 @@ paths:
         - basic: []
       parameters:
         - $ref: '#/parameters/clientId'
-        - $ref: '#/parameters/clientDomainId'
+        - $ref: '#/parameters/domainId'
       responses:
         '200':
           description: Successful response
@@ -144,7 +144,7 @@ definitions:
   Client:
     type: object
     properties:
-      clientId:
+      id:
         type: string
         description: 고객 아이디
       displayName:
@@ -171,7 +171,7 @@ definitions:
   Group:
     type: object
     properties:
-      groupId:
+      id:
         type: string
         description: 그룹 아이디
       clientId:
@@ -196,21 +196,21 @@ definitions:
       domainName:
         type: string
         description: 주 도메인명
-      secondaryDomainNames:
+      secDomainNames:
         type: array
         items:
           type: string
-          description: 도메인명.
+          description: 부 도메인명 목록.
   ClientDomain:
     type: object
     properties:
-      clientDomainId:
+      id:
         type: string
         description: 고객 도메인 아이디
       clientId:
         type: string
         description: 고객 아이디
-      clientDomainName:
+      domainName:
         type: string
         description: 고객 도메인
 parameters:
