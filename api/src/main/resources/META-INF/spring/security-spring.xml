@@ -21,6 +21,8 @@
            http://www.springframework.org/schema/security
            http://www.springframework.org/schema/security/spring-security.xsd">
 
+    <http pattern="/file/**" security="none"/>
+
     <http entry-point-ref="authenticationEntryPoint">
         <intercept-url method="OPTIONS" pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
         <intercept-url pattern="/clients**" access="ROLE_SA"/>

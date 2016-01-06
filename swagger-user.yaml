@@ -326,6 +326,27 @@ paths:
       responses:
         '200':
           description: Successful response
+  /file/upload.do:
+    post:
+      description: |
+        파일을 업로드한다.
+        멀티파트 처리에 있어서 스웨거 클라이언트에 버그가 있는 것으로 보임.
+      security:
+        - basic: []
+      consumes:
+        - multipart/form-data
+      parameters:
+        - name: file
+          in: formData
+          description: 첨부 파일
+          type: file
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/File'
   /files.do:
     get:
       description: |
@@ -339,20 +360,6 @@ paths:
             type: array
             items:
               $ref: '#/definitions/File'
-    post:
-      description: |
-        파일 메타 정보를 추가한다.
-      security:
-        - basic: []
-      parameters:
-        - name: body
-          in: body
-          description: 파일 오브젝트
-          schema:
-            $ref: '#/definitions/File'
-      responses:
-        '200':
-          description: Successful response
   /files/{fileId}.do:
     get:
       description: |

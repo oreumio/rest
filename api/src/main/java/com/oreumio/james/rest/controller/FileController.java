@@ -6,6 +6,8 @@ import com.oreumio.james.rest.user.EmlUserService;
 import com.oreumio.james.rest.util.FileUtil;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.*;
@@ -34,6 +36,8 @@ import java.util.Map;
 @RequestMapping("file")
 public class FileController {
 
+    private static Logger logger = LoggerFactory.getLogger(FileController.class);
+
     private String uploadTempDir;
 
     @Autowired
@@ -45,6 +49,8 @@ public class FileController {
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @ResponseBody
     public List<EmlFileVo> uploadFile(MultipartHttpServletRequest request) throws IOException {
+
+        logger.debug("파일을 업로드합니다.");
 
         List<EmlFileVo> emlFileVoList = new ArrayList<EmlFileVo>();
 
