@@ -370,7 +370,20 @@ paths:
       responses:
         '200':
           description: Successful response
-  /file/upload.do:
+  /files.do:
+    get:
+      description: |
+        파일 메타 정보를 검색한다.
+      security:
+        - basic: []
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/File'
+  /files/upload.do:
     post:
       description: |
         파일을 업로드한다.
@@ -384,19 +397,6 @@ paths:
           in: formData
           description: 첨부 파일
           type: file
-      responses:
-        '200':
-          description: Successful response
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/File'
-  /files.do:
-    get:
-      description: |
-        파일 메타 정보를 검색한다.
-      security:
-        - basic: []
       responses:
         '200':
           description: Successful response
@@ -420,6 +420,32 @@ paths:
     delete:
       description: |
         파일 메타 정보를 삭제한다.
+      security:
+        - basic: []
+      parameters:
+        - $ref: '#/parameters/fileId'
+      responses:
+        '200':
+          description: Successful response
+  /files/{fileId}/download.do:
+    get:
+      description: |
+        파일을 다운로드한다. 마임타입과 상관 없이, 다운로드되도록 함. view 도 제공할 필요가 있는가는 의문임.
+      security:
+        - basic: []
+      parameters:
+        - $ref: '#/parameters/fileId'
+        - name: fileName
+          in: query
+          description: 파일명
+          type: string
+      responses:
+        '200':
+          description: Successful response
+  /files/{fileId}/view.do:
+    get:
+      description: |
+        파일을 조회한다. 본래의 마임타입을 살려줌. 주로 이미지 파일 같은 브라우저가 인식하는 마임타입의 파일에 사용됨.
       security:
         - basic: []
       parameters:
@@ -550,7 +576,7 @@ paths:
       responses:
         '200':
           description: Successful response
-  /reservedMessages/{mailFormId}/changeDateTime.do:
+  /reservedMessages/{mailFormId}/changeDateOrTime.do:
     post:
       description: |
         예약 메일을 변경한다. 즉시 발송을 포함해서 발송 시각을 변경하는 것만 가능.

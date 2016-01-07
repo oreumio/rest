@@ -97,7 +97,7 @@ public class FileController {
      * @return
      * @throws IOException
      */
-    @RequestMapping(value = "/downFile", method = RequestMethod.GET)
+    @RequestMapping(value = "/download", method = RequestMethod.GET)
     public ResponseEntity<InputStreamResource> downFile(HttpServletRequest request) throws IOException {
         String fileId = StringUtils.defaultString(request.getParameter("fileId"));
         String filePath = StringUtils.defaultString(request.getParameter("filePath"));
@@ -122,7 +122,7 @@ public class FileController {
      * @return
      * @throws IOException
      */
-    @RequestMapping(value="/viewImage", method = RequestMethod.GET)
+    @RequestMapping(value="/view", method = RequestMethod.GET)
     public HttpEntity<byte[]> downloadImage(HttpServletRequest request) throws IOException {
         String fileId = request.getParameter("fileId");
         String filePath = request.getParameter("filePath");
