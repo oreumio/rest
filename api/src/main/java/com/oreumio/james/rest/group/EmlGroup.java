@@ -14,6 +14,8 @@ import java.io.Serializable;
 @Table(name = "EML_GROUP")
 public class EmlGroup implements Serializable {
 
+    public static String DEFAULT_ALG = "PLAIN";
+
 	/**
 	 * 그룹 아이디
 	 */
@@ -23,6 +25,25 @@ public class EmlGroup implements Serializable {
 
     @Column(name = "CLIENT_ID", nullable = false, length = 30)
     private String clientId;
+
+    @Column(name = "GROUP_HOST", nullable = false)
+    private String host;
+
+    /**
+     * 유저 아이디
+     */
+    @Column(name = "GROUP_ADMIN_USERNAME", nullable = false)
+    private String userName;
+
+    /** Hashed password */
+    @Column(name = "GROUP_ADMIN_PWD", nullable = false, length = 100)
+    private String password;
+
+    /**
+     * PLAIN, MD5, MD5-B, SHA-256, SHA-256-B, SHA-512, SHA-512-B
+     */
+    @Column(name = "GROUP_ADMIN_PWD_HASH_ALGRTH", nullable = false, length = 30)
+    private String alg;
 
 	@Column(name = "GROUP_DISPLAY_NAME", nullable = false)
 	private String displayName;
@@ -47,22 +68,24 @@ public class EmlGroup implements Serializable {
     @Column(name = "GROUP_CLIENT_CONFIG", nullable = false)
     private String clientConfig;
 
-	@Column(name = "GROUP_HOST", nullable = false)
-	private String host;
-
 	public EmlGroup() {
+        alg = DEFAULT_ALG;
         state = "R";
-        host = "oreumio.com";
         serverConfig = "{}";
         clientConfig = "{}";
 	}
 
-    public EmlGroup(EmlGroupVo emlGroupVo) {
+    public EmlGroup(EmlGroupVo groupVo) {
         this();
-        id = emlGroupVo.getId();
-        clientId = emlGroupVo.getClientId();
-        displayName = emlGroupVo.getDisplayName();
-        quota = emlGroupVo.getQuota();
+        host = groupVo.getHost();
+        userName = groupVo.getUserName();
+        password = groupVo.getPassword();
+        if (groupVo.getAlg() != null) {
+            alg = groupVo.getAlg();
+        }
+        clientId = groupVo.getClientId();
+        displayName = groupVo.getDisplayName();
+        quota = groupVo.getQuota();
     }
 
     public String getId() {
@@ -79,6 +102,38 @@ public class EmlGroup implements Serializable {
 
     public void setClientId(String clientId) {
         this.clientId = clientId;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getAlg() {
+        return alg;
+    }
+
+    public void setAlg(String alg) {
+        this.alg = alg;
     }
 
     public String getDisplayName() {
@@ -121,14 +176,6 @@ public class EmlGroup implements Serializable {
         this.clientConfig = clientConfig;
     }
 
-    public String getHost() {
-        return host;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
-    }
-
     @Override
     public String toString() {
         return "EmlGroup{" +
@@ -140,6 +187,8 @@ public class EmlGroup implements Serializable {
                 ", serverConfig='" + serverConfig + '\'' +
                 ", clientConfig='" + clientConfig + '\'' +
                 ", host='" + host + '\'' +
+                ", userName='" + userName + '\'' +
+                ", alg='" + alg + '\'' +
                 '}';
     }
 }

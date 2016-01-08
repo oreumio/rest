@@ -20,9 +20,6 @@ public class EmlUserDao {
     @PersistenceContext(unitName = "rest")
     private EntityManager em;
 
-    @Resource(name = "idProvider")
-    private IdProvider<String> idProvider;
-
     /**
      * @param em EntityManager
      */
@@ -71,18 +68,19 @@ public class EmlUserDao {
         return userList;
     }
 
-    public EmlUser insert(EmlUserVo emlUserVo) {
-        EmlUser emlUser = new EmlUser(emlUserVo);
-        emlUser.setId("U" + idProvider.next());
-        em.persist(emlUser);
-        return emlUser;
-    }
-
-    public void delete(String userName, String groupId) {
-        EmlUser emlUser = em.createQuery("SELECT user FROM EmlUser user WHERE user.userName = :userName AND user.groupId = :groupId", EmlUser.class)
+    public EmlUser select(String userName, String groupId) {
+        EmlUser user = em.createQuery("SELECT user FROM EmlUser user WHERE user.userName = :userName AND user.groupId = :groupId", EmlUser.class)
                 .setParameter("userName", userName)
                 .setParameter("groupId", groupId)
                 .getSingleResult();
-        em.remove(emlUser);
+        return user;
+    }
+
+    public void insert(EmlUser user) {
+        em.persist(user);
+    }
+
+    public void delete(EmlUser user) {
+        em.remove(user);
     }
 }

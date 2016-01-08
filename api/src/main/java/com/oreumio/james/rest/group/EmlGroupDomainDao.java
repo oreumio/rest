@@ -55,7 +55,7 @@ public class EmlGroupDomainDao {
         EmlGroupDomain emlGroupDomain = new EmlGroupDomain();
         emlGroupDomain.setId("GD" + idProvider.next());
         emlGroupDomain.setGroupId(groupId);
-        emlGroupDomain.setGroupDomainName(groupDomainName);
+        emlGroupDomain.setDomainName(groupDomainName);
         em.persist(emlGroupDomain);
         return emlGroupDomain;
     }

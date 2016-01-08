@@ -1,8 +1,6 @@
 package com.oreumio.james.rest.controller;
 
-import com.oreumio.james.rest.group.EmlClientDomainVo;
-import com.oreumio.james.rest.group.EmlClientService;
-import com.oreumio.james.rest.group.EmlClientVo;
+import com.oreumio.james.rest.group.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +58,14 @@ public class ClientController {
         clientService.unregister(clientId);
     }
 
+    @RequestMapping(value = "clients/{clientId}/getQuotaUsage", method = RequestMethod.POST)
+    @ResponseBody
+    public EmlClientVo getQuotaUsage(HttpServletRequest request, @PathVariable String clientId) {
+        logger.debug("고객의 사용량 실적을 취득합니다.: clientId=" + clientId);
+
+        return clientService.getQuotaUsage(clientId);
+    }
+
     @RequestMapping(value = "clients/{clientId}/changeDisplayName", method = RequestMethod.POST)
     @ResponseBody
     public void changeName(HttpServletRequest request, @PathVariable String clientId, String displayName) {
@@ -97,7 +103,7 @@ public class ClientController {
     public void addDomain(HttpServletRequest request, @PathVariable String clientId, @RequestBody EmlClientDomainVo clientDomainVo) {
         logger.debug("고객 도메인을 추가합니다.: clientId=" + clientId + ", " + clientDomainVo);
 
-        clientService.addDomain(clientId, clientDomainVo.getClientDomainName());
+        clientService.addDomain(clientId, clientDomainVo.getDomainName());
     }
 
     @RequestMapping(value = "clients/{clientId}/domains/{clientDomainId}", method = RequestMethod.DELETE)

@@ -1,22 +1,24 @@
-package com.oreumio.james.rest.group;
+package com.oreumio.james.rest.system;
+
+import com.oreumio.james.rest.group.EmlClient;
 
 /**
  * @author Jhonson choi (jhonsonchoi@gmail.com)
  */
-public class EmlClientVo {
+public class EmlSystemVo {
     private String id;
-    private String host;
     private String userName;
+    private String host;
     private String password;
     private String alg;
     private String displayName;
     private String state;
     private long quota;
 
-    public EmlClientVo() {
+    public EmlSystemVo() {
     }
 
-    public EmlClientVo(EmlClient client) {
+    public EmlSystemVo(EmlClient client) {
         id = client.getId();
         userName = client.getUserName();
         host = client.getHost();

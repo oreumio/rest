@@ -6,6 +6,10 @@ package com.oreumio.james.rest.group;
 public class EmlGroupVo {
     private String id;
     private String clientId;
+    private String host;
+    private String userName;
+    private String password;
+    private String alg;
     private String state;
     private long quota;
     private String displayName;
@@ -14,12 +18,16 @@ public class EmlGroupVo {
     public EmlGroupVo() {
     }
 
-    public EmlGroupVo(EmlGroup emlGroup) {
-        id = emlGroup.getId();
-        clientId = emlGroup.getClientId();
-        state = emlGroup.getState();
-        quota = emlGroup.getQuota();
-        displayName = emlGroup.getDisplayName();
+    public EmlGroupVo(EmlGroup group) {
+        id = group.getId();
+        clientId = group.getClientId();
+        host = group.getHost();
+        userName = group.getUserName();
+        password = group.getPassword();
+        alg = group.getAlg();
+        state = group.getState();
+        quota = group.getQuota();
+        displayName = group.getDisplayName();
     }
 
     public String getId() {
@@ -36,6 +44,38 @@ public class EmlGroupVo {
 
     public void setClientId(String clientId) {
         this.clientId = clientId;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getAlg() {
+        return alg;
+    }
+
+    public void setAlg(String alg) {
+        this.alg = alg;
     }
 
     public String getState() {
@@ -75,6 +115,10 @@ public class EmlGroupVo {
         return "EmlGroupVo{" +
                 "id='" + id + '\'' +
                 ", clientId='" + clientId + '\'' +
+                ", host='" + host + '\'' +
+                ", userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                ", alg='" + alg + '\'' +
                 ", state='" + state + '\'' +
                 ", quota=" + quota +
                 ", displayName='" + displayName + '\'' +

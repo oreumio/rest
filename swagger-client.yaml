@@ -167,7 +167,7 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/GroupDomain'
-  /groups/{groupId}/domains/{domainId}.do:
+  /groups/{groupId}/domains/{groupDomainId}.do:
     delete:
       description: |
         그룹 도메인을 삭제한다.
@@ -175,11 +175,11 @@ paths:
         - basic: []
       parameters:
         - $ref: '#/parameters/groupId'
-        - $ref: '#/parameters/domainId'
+        - $ref: '#/parameters/groupDomainId'
       responses:
         '200':
           description: Successful response
-  /groups/{groupId}/domains/{domainId}/secDomains.do:
+  /groups/{groupId}/domains/{groupDomainId}/secDomains.do:
     get:
       description: |
         그룹 부 도메인 목록을 구한다.
@@ -187,7 +187,7 @@ paths:
         - basic: []
       parameters:
         - $ref: '#/parameters/groupId'
-        - $ref: '#/parameters/domainId'
+        - $ref: '#/parameters/groupDomainId'
       responses:
         '200':
           description: Successful response
@@ -202,7 +202,7 @@ paths:
         - basic: []
       parameters:
         - $ref: '#/parameters/groupId'
-        - $ref: '#/parameters/domainId'
+        - $ref: '#/parameters/groupDomainId'
         - name: body
           in: body
           description: 그룹 부 도메인
@@ -214,7 +214,7 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/GroupSecDomain'
-  /groups/{groupId}/domains/{domainId}/secDomains/{secDomainId}.do:
+  /groups/{groupId}/domains/{groupDomainId}/secDomains/{groupSecDomainId}.do:
     delete:
       description: |
         그룹 부 도메인을 삭제한다.
@@ -222,8 +222,8 @@ paths:
         - basic: []
       parameters:
         - $ref: '#/parameters/groupId'
-        - $ref: '#/parameters/domainId'
-        - $ref: '#/parameters/secDomainId'
+        - $ref: '#/parameters/groupDomainId'
+        - $ref: '#/parameters/groupSecDomainId'
       responses:
         '200':
           description: Successful response
@@ -274,11 +274,22 @@ definitions:
       displayName:
         type: string
         description: 그룹 표시명
+      host:
+        type: string
+        description: 접속 호스트
+      userName:
+        type: string
+        description: 고객 사용자 아이디
+      password:
+        type: string
+        description: 패스워드
+      alg:
+        type: string
+        description: 패스워드 알고리즘
       quota:
         type: integer
         format: int32
         description: 용량
-      serverConfig:
       serverConfig:
         $ref: '#/definitions/ServerConfig'
       clientConfig:
@@ -380,7 +391,7 @@ definitions:
       groupId:
         type: string
         description: 그룹 아이디
-      groupDomainName:
+      domainName:
         type: string
         description: 그룹 도메인명
   GroupSecDomain:
@@ -395,9 +406,43 @@ definitions:
       groupDomainId:
         type: string
         description: 그룹 주 도메인 아이디
-      groupSecDomainName:
+      domainName:
         type: string
-        description: 그룹 도메인명
+        description: 그룹 부 도메인명
+  User:
+    type: object
+    properties:
+      id:
+        type: string
+        description: 사용자 아이디
+      groupId:
+        type: string
+        description: 그룹 아이디
+      userName:
+        type: string
+        description: 사용자명. 이메일 주소의 지역부.
+      domainName:
+        type: string
+        description: 도메인명. 이메일 주소의 도메인부. 인증 시에 사용하는 호스트로 포트를 포함함.
+      displayName:
+        type: string
+        description: 사용자 표시명
+      socketEnabled:
+        type: string
+        description: POP3/IMAP 사용여부.
+      state:
+        type: string
+        description: 사용자 상태. 정상(N), 정지(R), 삭제(D).
+      quota:
+        type: integer
+        format: int32
+        description: 계획 용량
+      serverConfig:
+        type: string
+        description: 서버를 위한 사용자 설정
+      clientConfig:
+        type: string
+        description: 클라이언트를 위한 사용자 설정
 parameters:
   groupId:
     name: groupId
@@ -405,16 +450,22 @@ parameters:
     description: 그룹 아이디
     required: true
     type: string
-  domainId:
-    name: domainId
+  groupDomainId:
+    name: groupDomainId
     in: path
     description: 도메인 아이디
     required: true
     type: string
-  secDomainId:
-    name: secDomainId
+  groupSecDomainId:
+    name: groupSecDomainId
     in: path
     description: 부 도메인 아이디
+    required: true
+    type: string
+  userId:
+    name: userId
+    in: path
+    description: 사용자 아이디
     required: true
     type: string
 securityDefinitions:

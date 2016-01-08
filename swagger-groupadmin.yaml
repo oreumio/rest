@@ -381,7 +381,7 @@ definitions:
   Group:
     type: object
     properties:
-      groupId:
+      id:
         type: string
         description: 그룹 아이디
       clientId:
@@ -393,6 +393,18 @@ definitions:
       displayName:
         type: string
         description: 그룹 표시명
+      userName:
+        type: string
+        description: 고객 사용자 아이디
+      password:
+        type: string
+        description: 패스워드
+      alg:
+        type: string
+        description: 패스워드 알고리즘
+      host:
+        type: string
+        description: 접속 호스트
       quota:
         type: integer
         format: int32
@@ -423,7 +435,7 @@ definitions:
       userName:
         type: string
         description: 사용자명. 이메일 주소의 지역부.
-      domainName:
+      host:
         type: string
         description: 도메인명. 이메일 주소의 도메인부. 인증 시에 사용하는 호스트로 포트를 포함함.
       displayName:
@@ -448,7 +460,7 @@ definitions:
   Role:
     type: object
     properties:
-      roleId:
+      id:
         type: string
         description: 역할 아이디
       displayName:
@@ -457,7 +469,7 @@ definitions:
   Org:
     type: object
     properties:
-      orgId:
+      id:
         type: string
         description: 조직 아이디. 0 회사, 1 부서, 2 직위, 3 직무, 4 직책, 5 기타
       groupId:
@@ -469,7 +481,7 @@ definitions:
   OrgUnit:
     type: object
     properties:
-      orgUnitId:
+      id:
         type: string
         description: 조직 단위 아이디
       orgId:
@@ -484,7 +496,7 @@ definitions:
   OrgUnitUser:
     type: object
     properties:
-      orgUnitId:
+      id:
         type: string
         description: 조직 단위 아이디
       orgId:

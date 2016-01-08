@@ -1,9 +1,7 @@
 package com.oreumio.james.rest.filter;
 
-import com.oreumio.james.rest.user.EmlUserRoleService;
-import com.oreumio.james.rest.user.EmlUserRoleVo;
-import com.oreumio.james.rest.user.EmlUserService;
-import com.oreumio.james.rest.user.EmlUserVo;
+import com.oreumio.james.rest.group.EmlGroupService;
+import com.oreumio.james.rest.group.EmlGroupVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,44 +18,42 @@ import java.util.List;
 /**
  * @author Jhonson choi (jhonsonchoi@gmail.com)
  */
-public class MyUserDetailsService implements UserDetailsService {
+public class GroupUserDetailsService implements UserDetailsService {
 
-    private static Logger logger = LoggerFactory.getLogger(MyUserDetailsService.class);
+    private static Logger logger = LoggerFactory.getLogger(GroupUserDetailsService.class);
+
+    private static List<GrantedAuthority> grantedAuthorityList = new ArrayList<GrantedAuthority>();
 
     @Autowired
-    private EmlUserService userService;
+    private EmlGroupService groupService;
 
-    @Autowired
-    private EmlUserRoleService userRoleService;
+    public GroupUserDetailsService() {
+        grantedAuthorityList.add(new SimpleGrantedAuthority("ROLE_GA"));
+    }
 
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
 
-        logger.debug("사용자 인증을 위한 정보를 취득합니다.: username=" + username);
+        logger.debug("그룹 관리자 인증을 위한 정보를 취득합니다.: username=" + username);
 
         int i = username.indexOf("@");
 
         if (i > -1) {
             try {
-                final EmlUserVo userVo = userService.getByName(username.substring(0, i), username.substring(i + 1));
-                final List<EmlUserRoleVo> userRoleVoList = userRoleService.list(userVo.getId());
+                final EmlGroupVo groupVo = groupService.getByName(username.substring(0, i), username.substring(i + 1));
 
-                logger.debug("사용자 정보를 취득했습니다.: " + userVo);
+                logger.debug("그룹 정보를 취득했습니다.: " + groupVo);
 
                 return new UserDetails() {
 
                     @Override
                     public Collection<? extends GrantedAuthority> getAuthorities() {
-                        List<GrantedAuthority> grantedAuthorityList = new ArrayList<GrantedAuthority>();
-                        for (EmlUserRoleVo userRoleVo : userRoleVoList) {
-                            grantedAuthorityList.add(new SimpleGrantedAuthority(userRoleVo.getRoleId()));
-                        }
                         return grantedAuthorityList;
                     }
 
                     @Override
                     public String getPassword() {
-                        return userVo.getPassword();
+                        return groupVo.getPassword();
                     }
 
                     @Override

@@ -28,7 +28,7 @@ public class EmlGroupDomain implements Serializable {
     private String groupId;
 
 	@Column(name = "GROUP_DOMAIN_NAME", nullable = false)
-	private String groupDomainName;
+	private String domainName;
 
 	public EmlGroupDomain() {
 
@@ -50,12 +50,12 @@ public class EmlGroupDomain implements Serializable {
         this.groupId = groupId;
     }
 
-    public String getGroupDomainName() {
-        return groupDomainName;
+    public String getDomainName() {
+        return domainName;
     }
 
-    public void setGroupDomainName(String groupDomainName) {
-        this.groupDomainName = groupDomainName;
+    public void setDomainName(String domainName) {
+        this.domainName = domainName;
     }
 
     @Override
@@ -63,7 +63,7 @@ public class EmlGroupDomain implements Serializable {
         return "EmlGroupDomain{" +
                 "id='" + id + '\'' +
                 ", groupId='" + groupId + '\'' +
-                ", groupDomainName='" + groupDomainName + '\'' +
+                ", domainName='" + domainName + '\'' +
                 '}';
     }
 }

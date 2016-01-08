@@ -57,7 +57,7 @@ public class EmlGroupSecDomainDao {
         emlGroupSecDomain.setId("GSD" + idProvider.next());
         emlGroupSecDomain.setGroupId(groupId);
         emlGroupSecDomain.setGroupDomainId(groupDomainId);
-        emlGroupSecDomain.setGroupSecDomainName(groupSecDomainName);
+        emlGroupSecDomain.setDomainName(groupSecDomainName);
         em.persist(emlGroupSecDomain);
         return emlGroupSecDomain;
     }

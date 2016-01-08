@@ -1,7 +1,6 @@
 package com.oreumio.james.rest.controller;
 
 import com.oreumio.james.rest.group.EmlGroupService;
-import com.oreumio.james.rest.group.EmlGroupVo;
 import com.oreumio.james.rest.user.EmlUserRoleService;
 import com.oreumio.james.rest.user.EmlUserRoleVo;
 import com.oreumio.james.rest.user.EmlUserService;
@@ -19,9 +18,9 @@ import java.util.List;
  * @author Jhonson choi (jhonsonchoi@gmail.com)
  */
 @Controller
-public class SelfController {
+public class UserSelfController {
 
-    private static Logger logger = LoggerFactory.getLogger(SelfController.class);
+    private static Logger logger = LoggerFactory.getLogger(UserSelfController.class);
 
     @Autowired
     private EmlUserService userService;
@@ -58,14 +57,5 @@ public class SelfController {
 
         logger.debug("사용자 자신의 역할 정보를 취득합니다.: userId=" + userVo.getId());
         return userRoleService.list(userVo.getId());
-    }
-
-    @RequestMapping(value = "group", method = RequestMethod.GET)
-    @ResponseBody
-    public EmlGroupVo getGroup(HttpServletRequest request) {
-        EmlUserVo userVo = userService.getByName(request.getUserPrincipal().getName());
-
-        logger.debug("그룹을 조회합니다.: groupId=" + userVo.getGroupId());
-        return groupService.get(null, userVo.getGroupId());
     }
 }

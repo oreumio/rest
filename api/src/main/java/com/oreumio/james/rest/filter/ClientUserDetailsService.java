@@ -43,47 +43,51 @@ public class ClientUserDetailsService implements UserDetailsService {
         int i = username.indexOf("@");
 
         if (i > -1) {
-            final EmlClientVo clientVo = clientService.getByName(username.substring(0, i), username.substring(i + 1));
+            try {
+                final EmlClientVo clientVo = clientService.getByName(username.substring(0, i), username.substring(i + 1));
 
-            logger.debug("고객 정보를 취득했습니다.: " + clientVo);
+                logger.debug("고객 정보를 취득했습니다.: " + clientVo);
 
-            return new UserDetails() {
+                return new UserDetails() {
 
-                @Override
-                public Collection<? extends GrantedAuthority> getAuthorities() {
-                    return grantedAuthorityList;
-                }
+                    @Override
+                    public Collection<? extends GrantedAuthority> getAuthorities() {
+                        return grantedAuthorityList;
+                    }
 
-                @Override
-                public String getPassword() {
-                    return clientVo.getPassword();
-                }
+                    @Override
+                    public String getPassword() {
+                        return clientVo.getPassword();
+                    }
 
-                @Override
-                public String getUsername() {
-                    return username;
-                }
+                    @Override
+                    public String getUsername() {
+                        return username;
+                    }
 
-                @Override
-                public boolean isAccountNonExpired() {
-                    return true;
-                }
+                    @Override
+                    public boolean isAccountNonExpired() {
+                        return true;
+                    }
 
-                @Override
-                public boolean isAccountNonLocked() {
-                    return true;
-                }
+                    @Override
+                    public boolean isAccountNonLocked() {
+                        return true;
+                    }
 
-                @Override
-                public boolean isCredentialsNonExpired() {
-                    return true;
-                }
+                    @Override
+                    public boolean isCredentialsNonExpired() {
+                        return true;
+                    }
 
-                @Override
-                public boolean isEnabled() {
-                    return true;
-                }
-            };
+                    @Override
+                    public boolean isEnabled() {
+                        return true;
+                    }
+                };
+            } catch (Exception e) {
+                logger.warn("해당하는 사용자가 없습니다.", e);
+            }
         }
 
         throw new UsernameNotFoundException(username);

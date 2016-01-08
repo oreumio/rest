@@ -2,8 +2,6 @@ package com.oreumio.james.rest.controller;
 
 import com.oreumio.james.rest.mailbox.EmlMailboxService;
 import com.oreumio.james.rest.mailbox.EmlMailboxVo;
-import com.oreumio.james.rest.session.SessionUtil;
-import com.oreumio.james.rest.session.SessionVo;
 import com.oreumio.james.rest.user.EmlUserService;
 import com.oreumio.james.rest.user.EmlUserVo;
 import org.slf4j.Logger;

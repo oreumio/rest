@@ -18,7 +18,7 @@ public class EmlClientDomainVo implements Serializable {
 
     private String clientId;
 
-	private String clientDomainName;
+	private String domainName;
 
 	public EmlClientDomainVo() {
 
@@ -27,7 +27,7 @@ public class EmlClientDomainVo implements Serializable {
     public EmlClientDomainVo(EmlClientDomain emlClientDomain) {
         id = emlClientDomain.getId();
         clientId = emlClientDomain.getClientId();
-        clientDomainName = emlClientDomain.getDomain();
+        domainName = emlClientDomain.getDomain();
     }
 
     public String getId() {
@@ -46,12 +46,12 @@ public class EmlClientDomainVo implements Serializable {
         this.clientId = clientId;
     }
 
-    public String getClientDomainName() {
-        return clientDomainName;
+    public String getDomainName() {
+        return domainName;
     }
 
-    public void setClientDomainName(String clientDomainName) {
-        this.clientDomainName = clientDomainName;
+    public void setDomainName(String domainName) {
+        this.domainName = domainName;
     }
 
     @Override
@@ -59,7 +59,7 @@ public class EmlClientDomainVo implements Serializable {
         return "EmlClientDomainVo{" +
                 "id='" + id + '\'' +
                 ", clientId='" + clientId + '\'' +
-                ", clientDomainName='" + clientDomainName + '\'' +
+                ", domainName='" + domainName + '\'' +
                 '}';
     }
 }

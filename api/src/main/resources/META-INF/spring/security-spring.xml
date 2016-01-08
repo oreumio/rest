@@ -27,16 +27,18 @@
         <intercept-url method="OPTIONS" pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
         <intercept-url pattern="/clients**" access="ROLE_SA"/>
         <intercept-url pattern="/clients/**" access="ROLE_SA"/>
-        <intercept-url pattern="/groups**" access="ROLE_SA, ROLE_CLIENT, ROLE_USER"/>
-        <intercept-url pattern="/groups/**" access="ROLE_SA, ROLE_CLIENT, ROLE_USER"/>
-        <intercept-url pattern="/users**" access="ROLE_SA, ROLE_GA, ROLE_USER"/>
-        <intercept-url pattern="/users/**" access="ROLE_SA, ROLE_GA, ROLE_USER"/>
-        <intercept-url pattern="/orgs**" access="ROLE_SA, ROLE_GA, ROLE_USER"/>
-        <intercept-url pattern="/orgs/**" access="ROLE_SA, ROLE_GA, ROLE_USER"/>
-        <intercept-url pattern="/group**" access="ROLE_USER"/>
-        <intercept-url pattern="/group/**" access="ROLE_USER"/>
+        <intercept-url pattern="/client**" access="ROLE_CLIENT"/>
+        <intercept-url pattern="/client/**" access="ROLE_CLIENT"/>
+        <intercept-url pattern="/groups**" access="ROLE_CLIENT, ROLE_USER"/>
+        <intercept-url pattern="/groups/**" access="ROLE_CLIENT, ROLE_USER"/>
+        <intercept-url pattern="/group**" access="ROLE_GA"/>
+        <intercept-url pattern="/group/**" access="ROLE_GA"/>
+        <intercept-url pattern="/users**" access="ROLE_GA, ROLE_USER"/>
+        <intercept-url pattern="/users/**" access="ROLE_GA, ROLE_USER"/>
         <intercept-url pattern="/user**" access="ROLE_USER"/>
         <intercept-url pattern="/user/**" access="ROLE_USER"/>
+        <intercept-url pattern="/orgs**" access="ROLE_GA, ROLE_USER"/>
+        <intercept-url pattern="/orgs/**" access="ROLE_GA, ROLE_USER"/>
         <intercept-url pattern="/**" access="ROLE_SA, ROLE_GA" />
 <!--
         <custom-filter after="EXCEPTION_TRANSLATION_FILTER" ref="ajaxSessionTimeoutFilter"/>
@@ -76,6 +78,8 @@
 
         <authentication-provider user-service-ref="clientUserDetailsService"/>
 
+        <authentication-provider user-service-ref="groupUserDetailsService"/>
+
         <authentication-provider user-service-ref="myUserDetailsService"/>
 <!--
         <authentication-provider user-service-ref="myUserDetailsService">
@@ -90,6 +94,9 @@
 
     <!-- 고객 사용자 인증 처리 -->
     <beans:bean id="clientUserDetailsService" class="com.oreumio.james.rest.filter.ClientUserDetailsService"/>
+
+    <!-- 그룹 관리자 인증 처리 -->
+    <beans:bean id="groupUserDetailsService" class="com.oreumio.james.rest.filter.GroupUserDetailsService"/>
 
     <!-- 사용자 인증 처리 -->
     <beans:bean id="myUserDetailsService" class="com.oreumio.james.rest.filter.MyUserDetailsService"/>

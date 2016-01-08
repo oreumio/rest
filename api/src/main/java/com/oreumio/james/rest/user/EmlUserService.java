@@ -64,11 +64,11 @@ public class EmlUserService implements EmlUserSupportService {
     }
 
     @Transactional(value = "rest_tm")
-    public EmlUserVo add(String groupId, EmlUserVo emlUserVo) {
+    public EmlUserVo add(String groupId, EmlUserVo userVo) {
 
-        emlUserVo.setGroupId(groupId);
+        userVo.setGroupId(groupId);
 
-        logger.debug("사용자를 추가합니다: " + emlUserVo);
+        logger.debug("사용자를 추가합니다: " + userVo);
 
         StringWriter writer = new StringWriter();
         try {
@@ -76,52 +76,57 @@ public class EmlUserService implements EmlUserSupportService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        emlUserVo.setServerConfig(writer.toString());
-        emlUserVo.setPassword("pass");
-        EmlUser emlUser = userDao.insert(emlUserVo);
-        return new EmlUserVo(emlUser);
+        userVo.setServerConfig(writer.toString());
+        userVo.setPassword("pass");
+
+        EmlUser user = new EmlUser(userVo);
+        user.setId(idProvider.next());
+        userDao.insert(user);
+        return new EmlUserVo(user);
     }
 
     @Transactional(value = "rest_tm")
     public void remove(String groupId, String userId) {
-        userDao.delete(groupId, userId);
+        EmlUser user = userDao.select(groupId, userId);
+        userDao.delete(user);
     }
 
     @Transactional(value = "rest_tm")
     public void removeByName(String userName, String groupId) {
-        userDao.delete(userName, groupId);
+        EmlUser user = userDao.select(userName, groupId);
+        userDao.delete(user);
     }
 
     @Transactional(value = "rest_tm")
     public void changeState(String groupId, String userId, String prestate, String poststate) {
-        EmlUser emlUser = userDao.selectUser(userId);
-        emlUser.setState(poststate);
+        EmlUser user = userDao.selectUser(userId);
+        user.setState(poststate);
     }
 
     @Transactional(value = "rest_tm")
     public void changeQuota(String groupId, String userId, long quota) {
-        EmlUser emlUser = userDao.selectUser(userId);
-        emlUser.setQuota(quota);
+        EmlUser user = userDao.selectUser(userId);
+        user.setQuota(quota);
     }
 
     @Transactional(value = "rest_tm")
     public void changePassword(String groupId, String userId, String password) {
-        EmlUser emlUser = userDao.selectUser(userId);
-        emlUser.setPassword(password);
+        EmlUser user = userDao.selectUser(userId);
+        user.setPassword(password);
     }
 
     @Transactional(value = "rest_tm")
     public void changePassword(String groupId, String userId, String oldPassword, String newPassword) {
-        EmlUser emlUser = userDao.selectUser(userId);
-        if (oldPassword.equals(emlUser.getPassword())) {
-            emlUser.setPassword(newPassword);
+        EmlUser user = userDao.selectUser(userId);
+        if (oldPassword.equals(user.getPassword())) {
+            user.setPassword(newPassword);
         }
     }
 
     @Override
     public String getPersonal(String address, String lang) {
         String userName = null, domainName = null;
-        EmlUserVo emlUserVo = get(userName, domainName);
-        return emlUserVo.getDisplayName();
+        EmlUserVo userVo = get(userName, domainName);
+        return userVo.getDisplayName();
     }
 }

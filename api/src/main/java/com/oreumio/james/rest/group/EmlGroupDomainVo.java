@@ -18,7 +18,7 @@ public class EmlGroupDomainVo implements Serializable {
 
     private String groupId;
 
-	private String groupDomainName;
+	private String domainName;
 
 	public EmlGroupDomainVo() {
 
@@ -27,7 +27,7 @@ public class EmlGroupDomainVo implements Serializable {
     public EmlGroupDomainVo(EmlGroupDomain groupDomain) {
         id = groupDomain.getId();
         groupId = groupDomain.getGroupId();
-        groupDomainName = groupDomain.getGroupDomainName();
+        domainName = groupDomain.getDomainName();
     }
 
     public String getId() {
@@ -46,12 +46,12 @@ public class EmlGroupDomainVo implements Serializable {
         this.groupId = groupId;
     }
 
-    public String getGroupDomainName() {
-        return groupDomainName;
+    public String getDomainName() {
+        return domainName;
     }
 
-    public void setGroupDomainName(String groupDomainName) {
-        this.groupDomainName = groupDomainName;
+    public void setDomainName(String domainName) {
+        this.domainName = domainName;
     }
 
     @Override
@@ -59,7 +59,7 @@ public class EmlGroupDomainVo implements Serializable {
         return "EmlGroupDomainVo{" +
                 "id='" + id + '\'' +
                 ", groupId='" + groupId + '\'' +
-                ", groupDomainName='" + groupDomainName + '\'' +
+                ", domainName='" + domainName + '\'' +
                 '}';
     }
 }

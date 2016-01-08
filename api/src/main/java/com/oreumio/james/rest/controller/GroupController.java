@@ -1,9 +1,6 @@
 package com.oreumio.james.rest.controller;
 
 import com.oreumio.james.rest.group.*;
-import com.oreumio.james.rest.session.SessionUtil;
-import com.oreumio.james.rest.session.SessionVo;
-import com.oreumio.james.rest.user.EmlUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,6 +96,15 @@ public class GroupController {
         groupService.updateQuota(clientVo.getId(), groupId, quota);
     }
 
+    @RequestMapping("groups/{groupId}/getQuotaUsage")
+    @ResponseBody
+    public EmlGroupVo getQuotaUsage(HttpServletRequest request, @PathVariable String groupId) {
+        logger.debug("그룹의 쿼타 사용실적을 취득합니다.: groupId=" + groupId);
+
+        EmlClientVo clientVo = clientService.getByName(request.getUserPrincipal().getName());
+        return groupService.getQuotaUsage(clientVo.getId(), groupId);
+    }
+
     @RequestMapping("groups/{groupId}/suspend")
     @ResponseBody
     public void suspend(HttpServletRequest request, @PathVariable String groupId) {
@@ -137,42 +143,42 @@ public class GroupController {
         logger.debug("그룹 도메인을 추가합니다.: groupId=" + groupId);
 
         EmlClientVo clientVo = clientService.getByName(request.getUserPrincipal().getName());
-        return groupService.addDomain(clientVo.getId(), groupId, groupDomainVo.getGroupDomainName());
+        return groupService.addDomain(clientVo.getId(), groupId, groupDomainVo.getDomainName());
     }
 
-    @RequestMapping(value = "groups/{groupId}/domains/{domainId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "groups/{groupId}/domains/{groupDomainId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public void removeDomain(HttpServletRequest request, @PathVariable String groupId, @PathVariable String domainId) {
-        logger.debug("그룹 도메인을 삭제합니다.: groupId=" + groupId + ", domainId=" + domainId);
+    public void removeDomain(HttpServletRequest request, @PathVariable String groupId, @PathVariable String groupDomainId) {
+        logger.debug("그룹 도메인을 삭제합니다.: groupId=" + groupId + ", groupDomainId=" + groupDomainId);
 
         EmlClientVo clientVo = clientService.getByName(request.getUserPrincipal().getName());
-        groupService.removeDomain(clientVo.getId(), groupId, domainId);
+        groupService.removeDomain(clientVo.getId(), groupId, groupDomainId);
     }
 
-    @RequestMapping(value = "groups/{groupId}/domains/{domainId}/secDomains", method = RequestMethod.GET)
+    @RequestMapping(value = "groups/{groupId}/domains/{groupDomainId}/secDomains", method = RequestMethod.GET)
     @ResponseBody
-    public List<EmlGroupSecDomainVo> listSecDomain(HttpServletRequest request, @PathVariable String groupId, @PathVariable String domainId) {
-        logger.debug("그룹의 부 도메인을 검색합니다.: groupId=" + groupId + ", domainId=" + domainId);
+    public List<EmlGroupSecDomainVo> listSecDomain(HttpServletRequest request, @PathVariable String groupId, @PathVariable String groupDomainId) {
+        logger.debug("그룹의 부 도메인을 검색합니다.: groupId=" + groupId + ", groupDomainId=" + groupDomainId);
 
         EmlClientVo clientVo = clientService.getByName(request.getUserPrincipal().getName());
-        return groupService.listSecDomains(clientVo.getId(), groupId, domainId);
+        return groupService.listSecDomains(clientVo.getId(), groupId, groupDomainId);
     }
 
-    @RequestMapping(value = "groups/{groupId}/domains/{domainId}/secDomains", method = RequestMethod.POST)
+    @RequestMapping(value = "groups/{groupId}/domains/{groupDomainId}/secDomains", method = RequestMethod.POST)
     @ResponseBody
-    public EmlGroupSecDomainVo addSecDomain(HttpServletRequest request, @PathVariable String groupId, @PathVariable String domainId, @RequestBody EmlGroupSecDomainVo groupSecDomainVo) {
-        logger.debug("그룹의 부 도메인을 추가합니다.: groupId=" + groupId + ", domainId=" + domainId + ", " + groupSecDomainVo);
+    public EmlGroupSecDomainVo addSecDomain(HttpServletRequest request, @PathVariable String groupId, @PathVariable String groupDomainId, @RequestBody EmlGroupSecDomainVo groupSecDomainVo) {
+        logger.debug("그룹의 부 도메인을 추가합니다.: groupId=" + groupId + ", groupDomainId=" + groupDomainId + ", " + groupSecDomainVo);
 
         EmlClientVo clientVo = clientService.getByName(request.getUserPrincipal().getName());
-        return groupService.addSecDomain(clientVo.getId(), groupId, domainId, groupSecDomainVo.getGroupSecDomainName());
+        return groupService.addSecDomain(clientVo.getId(), groupId, groupDomainId, groupSecDomainVo.getDomainName());
     }
 
-    @RequestMapping(value = "groups/{groupId}/domains/{domainId}/secDomains/{secDomainId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "groups/{groupId}/domains/{groupDomainId}/secDomains/{groupSecDomainId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public void removeSecDomain(HttpServletRequest request, @PathVariable String groupId, @PathVariable String domainId, @PathVariable String secDomainId) {
-        logger.debug("그룹의 부 도메인을 삭제합니다.: groupId=" + groupId + ", domainId=" + domainId + ", secDomainId=" + secDomainId);
+    public void removeSecDomain(HttpServletRequest request, @PathVariable String groupId, @PathVariable String groupDomainId, @PathVariable String groupSecDomainId) {
+        logger.debug("그룹의 부 도메인을 삭제합니다.: groupId=" + groupId + ", groupDomainId=" + groupDomainId + ", groupSecDomainId=" + groupSecDomainId);
 
         EmlClientVo clientVo = clientService.getByName(request.getUserPrincipal().getName());
-        groupService.removeSecDomain(clientVo.getId(), groupId, domainId, secDomainId);
+        groupService.removeSecDomain(clientVo.getId(), groupId, groupDomainId, groupSecDomainId);
     }
 }

@@ -193,6 +193,9 @@ definitions:
       displayName:
         type: string
         description: 고객 표시명
+      host:
+        type: string
+        description: 접속 호스트
       userName:
         type: string
         description: 고객 사용자 아이디
@@ -202,9 +205,6 @@ definitions:
       alg:
         type: string
         description: 패스워드 알고리즘
-      host:
-        type: string
-        description: 접속 호스트
       quota:
         type: integer
         description: 고객 쿼타

@@ -21,6 +21,9 @@ public class EmlClientService {
     @Autowired
     private EmlClientDomainDao clientDomainDao;
 
+    @Autowired
+    private EmlGroupDao groupDao;
+
     @Resource(name = "idProvider")
     private IdProvider<String> idProvider;
 
@@ -53,9 +56,9 @@ public class EmlClientService {
 
     @Transactional(value = "rest_tm")
     public EmlClientVo register(EmlClientVo clientVo) {
-        EmlClient emlClient = new EmlClient(clientVo);
-        emlClient.setId(idProvider.next());
-        clientDao.insert(emlClient);
+        EmlClient client = new EmlClient(clientVo);
+        client.setId(idProvider.next());
+        clientDao.insert(client);
         return clientVo;
     }
 
@@ -107,4 +110,17 @@ public class EmlClientService {
         }
         return emlClientDomainVoList;
     }
+
+    @Transactional(value = "rest_tm")
+    public EmlClientVo getQuotaUsage(String clientId) {
+        long usage = 0;
+        List<EmlGroup> groupList = groupDao.list(clientId);
+        for (EmlGroup groupVo : groupList) {
+            usage += groupVo.getQuota();
+        }
+        EmlClientVo clientVo = new EmlClientVo();
+        clientVo.setQuota(usage);
+        return clientVo;
+    }
+
 }

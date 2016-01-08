@@ -53,6 +53,13 @@ public class EmlGroupDao {
 		return em.find(EmlGroup.class, groupId);
 	}
 
+    public EmlGroup selectGroup(String userName, String host) {
+        EmlGroup group = em.createQuery("SELECT group FROM EmlGroup group WHERE group.userName = :userName", EmlGroup.class)
+                .setParameter("userName", userName)
+                .getSingleResult();
+        return group;
+    }
+
     public List<EmlGroup> list(String clientId) {
         List<EmlGroup> groupList = em.createQuery("SELECT group FROM EmlGroup group WHERE group.clientId = :clientId", EmlGroup.class)
                 .setParameter("clientId", clientId)

@@ -15,6 +15,8 @@ import java.util.Date;
 @Table(name = "EML_CLIENT")
 public class EmlClient implements Serializable {
 
+    public static String DEFAULT_ALG = "PLAIN";
+
 	/**
 	 * 고객 아이디
 	 */
@@ -61,8 +63,7 @@ public class EmlClient implements Serializable {
     private Date updateTs;
 
 	public EmlClient() {
-        password = "password";
-        alg = "PLAIN";
+        alg = DEFAULT_ALG;
 	}
 
     public EmlClient(EmlClientVo clientVo) {
@@ -70,7 +71,9 @@ public class EmlClient implements Serializable {
         userName = clientVo.getUserName();
         host = clientVo.getHost();
         password = clientVo.getPassword();
-        alg = clientVo.getAlg();
+        if (clientVo.getAlg() != null) {
+            alg = clientVo.getAlg();
+        }
         displayName = clientVo.getDisplayName();
         state = clientVo.getState();
         quota = clientVo.getQuota();
