@@ -2,11 +2,11 @@
 <html>
 <script src="jquery-2.1.4.js"></script>
 <script>
-    var groupId, groupDomainName = 'localhost:8083';
+    var groupDomainName = 'localhost:8083';
     var username = "oreumio";
     var password = "letmein";
 
-    var auth = btoa(username + ":" + password);
+    var auth = "Basic " + btoa(username + ":" + password);
     console.log(auth);
 
     $( document ).ready(function() {
