@@ -34,6 +34,11 @@ public class EmlClientDomain implements Serializable {
 
 	}
 
+    public EmlClientDomain(EmlClientDomainVo clientDomainVo) {
+        clientId = clientDomainVo.getClientId();
+        domain = clientDomainVo.getDomainName();
+    }
+
     public String getId() {
         return id;
     }

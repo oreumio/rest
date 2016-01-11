@@ -34,6 +34,10 @@ public class EmlUserService implements EmlUserSupportService {
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
+    public void setIdProvider(IdProvider<String> idProvider) {
+        this.idProvider = idProvider;
+    }
+
     public EmlUserVo get(String groupId, String userId) {
         EmlUser emlUser = userDao.selectUser(userId);
         return new EmlUserVo(emlUser);

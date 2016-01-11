@@ -59,7 +59,7 @@ public class EmlClientService {
         EmlClient client = new EmlClient(clientVo);
         client.setId(idProvider.next());
         clientDao.insert(client);
-        return clientVo;
+        return new EmlClientVo(client);
     }
 
     @Transactional(value = "rest_tm")
@@ -87,12 +87,12 @@ public class EmlClientService {
     }
 
     @Transactional(value = "rest_tm")
-    public void addDomain(String clientId, String domain) {
-        EmlClientDomain clientDomain = new EmlClientDomain();
-        clientDomain.setId(idProvider.next());
+    public EmlClientDomainVo addDomain(String clientId, EmlClientDomainVo clientDomainVo) {
+        EmlClientDomain clientDomain = new EmlClientDomain(clientDomainVo);
         clientDomain.setClientId(clientId);
-        clientDomain.setDomain(domain);
+        clientDomain.setId(idProvider.next());
         clientDomainDao.insert(clientDomain);
+        return new EmlClientDomainVo(clientDomain);
     }
 
     @Transactional(value = "rest_tm")

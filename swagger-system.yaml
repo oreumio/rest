@@ -67,6 +67,16 @@ paths:
       responses:
         '200':
           description: Successful response
+    delete:
+      description: |
+        고객의 정보를 삭제한다.
+      security:
+        - basic: []
+      parameters:
+        - $ref: '#/parameters/clientId'
+      responses:
+        '200':
+          description: Successful response
   /clients/{clientId}/getQuotaUsage.do:
     post:
       description: |

@@ -100,10 +100,10 @@ public class ClientController {
 
     @RequestMapping(value = "clients/{clientId}/domains", method = RequestMethod.POST)
     @ResponseBody
-    public void addDomain(HttpServletRequest request, @PathVariable String clientId, @RequestBody EmlClientDomainVo clientDomainVo) {
+    public EmlClientDomainVo addDomain(HttpServletRequest request, @PathVariable String clientId, @RequestBody EmlClientDomainVo clientDomainVo) {
         logger.debug("고객 도메인을 추가합니다.: clientId=" + clientId + ", " + clientDomainVo);
 
-        clientService.addDomain(clientId, clientDomainVo.getDomainName());
+        return clientService.addDomain(clientId, clientDomainVo);
     }
 
     @RequestMapping(value = "clients/{clientId}/domains/{clientDomainId}", method = RequestMethod.DELETE)

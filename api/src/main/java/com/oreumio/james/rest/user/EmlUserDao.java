@@ -27,10 +27,6 @@ public class EmlUserDao {
         this.em = em;
     }
 
-    public void setIdProvider(IdProvider<String> idProvider) {
-        this.idProvider = idProvider;
-    }
-
     public EmlUser selectUser(String userId) {
         return em.find(EmlUser.class, userId);
     }
