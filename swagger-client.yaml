@@ -83,6 +83,24 @@ paths:
       responses:
         '200':
           description: Successful response
+  /groups/{groupId}/changeDisplayName.do:
+    post:
+      description: |
+        그룹의 표시명을 변경한다.
+      security:
+        - basic: []
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - $ref: '#/parameters/groupId'
+        - name: displayName
+          in: formData
+          description: 그룹 표시명
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
   /groups/{groupId}/getQuotaUsage.do:
     post:
       description: |

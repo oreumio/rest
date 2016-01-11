@@ -3,42 +3,46 @@
 <script src="jquery-2.1.4.js"></script>
 <script>
     var groupId, groupDomainName = 'localhost:8083';
-    var username = "sa";
+    var username = "oreumio";
     var password = "letmein";
 
-    var auth = "Basic " + btoa(username + ":" + password);
+    var auth = btoa(username + ":" + password);
     console.log(auth);
 
     $( document ).ready(function() {
 
         $('#test').click(function () {
-            get_system();
-            post_system_getQuotaUsage();
-            get_clients();
-            var clientId = post_clients();
-            get_client(clientId);
-            post_client_quota_usage(clientId);
-            post_client_display_name(clientId, '새 오름아이오 테스트');
-            post_client_quota(clientId, 60000);
-            post_client_state(clientId, "R");
-            get_client_domains(clientId);
-            var domainId = post_client_domains(clientId, 'foo.oreumio.com');
-            delete_client_domains(clientId, domainId);
-            delete_client(clientId);
+            get_client();
+            post_client_getQuotaUsage();
+            get_groups();
+            var groupId = post_groups();
+            get_group(groupId);
+            post_group_quota_usage(groupId);
+//            post_group_display_name(groupId, '새 그룹');
+            post_group_quota(groupId, 60000);
+            post_group_suspend(groupId);
+            post_group_resume(groupId);
+            get_group_domains(groupId);
+            var domainId = post_group_domains(groupId, 'foo.oreumio.com');
+            get_group_sec_domains(groupId, domainId);
+            var secDomainId = post_group_sec_domains(groupId, domainId, 'foo.oreumio.com');
+            delete_group_sec_domains(groupId, domainId, secDomainId);
+            delete_group_domains(groupId, domainId);
+            delete_group(groupId);
 
             return false;
         });
     });
 
-    function get_system() {
-        console.log('get_system');
+    function get_client() {
+        console.log('get_client');
 
         var data = {
         };
 
         $.ajax({
             method: 'get',
-            url: "/system.do",
+            url: "/client.do",
             dataType: 'json',
 //            data: JSON.stringify(data),
             contentType: 'application/json',
@@ -52,15 +56,15 @@
         });
     }
 
-    function post_system_getQuotaUsage() {
-        console.log('post_system_getQuotaUsage');
+    function post_client_getQuotaUsage() {
+        console.log('post_client_getQuotaUsage');
 
         var data = {
         };
 
         $.ajax({
             method: 'post',
-            url: "/system/getQuotaUsage.do",
+            url: "/client/getQuotaUsage.do",
             dataType: 'json',
 //            data: JSON.stringify(data),
             contentType: 'application/json',
@@ -74,15 +78,15 @@
         });
     }
 
-    function get_clients() {
-        console.log('get_clients');
+    function get_groups() {
+        console.log('get_groups');
 
         var data = {
         };
 
         $.ajax({
             method: 'get',
-            url: "/clients.do",
+            url: "/groups.do",
             dataType: 'json',
 //            data: JSON.stringify(data),
             contentType: 'application/json',
@@ -96,24 +100,24 @@
         });
     }
 
-    function post_clients() {
-        console.log('post_clients');
+    function post_groups() {
+        console.log('post_groups');
 
-        var clientId;
+        var groupId;
 
         var data = {
-            displayName: '오름아이오 테스트',
+            displayName: '그룹 테스트',
             host: 'localhost:8083',
-            userName: 'oreumio-sa',
+            userName: 'oreumio-client',
             password: 'letmein',
             alg:'PLAIN',
-            quota: 50000,
+            quota: 10000,
             state: 'N'
         };
 
         $.ajax({
             method: 'post',
-            url: "/clients.do",
+            url: "/groups.do",
             dataType: 'json',
             data: JSON.stringify(data),
             contentType: 'application/json',
@@ -123,22 +127,22 @@
             },
             success: function (r) {
                 console.log(r);
-                clientId = r.id;
+                groupId = r.id;
             }
         });
 
-        return clientId;
+        return groupId;
     }
 
-    function get_client(id) {
-        console.log('get_client');
+    function get_group(id) {
+        console.log('get_group');
 
         var data = {
         };
 
         $.ajax({
             method: 'get',
-            url: "/clients/" + id + ".do",
+            url: "/groups/" + id + ".do",
             dataType: 'json',
 //            data: JSON.stringify(data),
             contentType: 'application/json',
@@ -152,15 +156,15 @@
         });
     }
 
-    function delete_client(clientId) {
-        console.log('delete_client');
+    function delete_group(groupId) {
+        console.log('delete_group');
 
         var data = {
         };
 
         $.ajax({
             method: 'delete',
-            url: '/clients/' + clientId + '.do',
+            url: '/groups/' + groupId + '.do',
             dataType: 'json',
 //            data: JSON.stringify(data),
             contentType: 'application/json',
@@ -174,15 +178,15 @@
         });
     }
 
-    function post_client_quota_usage(id) {
-        console.log('post_client_quota_usage');
+    function post_group_quota_usage(id) {
+        console.log('post_group_quota_usage');
 
         var data = {
         };
 
         $.ajax({
             method: 'post',
-            url: "/clients/" + id + "/getQuotaUsage.do",
+            url: "/groups/" + id + "/getQuotaUsage.do",
             dataType: 'json',
 //            data: JSON.stringify(data),
             contentType: 'application/json',
@@ -196,8 +200,8 @@
         });
     }
 
-    function post_client_display_name(id, name) {
-        console.log('post_client_display_name');
+    function post_group_display_name(id, name) {
+        console.log('post_group_display_name');
 
         var data = {
             displayName: name
@@ -205,7 +209,7 @@
 
         $.ajax({
             method: 'post',
-            url: "/clients/" + id + "/changeDisplayName.do",
+            url: "/groups/" + id + "/changeDisplayName.do",
             dataType: 'json',
             data: data,
             contentType: 'application/x-www-form-urlencoded',
@@ -219,8 +223,8 @@
         });
     }
 
-    function post_client_quota(id, quota) {
-        console.log('post_client_quota');
+    function post_group_quota(id, quota) {
+        console.log('post_group_quota');
 
         var data = {
             quota: quota
@@ -228,7 +232,7 @@
 
         $.ajax({
             method: 'post',
-            url: "/clients/" + id + "/changeQuota.do",
+            url: "/groups/" + id + "/changeQuota.do",
             dataType: 'json',
             data: data,
             contentType: 'application/x-www-form-urlencoded',
@@ -242,16 +246,15 @@
         });
     }
 
-    function post_client_state(id, state) {
-        console.log('post_client_state');
+    function post_group_suspend(id) {
+        console.log('post_group_suspend');
 
         var data = {
-            state: state
         };
 
         $.ajax({
             method: 'post',
-            url: "/clients/" + id + "/changeState.do",
+            url: "/groups/" + id + "/suspend.do",
             dataType: 'json',
             data: data,
             contentType: 'application/x-www-form-urlencoded',
@@ -265,15 +268,37 @@
         });
     }
 
-    function get_client_domains(clientId) {
-        console.log('get_client_domains');
+    function post_group_resume(id) {
+        console.log('post_group_resume');
+
+        var data = {
+        };
+
+        $.ajax({
+            method: 'post',
+            url: "/groups/" + id + "/resume.do",
+            dataType: 'json',
+            data: data,
+            contentType: 'application/x-www-form-urlencoded',
+            async: false,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader ("Authorization", auth);
+            },
+            success: function (r) {
+                console.log(r);
+            }
+        });
+    }
+
+    function get_group_domains(groupId) {
+        console.log('get_group_domains');
 
         var data = {
         };
 
         $.ajax({
             method: 'get',
-            url: '/clients/' + clientId + '/domains.do',
+            url: '/groups/' + groupId + '/domains.do',
             dataType: 'json',
 //            data: JSON.stringify(data),
             contentType: 'application/json',
@@ -287,8 +312,8 @@
         });
     }
 
-    function post_client_domains(clientId, domain) {
-        console.log('post_client_domains');
+    function post_group_domains(groupId, domain) {
+        console.log('post_group_domains');
 
         var domainId;
 
@@ -298,7 +323,7 @@
 
         $.ajax({
             method: 'post',
-            url: '/clients/' + clientId + '/domains.do',
+            url: '/groups/' + groupId + '/domains.do',
             dataType: 'json',
             data: JSON.stringify(data),
             contentType: 'application/json',
@@ -315,15 +340,87 @@
         return domainId;
     }
 
-    function delete_client_domains(clientId, domainId) {
-        console.log('delete_client_domains');
+    function delete_group_domains(groupId, domainId) {
+        console.log('delete_group_domains');
 
         var data = {
         };
 
         $.ajax({
             method: 'delete',
-            url: '/clients/' + clientId + '/domains/' + domainId + '.do',
+            url: '/groups/' + groupId + '/domains/' + domainId + '.do',
+            dataType: 'json',
+//            data: JSON.stringify(data),
+            contentType: 'application/json',
+            async: false,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader ("Authorization", auth);
+            },
+            success: function (r) {
+                console.log(r);
+            }
+        });
+    }
+
+    function get_group_sec_domains(groupId, domainId) {
+        console.log('get_group_sec_domains');
+
+        var data = {
+        };
+
+        $.ajax({
+            method: 'get',
+            url: '/groups/' + groupId + '/domains/' + domainId + '/secDomains.do',
+            dataType: 'json',
+//            data: JSON.stringify(data),
+            contentType: 'application/json',
+            async: false,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader ("Authorization", auth);
+            },
+            success: function (r) {
+                console.log(r);
+            }
+        });
+    }
+
+    function post_group_sec_domains(groupId, domainId, domain) {
+        console.log('post_group_sec_domains');
+
+        var secDomainId;
+
+        var data = {
+            domainName: domain
+        };
+
+        $.ajax({
+            method: 'post',
+            url: '/groups/' + groupId + '/domains/' + domainId + '/secDomains.do',
+            dataType: 'json',
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            async: false,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader ("Authorization", auth);
+            },
+            success: function (r) {
+                console.log(r);
+                secDomainId = r.id;
+            }
+        });
+
+        return secDomainId;
+    }
+
+    function delete_group_sec_domains(groupId, domainId, secDomainId) {
+        console.log('delete_group_sec_domains');
+
+        var data = {
+        };
+
+        $.ajax({
+            method: 'delete',
+            url: '/groups/' + groupId + '/domains/' + domainId + '/secDomains/' + secDomainId + '.do',
             dataType: 'json',
 //            data: JSON.stringify(data),
             contentType: 'application/json',
@@ -338,7 +435,7 @@
     }
 </script>
 <body>
-<h2>오름아이오 James SA API 테스트!</h2>
+<h2>오름아이오 James 고객 API 테스트!</h2>
 <p>
 <input type="button" id="test" value="테스트" />
 </p>

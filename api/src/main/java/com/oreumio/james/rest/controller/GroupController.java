@@ -78,13 +78,13 @@ public class GroupController {
         groupService.remove(clientVo.getId(), groupId);
     }
 
-    @RequestMapping("groups/{groupId}/changeName")
+    @RequestMapping("groups/{groupId}/changeDisplayName")
     @ResponseBody
-    public void changeName(HttpServletRequest request, @PathVariable String groupId, String name) {
-        logger.debug("그룹의 이름을 수정합니다.: groupId=" + groupId + ", name=" + name);
+    public void changeName(HttpServletRequest request, @PathVariable String groupId, String displayName) {
+        logger.debug("그룹의 이름을 수정합니다.: groupId=" + groupId + ", displayName=" + displayName);
 
         EmlClientVo clientVo = clientService.getByName(request.getUserPrincipal().getName());
-        groupService.updateName(clientVo.getId(), groupId, name);
+        groupService.updateName(clientVo.getId(), groupId, displayName);
     }
 
     @RequestMapping("groups/{groupId}/changeQuota")

@@ -21,6 +21,7 @@
            http://www.springframework.org/schema/security
            http://www.springframework.org/schema/security/spring-security.xsd">
 
+    <http pattern="/*.jsp" security="none"/>
     <http pattern="/file/**" security="none"/>
 
     <http entry-point-ref="authenticationEntryPoint">

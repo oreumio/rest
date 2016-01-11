@@ -100,7 +100,7 @@ paths:
         - $ref: '#/parameters/clientId'
         - name: displayName
           in: formData
-          description: 클라이언트 쿼타
+          description: 클라이언트 표시명
           required: true
           type: string
       responses:

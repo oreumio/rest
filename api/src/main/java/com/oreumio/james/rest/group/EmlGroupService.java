@@ -112,6 +112,8 @@ public class EmlGroupService {
         // 그룹 엔티티 추가
         logger.debug("그룹을 추가합니다.: " + group);
         groupDao.insert(group);
+
+        groupVo.setId(group.getId());
     }
 
     @Transactional(value = "rest_tm")
