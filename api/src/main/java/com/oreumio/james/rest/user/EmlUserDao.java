@@ -1,9 +1,7 @@
 package com.oreumio.james.rest.user;
 
-import com.oreumio.james.util.IdProvider;
 import org.springframework.stereotype.Repository;
 
-import javax.annotation.Resource;
 import javax.persistence.*;
 import java.util.List;
 

@@ -1,11 +1,9 @@
 package com.oreumio.james.rest.group;
 
-import com.oreumio.james.util.IdProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
-import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;

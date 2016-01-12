@@ -1,16 +1,12 @@
 package com.oreumio.james.rest.group;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.oreumio.james.util.IdProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
-import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.List;
 
 /**
@@ -28,9 +24,6 @@ public class EmlGroupDao {
 	@PersistenceContext(unitName = "rest")
 	private EntityManager em;
 
-    @Resource(name = "idProvider")
-    private IdProvider<String> idProvider;
-
     private ObjectMapper objectMapper = new ObjectMapper();
 
     /**
@@ -39,10 +32,6 @@ public class EmlGroupDao {
 	public void setEntityManager(EntityManager em) {
 		this.em = em;
 	}
-
-    public void setIdProvider(IdProvider<String> idProvider) {
-        this.idProvider = idProvider;
-    }
 
 	/**
 	 * 그룹 정보를 가져온다.
