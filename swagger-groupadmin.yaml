@@ -122,7 +122,7 @@ paths:
       responses:
         '200':
           description: Successful response
-  /users/{userId}/getQuota.do:
+  /users/{userId}/getQuotaUsage.do:
     post:
       description: |
         사용자의 실적 용량을 취득한다.

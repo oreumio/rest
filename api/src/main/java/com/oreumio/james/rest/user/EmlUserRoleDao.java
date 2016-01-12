@@ -34,7 +34,7 @@ public class EmlUserRoleDao {
     }
 
     public EmlUserRole select(String userId, String roleId) {
-        EmlUserRole userRole = em.createQuery("SELECT userRole FROM EmlUserRole userRole WHERE userRole.userId = :userId AND userRole.roleId = :roleId", EmlUserRole.class)
+        EmlUserRole userRole = em.createQuery("SELECT userRole FROM EmlUserRole userRole WHERE userRole.userId = :userId AND userRole.id = :roleId", EmlUserRole.class)
                 .setParameter("userId", userId)
                 .setParameter("roleId", roleId)
                 .getSingleResult();

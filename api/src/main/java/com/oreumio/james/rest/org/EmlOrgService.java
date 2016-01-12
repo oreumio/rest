@@ -1,9 +1,11 @@
 package com.oreumio.james.rest.org;
 
+import com.oreumio.james.util.IdProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +28,13 @@ public class EmlOrgService {
     @Autowired
     private EmlUserOrgDao emlUserOrgDao;
 
+    @Resource(name = "idProvider")
+    private IdProvider<String> idProvider;
+
+    public void setIdProvider(IdProvider<String> idProvider) {
+        this.idProvider = idProvider;
+    }
+
     public List<EmlOrgVo> listSystems(String groupId) {
         List<EmlOrgVo> emlOrgSystemVoList = new ArrayList<EmlOrgVo>();
 
@@ -40,6 +49,12 @@ public class EmlOrgService {
     public EmlOrgVo addSystem(String groupId, String orgName) {
         EmlOrg emlOrgSystem = orgSystemDao.insert(groupId, orgName);
         return new EmlOrgVo(emlOrgSystem);
+    }
+
+    @Transactional(value = "rest_tm")
+    public EmlOrgVo getSystem(String groupId, String orgId) {
+        EmlOrg orgSystem = orgSystemDao.select(groupId, orgId);
+        return new EmlOrgVo(orgSystem);
     }
 
     @Transactional(value = "rest_tm")
@@ -75,6 +90,12 @@ public class EmlOrgService {
     }
 
     @Transactional(value = "rest_tm")
+    public EmlOrgUnitVo getSystemUnit(String orgId, String orgUnitId) {
+        EmlOrgUnit orgSystemUnit = orgSystemUnitDao.select(orgId, orgUnitId);
+        return new EmlOrgUnitVo(orgSystemUnit);
+    }
+
+    @Transactional(value = "rest_tm")
     public void removeSystemUnit(String orgId, String orgUnitId) {
         EmlOrgUnit emlOrgSystemUnit = orgSystemUnitDao.select(orgId, orgUnitId);
         orgSystemUnitDao.delete(emlOrgSystemUnit);
@@ -82,23 +103,33 @@ public class EmlOrgService {
 
     @Transactional(value = "rest_tm")
     public EmlUserOrgVo addSystemUnitUser(String orgId, String orgUnitId, String userId) {
-        EmlUserOrg emlOrgSystemUnitUser = emlUserOrgDao.insert(orgUnitId, userId);
-        return new EmlUserOrgVo(emlOrgSystemUnitUser);
+        EmlUserOrg userOrg = new EmlUserOrg();
+        userOrg.setId(idProvider.next());
+        userOrg.setOrgSystemUnitId(orgUnitId);
+        userOrg.setUserId(userId);
+        emlUserOrgDao.insert(userOrg);
+        return new EmlUserOrgVo(userOrg);
     }
 
     @Transactional(value = "rest_tm")
-    public void removeSystemUnitUser(String orgId, String orgUnitId, String userId) {
-        EmlUserOrg emlOrgSystemUnitUser = emlUserOrgDao.select(orgUnitId, userId);
-        emlUserOrgDao.delete(emlOrgSystemUnitUser);
+    public EmlUserOrgVo getSystemUnitUser(String orgId, String orgUnitId, String memberId) {
+        EmlUserOrg userOrg = emlUserOrgDao.select(orgUnitId, memberId);
+        return new EmlUserOrgVo(userOrg);
+    }
+
+    @Transactional(value = "rest_tm")
+    public void removeSystemUnitUser(String orgId, String orgUnitId, String memberId) {
+        EmlUserOrg userOrg = emlUserOrgDao.select(orgUnitId, memberId);
+        emlUserOrgDao.delete(userOrg);
     }
 
     @Transactional(value = "rest_tm")
     public List<EmlUserOrgVo> listSystemUnitUsers(String orgId, String orgUnitId) {
-        List<EmlUserOrgVo> emlUserOrgVoList = new ArrayList<EmlUserOrgVo>();
-        List<EmlUserOrg> emlOrgSystemUnitUsers = emlUserOrgDao.list(orgUnitId);
-        for (EmlUserOrg emlUserOrg : emlOrgSystemUnitUsers) {
-            emlUserOrgVoList.add(new EmlUserOrgVo(emlUserOrg));
+        List<EmlUserOrgVo> userOrgVoList = new ArrayList<EmlUserOrgVo>();
+        List<EmlUserOrg> userOrgList = emlUserOrgDao.list(orgUnitId);
+        for (EmlUserOrg userOrg : userOrgList) {
+            userOrgVoList.add(new EmlUserOrgVo(userOrg));
         }
-        return emlUserOrgVoList;
+        return userOrgVoList;
     }
 }

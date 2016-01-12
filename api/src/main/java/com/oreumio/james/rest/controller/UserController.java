@@ -95,6 +95,16 @@ public class UserController {
         userService.changeQuota(groupVo.getId(), userId, quota);
     }
 
+    @RequestMapping(value = "users/{userId}/getQuotaUsage", method = RequestMethod.POST)
+    @ResponseBody
+    public long getQuotaUsage(HttpServletRequest request, @PathVariable String userId) {
+        EmlGroupVo groupVo = groupService.getByName(request.getUserPrincipal().getName());
+
+        logger.debug("getQuotaUsage userId=" + userId);
+        return 0;
+//        userService.changeQuota(groupVo.getId(), userId, quota);
+    }
+
     @RequestMapping(value = "users/{userId}/changePassword", method = RequestMethod.POST)
     @ResponseBody
     public void changePassword(HttpServletRequest request, @PathVariable String userId, @RequestParam String newPassword) {
@@ -116,12 +126,12 @@ public class UserController {
 
     @RequestMapping(value = "users/{userId}/roles", method = RequestMethod.POST)
     @ResponseBody
-    public void addRole(HttpServletRequest request, @PathVariable String userId, @RequestBody EmlUserRoleVo userRoleVo) {
+    public EmlUserRoleVo addRole(HttpServletRequest request, @PathVariable String userId, @RequestBody EmlUserRoleVo userRoleVo) {
         EmlGroupVo groupVo = groupService.getByName(request.getUserPrincipal().getName());
 
 //        String newPassword = form;
         logger.debug("add Role userId=" + userId + ", userRoleVo=" + userRoleVo);
-        userRoleService.add(userId, userRoleVo);
+        return userRoleService.add(userId, userRoleVo);
     }
 
     @RequestMapping(value = "users/{userId}/roles/{roleId}", method = RequestMethod.DELETE)

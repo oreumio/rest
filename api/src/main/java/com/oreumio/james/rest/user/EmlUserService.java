@@ -39,7 +39,7 @@ public class EmlUserService implements EmlUserSupportService {
     }
 
     public EmlUserVo get(String groupId, String userId) {
-        EmlUser emlUser = userDao.selectUser(userId);
+        EmlUser emlUser = userDao.select(groupId, userId);
         return new EmlUserVo(emlUser);
     }
 

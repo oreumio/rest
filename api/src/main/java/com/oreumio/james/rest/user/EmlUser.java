@@ -126,7 +126,9 @@ public class EmlUser implements Serializable {
         userName = userVo.getUserName();
         host = userVo.getHost();
         password = userVo.getPassword();
-        alg = userVo.getAlg();
+        if (userVo.getAlg() != null) {
+            alg = userVo.getAlg();
+        }
         displayName = userVo.getDisplayName();
         quota = userVo.getQuota();
         serverConfig = userVo.getServerConfig();

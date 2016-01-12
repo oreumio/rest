@@ -48,7 +48,7 @@ public class EmlUserRoleService {
         userRole.setId(idProvider.next());
         userRole.setUserId(userId);
         userRoleDao.insert(userRole);
-        return userRoleVo;
+        return new EmlUserRoleVo(userRole);
     }
 
     @Transactional(value = "rest_tm")

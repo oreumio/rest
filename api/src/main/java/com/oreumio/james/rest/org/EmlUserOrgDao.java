@@ -25,19 +25,12 @@ public class EmlUserOrgDao {
 	@PersistenceContext(unitName = "rest")
 	private EntityManager em;
 
-    @Resource(name = "idProvider")
-    private IdProvider<String> idProvider;
-
     /**
 	 * @param em EntityManager
 	 */
 	public void setEntityManager(EntityManager em) {
 		this.em = em;
 	}
-
-    public void setIdProvider(IdProvider<String> idProvider) {
-        this.idProvider = idProvider;
-    }
 
 	/**
 	 * 그룹 도메인 정보를 가져온다.
@@ -51,19 +44,14 @@ public class EmlUserOrgDao {
         return emlUserOrgs;
     }
 
-    public EmlUserOrg insert(String orgUnitId, String userId) {
-        EmlUserOrg emlUserOrg = new EmlUserOrg();
-        emlUserOrg.setId("GSD" + 1);
-        emlUserOrg.setOrgSystemUnitId(orgUnitId);
-        emlUserOrg.setUserId(userId);
-        em.persist(emlUserOrg);
-        return emlUserOrg;
+    public void insert(EmlUserOrg userOrg) {
+        em.persist(userOrg);
     }
 
-    public EmlUserOrg select(String systemUnitId, String userId) {
-        EmlUserOrg emlUserOrg = em.createQuery("SELECT userOrg FROM EmlUserOrg userOrg WHERE userOrg.orgSystemUnitId = :systemUnitId AND userOrg.userId = :userId", EmlUserOrg.class)
+    public EmlUserOrg select(String systemUnitId, String memberId) {
+        EmlUserOrg emlUserOrg = em.createQuery("SELECT userOrg FROM EmlUserOrg userOrg WHERE userOrg.orgSystemUnitId = :systemUnitId AND userOrg.id = :memberId", EmlUserOrg.class)
                 .setParameter("systemUnitId", systemUnitId)
-                .setParameter("userId", userId)
+                .setParameter("memberId", memberId)
                 .getSingleResult();
         return emlUserOrg;
     }

@@ -64,9 +64,9 @@ public class EmlUserDao {
         return userList;
     }
 
-    public EmlUser select(String userName, String groupId) {
-        EmlUser user = em.createQuery("SELECT user FROM EmlUser user WHERE user.userName = :userName AND user.groupId = :groupId", EmlUser.class)
-                .setParameter("userName", userName)
+    public EmlUser select(String groupId, String userId) {
+        EmlUser user = em.createQuery("SELECT user FROM EmlUser user WHERE user.id = :userId AND user.groupId = :groupId", EmlUser.class)
+                .setParameter("userId", userId)
                 .setParameter("groupId", groupId)
                 .getSingleResult();
         return user;
